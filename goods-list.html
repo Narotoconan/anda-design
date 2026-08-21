@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>货物列表 · 燧安库存</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --surface: rgba(255, 255, 255, 0.88);
+      --surface-solid: #ffffff;
+      --surface-soft: #f7f7f9;
+      --ink: #1d1d1f;
+      --ink-2: #5d5d64;
+      --ink-3: #7d7d85;
+      --line: rgba(29, 29, 31, 0.09);
+      --line-strong: rgba(29, 29, 31, 0.14);
+      --red: #d92d20;
+      --red-dark: #b42318;
+      --red-soft: #fff0ee;
+      --orange: #e9701a;
+      --orange-soft: #fff5e8;
+      --green: #138a52;
+      --green-soft: #ecf8f1;
+      --blue: #2675d8;
+      --blue-soft: #edf5ff;
+      --shadow-sm: 0 1px 2px rgba(10, 10, 15, 0.04), 0 8px 24px rgba(10, 10, 15, 0.04);
+      --shadow-md: 0 2px 4px rgba(10, 10, 15, 0.04), 0 18px 50px rgba(10, 10, 15, 0.07);
+      --focus: 0 0 0 4px rgba(217, 45, 32, 0.16);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 13px;
+      --motion-fast: 150ms;
+      --motion-normal: 300ms;
+      --ease-spring: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100dvh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% -10%, rgba(217, 45, 32, 0.06), transparent 30rem),
+        var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button { touch-action: manipulation; }
+    svg { display: block; }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: 12px;
+      z-index: 100;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--ink);
+      border-radius: 10px;
+      transform: translateY(-160%);
+      transition: transform var(--motion-fast) ease-out;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(245, 245, 247, 0.72);
+      backdrop-filter: blur(24px) saturate(170%);
+      -webkit-backdrop-filter: blur(24px) saturate(170%);
+    }
+
+    .topbar::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 -16px;
+      height: 16px;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(245, 245, 247, 0.52), transparent);
+    }
+
+    .nav {
+      width: min(1180px, calc(100% - 48px));
+      min-height: 72px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: #fff;
+      background: var(--red);
+      border-radius: 10px;
+      box-shadow: 0 5px 14px rgba(217, 45, 32, 0.2);
+    }
+
+    .brand-name { font-weight: 680; letter-spacing: -0.02em; }
+
+    .brand-section {
+      margin-left: 4px;
+      padding-left: 15px;
+      color: var(--ink-2);
+      font-size: 14px;
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .sync-state {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-2);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .sync-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(19, 138, 82, 0.1);
+    }
+
+    main {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 58px 0 72px;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      color: var(--red-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      background: var(--red);
+      border-radius: 2px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 48px);
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+      font-weight: 720;
+    }
+
+    .head-copy {
+      max-width: 650px;
+      margin: 13px 0 0;
+      color: var(--ink-2);
+      font-size: 15px;
+    }
+
+    .summary-note {
+      min-width: 210px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,.54);
+      border: 1px solid rgba(255,255,255,.76);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .summary-note strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-note span {
+      display: block;
+      margin-top: 5px;
+      color: var(--ink-2);
+      font-size: 12px;
+    }
+
+    .search-card {
+      padding: 10px;
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: minmax(280px, 1.7fr) repeat(3, minmax(145px, .65fr)) auto;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+    }
+
+    .field {
+      position: relative;
+      min-width: 0;
+    }
+
+    .field-label {
+      position: absolute;
+      left: 42px;
+      top: 7px;
+      z-index: 1;
+      color: var(--ink-3);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      pointer-events: none;
+    }
+
+    .field-label.select-label { left: 14px; }
+
+    .field-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      color: var(--ink-3);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .control {
+      width: 100%;
+      height: 52px;
+      color: var(--ink);
+      background: var(--surface-soft);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    input.control { padding: 19px 14px 5px 42px; }
+
+    select.control {
+      padding: 19px 36px 5px 14px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d7d85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+    }
+
+    .control:hover { background-color: #f1f1f3; }
+    .control:focus-visible { border-color: rgba(217,45,32,.45); box-shadow: var(--focus); }
+
+    .search-action {
+      min-width: 108px;
+      height: 52px;
+      padding: 0 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      background: var(--ink);
+      border: 0;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 650;
+      transition: transform 100ms ease-out, background-color var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    .search-action:hover { background: #303034; }
+    .search-action:active { transform: scale(.97); }
+    .search-action:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(29,29,31,.18); }
+
+    .result-bar {
+      min-height: 44px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .result-copy { color: var(--ink-2); font-size: 13px; }
+    .result-copy strong { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+
+    .reset-button {
+      flex: 0 0 auto;
+      min-height: 44px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      font-size: 13px;
+      white-space: nowrap;
+      transition: background-color var(--motion-fast), color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .reset-button:hover { color: var(--ink); background: rgba(255,255,255,.7); }
+    .reset-button:active { transform: scale(.97); }
+    .reset-button:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    .goods-list { display: grid; gap: 12px; }
+
+    .goods-panel {
+      overflow: hidden;
+      background: var(--surface-solid);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      transition: border-color var(--motion-fast), box-shadow var(--motion-normal), transform var(--motion-fast);
+    }
+
+    .goods-panel:hover { border-color: var(--line-strong); }
+    .goods-panel.is-open { border-color: rgba(29,29,31,.12); box-shadow: var(--shadow-md); }
+
+    .panel-trigger {
+      width: 100%;
+      min-height: 132px;
+      padding: 22px 24px;
+      display: grid;
+      grid-template-columns: minmax(250px, 1.3fr) minmax(150px, .85fr) minmax(170px, .8fr) minmax(150px, .65fr) 44px;
+      gap: 20px;
+      align-items: center;
+      color: inherit;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      transition: background-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .panel-trigger:hover { background: #fcfcfd; }
+    .panel-trigger:active { background: #f8f8fa; }
+    .panel-trigger:focus-visible { outline: none; box-shadow: inset var(--focus); }
+
+    .goods-identity {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 15px;
+      align-items: center;
+    }
+
+    .goods-icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      color: var(--red);
+      background: var(--red-soft);
+      border-radius: 16px;
+    }
+
+    .goods-icon svg { width: 27px; height: 27px; }
+
+    .goods-name {
+      margin: 0;
+      overflow-wrap: anywhere;
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 680;
+      letter-spacing: -0.02em;
+    }
+
+    .goods-meta {
+      margin-top: 7px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink-3);
+      font-size: 12px;
+    }
+
+    .meta-divider { color: #c6c6cb; }
+
+    .metric-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink-3);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+
+    .metric-value {
+      display: block;
+      font-size: 16px;
+      line-height: 1.3;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-sub {
+      display: block;
+      margin-top: 5px;
+      color: var(--ink-3);
+      font-size: 12px;
+    }
+
+    .stock-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .status-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--status-color, var(--green));
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .status-text::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    .chevron {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      justify-self: end;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border-radius: 50%;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .is-open .chevron { color: #fff; background: var(--ink); transform: rotate(180deg); }
+
+    .panel-collapse {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows var(--motion-normal) var(--ease-spring), opacity 180ms ease-out;
+    }
+
+    .goods-panel.is-open .panel-collapse { grid-template-rows: 1fr; opacity: 1; }
+    .panel-collapse-inner { min-height: 0; overflow: hidden; }
+
+    .panel-body {
+      margin: 0 24px 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .detail-head {
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .detail-title { margin: 0; font-size: 13px; font-weight: 680; }
+    .detail-hint { color: var(--ink-3); font-size: 12px; }
+
+    .brand-table { width: 100%; }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1.15fr .8fr .72fr .84fr .84fr .65fr;
+      gap: 14px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .table-head {
+      padding: 0 14px 9px;
+      color: var(--ink-3);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .04em;
+    }
+
+    .table-body {
+      overflow: hidden;
+      background: var(--surface-soft);
+      border-radius: 15px;
+    }
+
+    .table-body .table-row {
+      min-height: 58px;
+      padding: 10px 14px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .table-body .table-row:last-child { border-bottom: 0; }
+    .table-cell { min-width: 0; overflow-wrap: anywhere; }
+    .table-cell strong { font-size: 13px; font-weight: 650; }
+    .table-cell .subline { display: block; margin-top: 2px; color: var(--ink-3); font-size: 10px; }
+    .number { font-variant-numeric: tabular-nums; }
+
+    .stock-count { font-weight: 680; }
+    .stock-count.low { color: var(--orange); }
+    .stock-count.out { color: var(--red); }
+
+    .badge {
+      width: fit-content;
+      min-height: 25px;
+      padding: 3px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--green);
+      background: var(--green-soft);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .badge::before { content: ""; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }
+    .badge.warning { color: #b75b0a; background: var(--orange-soft); }
+    .badge.danger { color: var(--red-dark); background: var(--red-soft); }
+    .badge.info { color: var(--blue); background: var(--blue-soft); }
+
+    .empty-state {
+      padding: 64px 24px;
+      text-align: center;
+      background: var(--surface-solid);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+    }
+
+    .empty-state[hidden] { display: none; }
+    .empty-state svg { width: 34px; height: 34px; margin: 0 auto 15px; color: var(--ink-3); }
+    .empty-state h2 { margin: 0 0 6px; font-size: 17px; }
+    .empty-state p { margin: 0; color: var(--ink-2); font-size: 13px; }
+
+    .pagination {
+      margin-top: 28px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,255,255,.78);
+      border-radius: 17px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pagination-info { color: var(--ink-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+    .page-controls { display: flex; align-items: center; gap: 5px; }
+
+    .page-button {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 10px;
+      display: inline-grid;
+      place-items: center;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .page-button:hover:not(:disabled) { color: var(--ink); background: #fff; }
+    .page-button:active:not(:disabled) { transform: scale(.94); }
+    .page-button:focus-visible { outline: none; box-shadow: var(--focus); }
+    .page-button[aria-current="page"] { color: #fff; background: var(--ink); }
+    .page-button:disabled { opacity: .34; cursor: not-allowed; }
+    .page-ellipsis { width: 30px; color: var(--ink-3); text-align: center; }
+
+    @media (max-width: 1050px) {
+      .search-card { grid-template-columns: 1.6fr repeat(2, 1fr); }
+      .search-card .field:nth-of-type(4) { grid-column: 1 / 2; }
+      .search-action { grid-column: 3 / 4; }
+      .panel-trigger { grid-template-columns: minmax(245px, 1.3fr) minmax(145px, .8fr) minmax(150px, .75fr) 44px; }
+      .panel-trigger > .metric-basic { display: none; }
+      .table-row { grid-template-columns: 1.15fr 1fr 1fr .8fr .7fr .82fr .82fr; }
+      .table-row > :nth-child(3) { display: none; }
+    }
+
+    @media (max-width: 760px) {
+      .nav, main { width: min(100% - 32px, 1180px); }
+      .nav { min-height: 64px; }
+      .brand-section, .sync-state span { display: none; }
+      main { padding: 36px 0 48px; }
+      .page-head { align-items: flex-start; margin-bottom: 24px; flex-direction: column; gap: 18px; }
+      h1 { font-size: 36px; }
+      .summary-note { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+      .summary-note span { margin: 0; }
+      .search-card { grid-template-columns: 1fr 1fr; }
+      .search-card .field:first-child { grid-column: 1 / -1; }
+      .search-card .field:nth-of-type(4) { grid-column: auto; }
+      .search-action { grid-column: 1 / -1; }
+      .panel-trigger {
+        position: relative;
+        min-height: 0;
+        padding: 20px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 12px;
+      }
+      .goods-identity { grid-column: 1 / -1; padding-right: 52px; }
+      .panel-trigger > .metric-stock, .panel-trigger > .metric-price {
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+      }
+      .panel-trigger > .metric-stock { grid-column: 1 / 2; }
+      .panel-trigger > .metric-price { grid-column: 2 / 3; min-width: 0; }
+      .panel-trigger > .metric-basic { display: none; }
+      .chevron { position: absolute; top: 20px; right: 20px; }
+      .panel-body { margin: 0 20px 20px; padding-top: 16px; }
+      .detail-head { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .table-head { display: none; }
+      .table-body { display: grid; gap: 8px; background: transparent; overflow: visible; }
+      .table-body .table-row {
+        min-height: auto;
+        padding: 14px;
+        grid-template-columns: 1fr 1fr;
+        gap: 13px 18px;
+        background: var(--surface-soft);
+        border: 0;
+        border-radius: 13px;
+      }
+      .table-row > :nth-child(3) { display: block; }
+      .table-cell::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 3px;
+        color: var(--ink-3);
+        font-size: 9px;
+        font-weight: 650;
+        letter-spacing: .04em;
+      }
+      .pagination { align-items: flex-start; flex-direction: column; }
+      .page-controls { width: 100%; justify-content: space-between; }
+      .page-button.hide-mobile, .page-ellipsis { display: none; }
+    }
+
+    @media (max-width: 430px) {
+      .nav, main { width: min(100% - 24px, 1180px); }
+      .search-card { grid-template-columns: 1fr; }
+      .search-card .field, .search-card .field:first-child, .search-card .field:nth-of-type(4), .search-action { grid-column: 1; }
+      .panel-trigger { padding: 18px 16px; }
+      .goods-identity { padding-right: 48px; }
+      .goods-identity { grid-template-columns: 46px minmax(0,1fr); gap: 12px; }
+      .goods-icon { width: 46px; height: 46px; border-radius: 14px; }
+      .chevron { top: 18px; right: 16px; }
+      .panel-trigger .metric-value { font-size: 15px; }
+      .panel-body { margin: 0 16px 16px; }
+      .table-body .table-row { grid-template-columns: 1fr 1fr; padding: 13px; }
+      .page-button { min-width: 38px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .topbar, .search-card, .summary-note, .pagination { background: #f9f9fa; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    }
+
+    @media (prefers-contrast: more) {
+      :root { --line: rgba(29,29,31,.22); --line-strong: rgba(29,29,31,.4); }
+      .topbar, .search-card, .summary-note, .pagination { background: #fff; }
+    }
+
+    /* Admin workspace refinement */
+    :root {
+      --sidebar-width: 232px;
+      --topbar-height: 60px;
+      --bg: #f4f5f7;
+      --surface-soft: #f7f8fa;
+      --radius-xl: 13px;
+      --radius-lg: 12px;
+      --radius-md: 9px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, .035);
+      --shadow-md: 0 3px 12px rgba(15, 23, 42, .055);
+    }
+
+    body { background: var(--bg); font-size: 14px; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 60;
+      width: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, .94);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(22px) saturate(150%);
+      -webkit-backdrop-filter: blur(22px) saturate(150%);
+    }
+
+    .side-brand {
+      height: var(--topbar-height);
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .side-brand .brand-mark { width: 32px; height: 32px; border-radius: 9px; box-shadow: none; }
+    .side-brand-copy { min-width: 0; }
+    .side-brand-name { display: block; font-size: 15px; line-height: 1.2; font-weight: 700; letter-spacing: -.02em; }
+    .side-brand-sub { display: block; margin-top: 2px; color: var(--ink-3); font-size: 10px; letter-spacing: .04em; }
+
+    .side-scroll { flex: 1; overflow-y: auto; padding: 16px 12px; }
+    .side-label { margin: 0 10px 7px; color: #9a9aa1; font-size: 10px; font-weight: 650; letter-spacing: .08em; }
+    .side-nav { display: grid; gap: 3px; }
+
+    .side-link {
+      min-height: 40px;
+      padding: 0 11px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #5d5d64;
+      text-decoration: none;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 560;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .side-link svg { width: 18px; height: 18px; flex: 0 0 auto; }
+    .side-link:hover { color: var(--ink); background: #f5f5f7; }
+    .side-link:active { transform: scale(.985); }
+    .side-link:focus-visible { outline: none; box-shadow: var(--focus); }
+    .side-link.parent-active { color: var(--ink); font-weight: 650; }
+    .side-link .nav-chevron { width: 14px; height: 14px; margin-left: auto; color: var(--ink-3); }
+
+    .subnav {
+      position: relative;
+      margin: 2px 0 9px 29px;
+      padding-left: 12px;
+      display: grid;
+      gap: 2px;
+    }
+
+    .subnav::before { content: ""; position: absolute; inset: 4px auto 4px 0; width: 1px; background: var(--line-strong); }
+    .sub-link { min-height: 34px; padding: 0 10px; color: var(--ink-2); text-decoration: none; border-radius: 8px; font-size: 12px; display: flex; align-items: center; }
+    .sub-link:hover { color: var(--ink); background: #f5f5f7; }
+    .sub-link.active { color: var(--red-dark); background: var(--red-soft); font-weight: 650; }
+    .sub-link:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    .side-user {
+      margin: 0 12px 12px;
+      padding: 11px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .user-avatar { width: 32px; height: 32px; display: grid; place-items: center; flex: 0 0 auto; color: #fff; background: #303034; border-radius: 50%; font-size: 11px; font-weight: 700; }
+    .user-meta { min-width: 0; }
+    .user-meta strong { display: block; font-size: 12px; font-weight: 650; }
+    .user-meta span { display: block; margin-top: 1px; color: var(--ink-3); font-size: 10px; }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto var(--sidebar-width);
+      z-index: 50;
+      height: var(--topbar-height);
+      background: rgba(255, 255, 255, .82);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+    }
+
+    .topbar::after { display: none; }
+    .nav { width: 100%; min-height: var(--topbar-height); padding: 0 24px; margin: 0; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; color: var(--ink-3); font-size: 12px; }
+    .breadcrumb svg { width: 13px; height: 13px; }
+    .breadcrumb strong { color: var(--ink); font-weight: 650; }
+    .top-tools { display: flex; align-items: center; gap: 16px; }
+    .top-divider { width: 1px; height: 20px; background: var(--line-strong); }
+    .top-user { display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 12px; }
+    .top-user .user-avatar { width: 28px; height: 28px; font-size: 10px; }
+    .mobile-brand { display: none; align-items: center; gap: 9px; font-weight: 700; }
+    .mobile-brand .brand-mark { width: 30px; height: 30px; border-radius: 8px; box-shadow: none; }
+
+    main {
+      width: auto;
+      margin: 0 0 0 var(--sidebar-width);
+      padding: calc(var(--topbar-height) + 22px) 24px 36px;
+    }
+
+    .page-head { align-items: center; gap: 24px; margin-bottom: 16px; }
+    .eyebrow { display: none; }
+    h1 { font-size: 25px; line-height: 1.2; letter-spacing: -.025em; font-weight: 700; }
+    .head-copy { margin: 4px 0 0; font-size: 12px; line-height: 1.45; }
+
+    .summary-note {
+      min-width: auto;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .summary-note strong { font-size: 15px; letter-spacing: -.01em; }
+    .summary-note span { margin: 0; padding-left: 10px; border-left: 1px solid var(--line-strong); font-size: 11px; }
+
+    .search-card {
+      padding: 10px;
+      margin-bottom: 12px;
+      grid-template-columns: minmax(230px, 1.55fr) repeat(3, minmax(130px, .62fr)) auto;
+      gap: 7px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .control { height: 44px; border-radius: 8px; }
+    .field-label { left: 39px; top: 5px; font-size: 9px; }
+    .field-label.select-label { left: 12px; }
+    .field-icon { left: 12px; width: 16px; height: 16px; }
+    input.control { padding: 17px 12px 3px 39px; }
+    select.control { padding: 17px 32px 3px 12px; background-position: right 10px center; }
+    .search-action { min-width: 94px; height: 44px; padding: 0 16px; border-radius: 8px; font-size: 12px; }
+
+    .result-bar { min-height: 34px; margin-bottom: 7px; }
+    .result-copy, .reset-button { font-size: 11px; }
+    .reset-button { min-height: 34px; }
+
+    .goods-list { gap: 8px; }
+    .goods-panel { border-radius: 13px; box-shadow: none; }
+    .goods-panel:hover { border-color: rgba(29, 29, 31, .17); }
+    .goods-panel.is-open { border-color: rgba(29, 29, 31, .16); box-shadow: var(--shadow-md); }
+
+    .panel-trigger {
+      min-height: 82px;
+      padding: 13px 16px;
+      grid-template-columns: minmax(260px, 1.45fr) minmax(120px, .72fr) minmax(180px, .9fr) minmax(150px, .72fr) 34px;
+      gap: 16px;
+    }
+
+    .goods-identity { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; }
+    .goods-icon { width: 40px; height: 40px; border-radius: 11px; }
+    .goods-icon svg { width: 21px; height: 21px; }
+    .goods-name { font-size: 14px; line-height: 1.25; }
+    .goods-meta { margin-top: 4px; font-size: 10px; }
+    .metric-label { margin-bottom: 3px; font-size: 9px; }
+    .metric-value { font-size: 13px; }
+    .metric-sub { margin-top: 3px; font-size: 10px; }
+    .status-text { font-size: 9px; }
+    .chevron { width: 30px; height: 30px; }
+
+    .panel-body { margin: 0 16px 13px; padding-top: 12px; }
+    .detail-head { margin-bottom: 8px; }
+    .detail-title { font-size: 12px; }
+    .detail-hint { font-size: 10px; }
+    .table-head { padding: 0 12px 6px; font-size: 9px; }
+    .table-body { border: 1px solid rgba(29,29,31,.05); border-radius: 9px; }
+    .table-body .table-row { min-height: 46px; padding: 7px 12px; font-size: 11px; }
+    .table-cell strong { font-size: 12px; }
+    .table-cell .subline { margin-top: 0; font-size: 9px; }
+    .badge { min-height: 22px; padding: 2px 7px; font-size: 9px; }
+
+    .pagination {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      box-shadow: none;
+    }
+
+    .page-button { min-width: 34px; height: 34px; border-radius: 8px; }
+
+    @media (max-width: 1180px) {
+      .search-card { grid-template-columns: minmax(220px, 1.4fr) repeat(2, minmax(135px, .7fr)); }
+      .search-card .field:nth-of-type(4) { grid-column: 1 / 2; }
+      .search-action { grid-column: 3 / 4; }
+      .panel-trigger { grid-template-columns: minmax(250px, 1.35fr) minmax(170px, .85fr) minmax(145px, .7fr) 34px; }
+      .panel-trigger > .metric-basic { display: none; }
+    }
+
+    @media (max-width: 1024px) {
+      :root { --sidebar-width: 72px; }
+      .side-brand { justify-content: center; padding: 0; }
+      .side-brand-copy, .side-label, .side-link span, .side-link .nav-chevron, .subnav, .user-meta { display: none; }
+      .side-scroll { padding: 14px 10px; }
+      .side-link { min-height: 44px; padding: 0; justify-content: center; }
+      .side-user { justify-content: center; padding: 11px 0; }
+      main { padding-left: 20px; padding-right: 20px; }
+    }
+
+    @media (max-width: 900px) and (min-width: 761px) {
+      .panel-trigger {
+        grid-template-columns: minmax(220px, 1.2fr) minmax(130px, .72fr) minmax(120px, .65fr) 30px;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root { --sidebar-width: 0px; }
+      body { font-size: 14px; }
+      .sidebar { display: none; }
+      .topbar { left: 0; }
+      .nav { padding: 0 16px; }
+      .breadcrumb, .top-user, .top-divider { display: none; }
+      .mobile-brand { display: flex; }
+      .top-tools { margin-left: auto; }
+      main { margin-left: 0; padding: calc(var(--topbar-height) + 17px) 14px 30px; }
+      .page-head { align-items: flex-start; margin-bottom: 14px; gap: 12px; }
+      h1 { font-size: 22px; }
+      .head-copy { max-width: 250px; }
+      .summary-note { align-self: flex-end; }
+      .search-card { grid-template-columns: 1fr 1fr; padding: 8px; }
+      .search-card .field:first-child { grid-column: 1 / -1; }
+      .search-card .field:nth-of-type(4) { grid-column: auto; }
+      .search-action { grid-column: 1 / -1; }
+      .control { font-size: 16px; }
+      .panel-trigger { min-height: 0; padding: 13px 14px; gap: 13px 10px; }
+      .goods-identity { grid-template-columns: 38px minmax(0,1fr); padding-right: 42px; }
+      .goods-icon { width: 38px; height: 38px; }
+      .chevron { top: 13px; right: 14px; }
+      .panel-trigger > .metric-stock, .panel-trigger > .metric-price { padding-top: 10px; }
+      .panel-body { margin: 0 12px 12px; }
+      .pagination { margin-top: 12px; }
+      .page-button { min-width: 40px; height: 40px; }
+    }
+
+    @media (max-width: 430px) {
+      .page-head { flex-direction: column; }
+      .summary-note { align-self: auto; }
+      .search-card { grid-template-columns: 1fr; }
+      .search-card .field, .search-card .field:first-child, .search-card .field:nth-of-type(4), .search-action { grid-column: 1; }
+    }
+
+    /* Apple-inspired material and interaction layer */
+    :root {
+      --bg: #f5f5f7;
+      --ink: #1d1d1f;
+      --ink-2: rgba(60, 60, 67, .72);
+      --ink-3: rgba(60, 60, 67, .52);
+      --line: rgba(60, 60, 67, .105);
+      --line-strong: rgba(60, 60, 67, .18);
+      --red: #d83229;
+      --red-dark: #b92720;
+      --red-soft: rgba(216, 50, 41, .09);
+      --focus: 0 0 0 3px rgba(216, 50, 41, .18);
+      --shadow-sm: 0 .5px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(0,0,0,.025), 0 4px 14px rgba(0,0,0,.025);
+      --shadow-md: 0 .5px 0 rgba(255,255,255,.92) inset, 0 8px 28px rgba(0,0,0,.07), 0 2px 7px rgba(0,0,0,.035);
+      --ease-spring: cubic-bezier(.22, .82, .23, 1);
+    }
+
+    body {
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-optical-sizing: auto;
+    }
+
+    .sidebar {
+      background: rgba(239, 239, 243, .84);
+      border-right-color: rgba(60, 60, 67, .12);
+      box-shadow: .5px 0 0 rgba(255,255,255,.7) inset;
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
+    }
+
+    .side-brand { border-bottom-color: rgba(60,60,67,.1); }
+
+    .brand-mark {
+      background: linear-gradient(145deg, #f4554d 0%, #c9231b 100%);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.4) inset, 0 2px 5px rgba(155,20,15,.2);
+    }
+
+    .side-brand-name { font-weight: 680; letter-spacing: -.025em; }
+    .side-brand-sub { color: rgba(60,60,67,.48); }
+    .side-label { color: rgba(60,60,67,.44); font-weight: 600; }
+
+    .side-link {
+      color: rgba(29,29,31,.68);
+      border-radius: 8px;
+      transition: color 140ms ease-out, background-color 140ms ease-out, transform 90ms ease-out;
+    }
+
+    .side-link:hover { color: var(--ink); background: rgba(255,255,255,.54); }
+    .side-link:active { background: rgba(60,60,67,.09); transform: scale(.985); }
+    .side-link.parent-active { color: var(--ink); }
+    .side-link.parent-active > svg:first-child { color: var(--red); }
+    .subnav::before { background: rgba(60,60,67,.14); }
+    .sub-link { color: rgba(29,29,31,.65); border-radius: 7px; }
+    .sub-link:hover { background: rgba(255,255,255,.5); }
+    .sub-link.active { color: var(--red-dark); background: rgba(216,50,41,.105); box-shadow: 0 .5px 0 rgba(255,255,255,.65) inset; }
+
+    .side-user {
+      margin-bottom: 10px;
+      padding: 9px 10px;
+      background: rgba(255,255,255,.4);
+      border: .5px solid rgba(255,255,255,.7);
+      border-radius: 10px;
+      box-shadow: 0 .5px 0 rgba(60,60,67,.09);
+    }
+
+    .user-avatar {
+      color: rgba(255,255,255,.96);
+      background: linear-gradient(150deg, #626269, #2e2e33);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.24) inset;
+    }
+
+    .topbar {
+      background: rgba(248, 248, 250, .78);
+      border-bottom-color: rgba(60,60,67,.1);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.82) inset;
+      backdrop-filter: blur(26px) saturate(180%);
+      -webkit-backdrop-filter: blur(26px) saturate(180%);
+    }
+
+    .breadcrumb { color: rgba(60,60,67,.54); }
+    .breadcrumb strong { font-weight: 620; }
+    .sync-state {
+      padding: 5px 8px;
+      background: rgba(255,255,255,.5);
+      border: .5px solid rgba(60,60,67,.08);
+      border-radius: 999px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.8) inset;
+    }
+
+    .sync-dot { box-shadow: 0 0 0 3px rgba(19,138,82,.085); }
+
+    h1 { font-weight: 680; letter-spacing: -.035em; }
+    .head-copy { color: rgba(60,60,67,.67); }
+    .summary-note strong { font-weight: 660; }
+
+    .search-card {
+      background: rgba(255,255,255,.7);
+      border-color: rgba(255,255,255,.82);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.96) inset, 0 0 0 .5px rgba(60,60,67,.075), 0 8px 24px rgba(0,0,0,.035);
+      backdrop-filter: blur(22px) saturate(175%);
+      -webkit-backdrop-filter: blur(22px) saturate(175%);
+    }
+
+    .control {
+      background-color: rgba(118,118,128,.075);
+      border-color: transparent;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.7) inset;
+    }
+
+    .control:hover { background-color: rgba(118,118,128,.105); }
+    .control:focus-visible { background-color: rgba(255,255,255,.94); border-color: rgba(216,50,41,.42); box-shadow: var(--focus); }
+    .field-label { color: rgba(60,60,67,.52); font-weight: 600; }
+    .field-icon { color: rgba(60,60,67,.46); }
+
+    .search-action {
+      background: var(--red);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.35) inset, 0 2px 6px rgba(173,30,24,.18);
+      transition: transform 90ms ease-out, filter 140ms ease-out, box-shadow 140ms ease-out;
+    }
+
+    .search-action:hover { background: var(--red); filter: brightness(.96); }
+    .search-action:active { transform: scale(.965); filter: brightness(.91); }
+    .search-action:focus-visible { box-shadow: 0 0 0 3px rgba(216,50,41,.2), 0 2px 6px rgba(173,30,24,.18); }
+    .reset-button:hover { background: rgba(118,118,128,.09); }
+
+    .goods-panel {
+      background: rgba(255,255,255,.92);
+      border-color: rgba(60,60,67,.095);
+      box-shadow: var(--shadow-sm);
+      transition: border-color 150ms ease-out, box-shadow 260ms var(--ease-spring), transform 150ms ease-out;
+    }
+
+    .goods-panel:hover { border-color: rgba(60,60,67,.15); box-shadow: 0 .5px 0 rgba(255,255,255,.95) inset, 0 2px 8px rgba(0,0,0,.04); }
+    .goods-panel.is-open { background: #fff; border-color: rgba(60,60,67,.13); box-shadow: var(--shadow-md); }
+    .panel-trigger:hover { background: rgba(118,118,128,.035); }
+    .panel-trigger:active { background: rgba(118,118,128,.07); }
+
+    .goods-icon {
+      background: rgba(216,50,41,.075);
+      box-shadow: 0 0 0 .5px rgba(216,50,41,.08) inset, 0 .5px 0 rgba(255,255,255,.85);
+    }
+
+    .goods-name { font-weight: 650; letter-spacing: -.018em; }
+    .metric-label { color: rgba(60,60,67,.5); font-weight: 600; letter-spacing: .025em; }
+    .metric-value { font-weight: 640; }
+
+    .chevron {
+      color: rgba(60,60,67,.64);
+      background: rgba(118,118,128,.09);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.8) inset;
+    }
+
+    .is-open .chevron { color: var(--red); background: rgba(216,50,41,.09); transform: rotate(180deg); }
+    .panel-collapse-inner { transform: translateY(-3px); transition: transform 260ms var(--ease-spring); }
+    .goods-panel.is-open .panel-collapse-inner { transform: translateY(0); }
+    .panel-body { border-top-color: rgba(60,60,67,.1); }
+    .detail-hint { color: rgba(60,60,67,.48); }
+
+    .table-body {
+      background: rgba(118,118,128,.055);
+      border-color: rgba(60,60,67,.055);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.8) inset;
+    }
+
+    .table-body .table-row { border-bottom-color: rgba(60,60,67,.09); }
+    .table-body .table-row:hover { background: rgba(255,255,255,.54); }
+
+    .pagination {
+      background: rgba(255,255,255,.68);
+      border-color: rgba(255,255,255,.82);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.95) inset, 0 0 0 .5px rgba(60,60,67,.075), 0 5px 16px rgba(0,0,0,.025);
+      backdrop-filter: blur(18px) saturate(170%);
+      -webkit-backdrop-filter: blur(18px) saturate(170%);
+    }
+
+    .page-button:hover:not(:disabled) { background: rgba(118,118,128,.09); }
+    .page-button[aria-current="page"] { background: var(--red); box-shadow: 0 .5px 0 rgba(255,255,255,.3) inset, 0 2px 5px rgba(173,30,24,.16); }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .sidebar, .topbar, .search-card, .pagination { background: #f7f7f9; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .goods-panel { background: #fff; }
+    }
+
+    @media (prefers-contrast: more) {
+      .sidebar, .topbar, .search-card, .pagination, .goods-panel { border-color: rgba(29,29,31,.32); background: #fff; }
+      .control { border-color: rgba(29,29,31,.26); }
+    }
+
+    @media (max-width: 760px) {
+      .top-tools { display: none; }
+    }
+
+    /* Accordion summary information regrouping */
+    .panel-trigger {
+      grid-template-columns: minmax(420px, 1.55fr) minmax(150px, .62fr) minmax(220px, .82fr) 30px;
+      grid-template-areas: "identity price stock chevron";
+      gap: 16px;
+    }
+
+    .goods-identity { grid-area: identity; }
+    .panel-trigger > .metric-basic { display: none; }
+    .panel-trigger > .metric-price { grid-area: price; }
+    .panel-trigger > .metric-stock {
+      grid-area: stock;
+      min-width: 0;
+      padding-left: 16px;
+      border-left: 1px solid rgba(60, 60, 67, .1);
+    }
+
+    .panel-trigger > .chevron { grid-area: chevron; }
+
+    .goods-meta .meta-stat {
+      color: rgba(29, 29, 31, .7);
+      font-weight: 560;
+      white-space: nowrap;
+    }
+
+    .stock-row {
+      justify-content: flex-start;
+      gap: 9px;
+    }
+
+    .status-text {
+      min-height: 21px;
+      padding: 2px 7px;
+      flex: 0 0 auto;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0;
+      white-space: nowrap;
+      background: color-mix(in srgb, currentColor 9%, transparent);
+      border-radius: 999px;
+    }
+
+    .status-text::before { width: 5px; height: 5px; }
+
+    @media (max-width: 1180px) {
+      .panel-trigger {
+        grid-template-columns: minmax(280px, 1.4fr) minmax(140px, .65fr) minmax(190px, .85fr) 30px;
+        grid-template-areas: "identity price stock chevron";
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 900px) and (min-width: 761px) {
+      .panel-trigger {
+        grid-template-columns: minmax(240px, 1.25fr) minmax(120px, .65fr) minmax(165px, .8fr) 30px;
+        grid-template-areas: "identity price stock chevron";
+        gap: 10px;
+      }
+
+      .panel-trigger > .metric-stock { padding-left: 11px; }
+    }
+
+    @media (max-width: 760px) {
+      .panel-trigger {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas: "identity identity" "stock price";
+        gap: 13px 10px;
+      }
+
+      .goods-identity { grid-area: identity; }
+      .panel-trigger > .metric-stock { grid-area: stock; padding-left: 0; border-left: 0; }
+      .panel-trigger > .metric-price { grid-area: price; }
+      .panel-trigger > .chevron { grid-area: auto; }
+      .status-text { font-size: 13px; }
+    }
+
+    /* Readable 14px type scale */
+    :root {
+      --type-caption: 12px;
+      --type-small: 13px;
+      --type-base: 14px;
+      --type-medium: 15px;
+      --type-title: 16px;
+      --type-page: 28px;
+    }
+
+    html { font-size: var(--type-base); }
+
+    body {
+      font-size: var(--type-base);
+      line-height: 1.5;
+    }
+
+    .side-brand-name { font-size: var(--type-title); }
+    .side-brand-sub,
+    .side-label,
+    .user-meta span { font-size: var(--type-caption); }
+    .side-link { min-height: 42px; font-size: var(--type-base); }
+    .sub-link { min-height: 36px; font-size: var(--type-small); }
+    .user-meta strong { font-size: var(--type-base); }
+    .breadcrumb,
+    .top-user,
+    .sync-state { font-size: var(--type-small); }
+    .mobile-brand { font-size: var(--type-base); }
+
+    h1 {
+      font-size: var(--type-page);
+      line-height: 1.16;
+    }
+
+    .head-copy {
+      font-size: var(--type-base);
+      line-height: 1.5;
+    }
+
+    .summary-note strong { font-size: 17px; }
+    .summary-note span { font-size: var(--type-small); }
+    .summary-note small { font-size: var(--type-small) !important; }
+
+    .field-label {
+      top: 6px;
+      font-size: var(--type-caption);
+      line-height: 1.2;
+    }
+
+    .control {
+      height: 48px;
+      font-size: var(--type-base);
+    }
+
+    input.control { padding: 22px 12px 4px 39px; }
+    select.control { padding: 22px 32px 4px 12px; }
+    .search-action { height: 48px; font-size: var(--type-base); }
+    .result-copy,
+    .reset-button { font-size: var(--type-small); }
+
+    .panel-trigger { min-height: 88px; }
+    .goods-name {
+      font-size: var(--type-title);
+      line-height: 1.28;
+    }
+
+    .goods-meta {
+      font-size: var(--type-caption);
+      line-height: 1.45;
+    }
+
+    .metric-label { font-size: var(--type-caption); }
+    .metric-value { font-size: var(--type-medium); }
+    .metric-sub { font-size: var(--type-caption); }
+    .status-text {
+      min-height: 25px;
+      padding: 3px 8px;
+      font-size: var(--type-medium);
+    }
+
+    .detail-title { font-size: var(--type-base); }
+    .detail-hint { font-size: var(--type-caption); }
+    .table-head { font-size: var(--type-caption); }
+    .table-body .table-row {
+      min-height: 52px;
+      font-size: var(--type-base);
+    }
+
+    .table-cell strong { font-size: var(--type-base); }
+    .table-cell .subline { font-size: var(--type-caption); }
+    .badge {
+      min-height: 24px;
+      font-size: var(--type-caption);
+    }
+
+    .pagination-info,
+    .page-button { font-size: var(--type-small); }
+    .empty-state p { font-size: var(--type-base); }
+
+    @media (max-width: 760px) {
+      .control { font-size: 16px; }
+      .goods-meta { font-size: var(--type-small); }
+      .status-text { font-size: var(--type-medium); }
+    }
+
+    /* Inventory and price summary group */
+    .search-card {
+      grid-template-columns: minmax(220px, 1.55fr) repeat(2, minmax(125px, .62fr)) auto;
+    }
+
+    .panel-trigger {
+      grid-template-columns: minmax(320px, 1fr) minmax(390px, 430px) 30px;
+      grid-template-areas: "identity summary chevron";
+      gap: 18px;
+    }
+
+    .panel-summary {
+      grid-area: summary;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr);
+      align-items: stretch;
+      overflow: hidden;
+      background: rgba(118, 118, 128, .055);
+      border: 1px solid rgba(60, 60, 67, .075);
+      border-radius: 11px;
+    }
+
+    .panel-summary .metric-stock,
+    .panel-summary .metric-price {
+      min-width: 0;
+      padding: 5px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .panel-summary .metric-stock {
+      border-left: 1px solid rgba(60, 60, 67, .1);
+    }
+
+    .panel-summary .metric-label {
+      margin-bottom: 1px;
+      line-height: 1.3;
+    }
+
+    .panel-summary .stock-row {
+      min-height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .panel-summary .metric-stock .metric-value {
+      min-height: 25px;
+      display: inline-flex;
+      align-items: center;
+      line-height: 25px;
+      white-space: nowrap;
+    }
+
+    .panel-summary .status-text {
+      height: 25px;
+      min-height: 25px;
+      padding: 0 8px;
+      align-items: center;
+      box-sizing: border-box;
+      line-height: 1;
+      border: 1px solid color-mix(in srgb, currentColor 13%, transparent);
+    }
+
+    .panel-summary .metric-price .metric-value,
+    .panel-summary .metric-price .metric-sub { white-space: nowrap; }
+    .panel-summary .metric-price .metric-sub { margin-top: 0; line-height: 1.3; }
+
+    .table-row {
+      grid-template-columns: 1.15fr 1fr 1.15fr .72fr .84fr .84fr .65fr;
+    }
+
+    @media (max-width: 1180px) {
+      .search-card {
+        grid-template-columns: minmax(220px, 1.55fr) repeat(2, minmax(125px, .62fr)) auto;
+      }
+
+      .search-action { grid-column: auto; }
+
+      .panel-trigger {
+        grid-template-columns: minmax(250px, 1fr) minmax(350px, 410px) 30px;
+        grid-template-areas: "identity summary chevron";
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 1050px) and (min-width: 761px) {
+      .table-row {
+        grid-template-columns: 1.15fr 1fr .72fr .84fr .84fr .65fr;
+      }
+    }
+
+    @media (max-width: 900px) and (min-width: 761px) {
+      .panel-trigger {
+        grid-template-columns: minmax(215px, 1fr) minmax(330px, 1.35fr) 30px;
+        grid-template-areas: "identity summary chevron";
+        gap: 10px;
+      }
+
+      .panel-summary .metric-stock,
+      .panel-summary .metric-price { padding-inline: 10px; }
+    }
+
+    @media (max-width: 760px) {
+      .search-card { grid-template-columns: 1fr 1fr; }
+      .search-card .field:first-child { grid-column: 1 / -1; }
+      .search-action { grid-column: 1 / -1; }
+
+      .panel-trigger {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "identity" "summary";
+        gap: 12px;
+      }
+
+      .panel-summary { width: 100%; }
+      .panel-summary .metric-stock,
+      .panel-summary .metric-price { padding: 8px 10px; }
+      .panel-summary .status-text { font-size: var(--type-small); }
+    }
+
+    @media (max-width: 430px) {
+      .search-card { grid-template-columns: 1fr; }
+      .search-card .field,
+      .search-card .field:first-child,
+      .search-action { grid-column: 1; }
+
+      .panel-summary { grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr); }
+      .panel-summary .stock-row { gap: 6px; }
+      .panel-summary .metric-stock,
+      .panel-summary .metric-price { padding-inline: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+
+  <aside class="sidebar" aria-label="主导航">
+    <div class="side-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3c2.5 3 5.2 5.5 5.2 9.1A5.2 5.2 0 0 1 12 17.3a5.2 5.2 0 0 1-5.2-5.2C6.8 9.7 8 7.5 9.4 6c.2 2 1 3.1 2 3.7.7-2.7.4-4.7.6-6.7Z"/><path d="M5 21h14"/>
+        </svg>
+      </span>
+      <span class="side-brand-copy"><span class="side-brand-name">燧安进销存</span><span class="side-brand-sub">消防器材管理系统</span></span>
+    </div>
+    <div class="side-scroll">
+      <p class="side-label">工作台</p>
+      <nav class="side-nav" aria-label="业务模块">
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+          <span>经营概览</span>
+        </a>
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v13H4z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/><path d="M9 12h6"/></svg>
+          <span>采购管理</span>
+        </a>
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="19" cy="20" r="1"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 8H7"/></svg>
+          <span>销售管理</span>
+        </a>
+        <a class="side-link parent-active" href="#goods-list" aria-expanded="true">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg>
+          <span>库存管理</span>
+          <svg class="nav-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+        <div class="subnav">
+          <a class="sub-link active" href="#goods-list" aria-current="page">货物列表</a>
+          <a class="sub-link" href="#">库存盘点</a>
+          <a class="sub-link" href="#">仓库调拨</a>
+          <a class="sub-link" href="#">出入库记录</a>
+        </div>
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v15H4z"/><path d="M8 5V3h8v2M8 10h8M8 14h5"/></svg>
+          <span>基础资料</span>
+        </a>
+      </nav>
+    </div>
+    <div class="side-user" aria-label="当前用户：仓库管理员">
+      <span class="user-avatar" aria-hidden="true">陈</span>
+      <span class="user-meta"><strong>陈晓峰</strong><span>仓库管理员</span></span>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <nav class="nav" aria-label="顶部工具栏">
+      <div class="mobile-brand">
+        <span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3c2.5 3 5.2 5.5 5.2 9.1A5.2 5.2 0 0 1 12 17.3a5.2 5.2 0 0 1-5.2-5.2C6.8 9.7 8 7.5 9.4 6c.2 2 1 3.1 2 3.7.7-2.7.4-4.7.6-6.7Z"/></svg></span>
+        <span>燧安进销存</span>
+      </div>
+      <div class="breadcrumb" aria-label="当前位置">
+        <span>库存管理</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+        <strong>货物列表</strong>
+      </div>
+      <div class="top-tools">
+        <div class="sync-state" aria-label="库存数据状态：已同步"><span class="sync-dot" aria-hidden="true"></span><span>库存数据已同步</span></div>
+        <span class="top-divider" aria-hidden="true"></span>
+        <div class="top-user"><span class="user-avatar" aria-hidden="true">陈</span><span>仓库管理员</span></div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="page-head" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Inventory catalog</p>
+        <h1 id="page-title">货物列表</h1>
+        <p class="head-copy">集中查看消防器材的规格、各品牌库存与价格，让每一次补货判断都有清晰依据。</p>
+      </div>
+      <div class="summary-note" aria-label="货物统计">
+        <strong>128 <small style="font-size:12px;font-weight:600;color:var(--ink-3)">类</small></strong>
+        <span>更新于今天 09:42</span>
+      </div>
+    </section>
+
+    <form class="search-card" id="search-form" aria-label="货物搜索与筛选">
+      <div class="field">
+        <label class="field-label" for="keyword">搜索货物</label>
+        <svg class="field-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path>
+        </svg>
+        <input class="control" id="keyword" type="search" autocomplete="off" placeholder="名称、规格或货号">
+      </div>
+      <div class="field">
+        <label class="field-label select-label" for="category">货物分类</label>
+        <select class="control" id="category">
+          <option value="">全部分类</option>
+          <option value="灭火器材">灭火器材</option>
+          <option value="消防水带">消防水带</option>
+          <option value="报警设备">报警设备</option>
+          <option value="应急照明">应急照明</option>
+          <option value="消防防护">消防防护</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label select-label" for="stock">库存状态</label>
+        <select class="control" id="stock">
+          <option value="">全部状态</option>
+          <option value="充足">库存充足</option>
+          <option value="偏低">库存偏低</option>
+          <option value="缺货">部分缺货</option>
+        </select>
+      </div>
+      <button class="search-action" type="submit">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        查询货物
+      </button>
+    </form>
+
+    <div class="result-bar">
+      <div class="result-copy" aria-live="polite">共找到 <strong id="result-count">5</strong> 类货物 · 默认按库存状态排序</div>
+      <button class="reset-button" id="reset-button" type="button">
+        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
+        重置筛选
+      </button>
+    </div>
+
+    <section class="goods-list" id="goods-list" aria-label="货物列表">
+      <article class="goods-panel is-open" data-category="灭火器材" data-stock="充足" data-keywords="手提式干粉灭火器 mfz abc 5kg 器材">
+        <button class="panel-trigger" type="button" aria-expanded="true" aria-controls="panel-1">
+          <div class="goods-identity">
+            <span class="goods-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg>
+            </span>
+            <span>
+              <span class="goods-name">手提式干粉灭火器</span>
+              <span class="goods-meta"><span>MFZ/ABC 5kg</span><span class="meta-divider">·</span><span>货号 FE-0105</span><span class="meta-divider">·</span><span class="meta-stat">4 个品牌</span><span class="meta-divider">·</span><span>单位：具</span></span>
+            </span>
+          </div>
+          <div class="panel-summary" aria-label="库存与价格摘要">
+            <div class="metric-price">
+              <span class="metric-label">销售价区间</span>
+              <span class="metric-value">¥68–98</span>
+              <span class="metric-sub">均价 ¥82.50</span>
+            </div>
+            <div class="metric-stock">
+              <span class="metric-label">可用库存</span>
+              <span class="stock-row"><span class="metric-value">1,286 具</span><span class="status-text">充足</span></span>
+            </div>
+          </div>
+          <span class="chevron" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="panel-collapse" id="panel-1">
+          <div class="panel-collapse-inner">
+            <div class="panel-body">
+              <div class="detail-head"><h2 class="detail-title">品牌库存明细</h2><span class="detail-hint">价格含税 · 库存实时汇总</span></div>
+              <div class="brand-table" role="table" aria-label="手提式干粉灭火器品牌库存明细">
+                <div class="table-row table-head" role="row"><span>品牌 / 产地</span><span>型号</span><span>认证编号</span><span>可用</span><span>进货价</span><span>销售价</span><span>状态</span></div>
+                <div class="table-body">
+                  <div class="table-row" role="row">
+                    <span class="table-cell" data-label="品牌 / 产地"><strong>淮海</strong><span class="subline">江苏徐州</span></span><span class="table-cell" data-label="型号">MFZ/ABC5</span><span class="table-cell" data-label="认证编号">202308181100</span><span class="table-cell number stock-count" data-label="可用">486 具</span><span class="table-cell number" data-label="进货价">¥52.00</span><span class="table-cell number" data-label="销售价">¥78.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span>
+                  </div>
+                  <div class="table-row" role="row">
+                    <span class="table-cell" data-label="品牌 / 产地"><strong>桂安</strong><span class="subline">广东广州</span></span><span class="table-cell" data-label="型号">MFZ/ABC5-A</span><span class="table-cell" data-label="认证编号">202408180233</span><span class="table-cell number stock-count" data-label="可用">358 具</span><span class="table-cell number" data-label="进货价">¥48.50</span><span class="table-cell number" data-label="销售价">¥72.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span>
+                  </div>
+                  <div class="table-row" role="row">
+                    <span class="table-cell" data-label="品牌 / 产地"><strong>江荆</strong><span class="subline">湖北荆州</span></span><span class="table-cell" data-label="型号">MFZ/ABC5</span><span class="table-cell" data-label="认证编号">202208180921</span><span class="table-cell number stock-count" data-label="可用">284 具</span><span class="table-cell number" data-label="进货价">¥45.00</span><span class="table-cell number" data-label="销售价">¥68.00</span><span class="table-cell" data-label="状态"><span class="badge info">项目预留</span></span>
+                  </div>
+                  <div class="table-row" role="row">
+                    <span class="table-cell" data-label="品牌 / 产地"><strong>浙安</strong><span class="subline">浙江宁波</span></span><span class="table-cell" data-label="型号">MFZ/ABC5-Z</span><span class="table-cell" data-label="认证编号">202408181065</span><span class="table-cell number stock-count" data-label="可用">158 具</span><span class="table-cell number" data-label="进货价">¥69.00</span><span class="table-cell number" data-label="销售价">¥98.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="goods-panel" data-category="消防水带" data-stock="偏低" data-keywords="有衬里消防水带 8 65 25m 聚氨酯">
+        <button class="panel-trigger" type="button" aria-expanded="false" aria-controls="panel-2">
+          <div class="goods-identity">
+            <span class="goods-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="4"></circle><path d="M20 12h2v5h-5"></path></svg></span>
+            <span><span class="goods-name">有衬里消防水带</span><span class="goods-meta"><span>8-65-25m</span><span class="meta-divider">·</span><span>货号 HD-6525</span><span class="meta-divider">·</span><span class="meta-stat">3 个品牌</span><span class="meta-divider">·</span><span>单位：盘</span></span></span>
+          </div>
+          <div class="panel-summary" aria-label="库存与价格摘要"><div class="metric-price"><span class="metric-label">销售价区间</span><span class="metric-value">¥178–236</span><span class="metric-sub">均价 ¥205.00</span></div><div class="metric-stock"><span class="metric-label">可用库存</span><span class="stock-row"><span class="metric-value">174 盘</span><span class="status-text" style="--status-color:var(--orange)">偏低</span></span></div></div>
+          <span class="chevron" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="panel-collapse" id="panel-2"><div class="panel-collapse-inner"><div class="panel-body">
+          <div class="detail-head"><h2 class="detail-title">品牌库存明细</h2><span class="detail-hint">价格含税 · 库存实时汇总</span></div>
+          <div class="brand-table" role="table" aria-label="有衬里消防水带品牌库存明细"><div class="table-row table-head" role="row"><span>品牌 / 产地</span><span>型号</span><span>认证编号</span><span>可用</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="table-body">
+            <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>沱雨</strong><span class="subline">四川成都</span></span><span class="table-cell" data-label="型号">8-65-25</span><span class="table-cell" data-label="认证编号">202311180641</span><span class="table-cell number stock-count" data-label="可用">102 盘</span><span class="table-cell number" data-label="进货价">¥142.00</span><span class="table-cell number" data-label="销售价">¥198.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span></div>
+            <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>三江</strong><span class="subline">福建泉州</span></span><span class="table-cell" data-label="型号">8-65-25-T</span><span class="table-cell" data-label="认证编号">202211180285</span><span class="table-cell number stock-count low" data-label="可用">46 盘</span><span class="table-cell number" data-label="进货价">¥130.00</span><span class="table-cell number" data-label="销售价">¥178.00</span><span class="table-cell" data-label="状态"><span class="badge warning">偏低</span></span></div>
+            <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>水花</strong><span class="subline">浙江绍兴</span></span><span class="table-cell" data-label="型号">8-65-25-PU</span><span class="table-cell" data-label="认证编号">202411180052</span><span class="table-cell number stock-count low" data-label="可用">26 盘</span><span class="table-cell number" data-label="进货价">¥172.00</span><span class="table-cell number" data-label="销售价">¥236.00</span><span class="table-cell" data-label="状态"><span class="badge warning">需补货</span></span></div>
+          </div></div>
+        </div></div></div>
+      </article>
+
+      <article class="goods-panel" data-category="报警设备" data-stock="充足" data-keywords="点型光电感烟火灾探测器 烟感 jty gd">
+        <button class="panel-trigger" type="button" aria-expanded="false" aria-controls="panel-3">
+          <div class="goods-identity"><span class="goods-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14l-1.4-7.2A4 4 0 0 0 13.7 5h-3.4a4 4 0 0 0-3.9 3.8L5 16Z"></path><path d="M3 16h18"></path><path d="M9 20h6"></path><path d="M12 2v1"></path></svg></span><span><span class="goods-name">点型光电感烟火灾探测器</span><span class="goods-meta"><span>独立式 / 联动型</span><span class="meta-divider">·</span><span>货号 AL-2201</span><span class="meta-divider">·</span><span class="meta-stat">3 个品牌</span><span class="meta-divider">·</span><span>单位：只</span></span></span></div>
+          <div class="panel-summary" aria-label="库存与价格摘要"><div class="metric-price"><span class="metric-label">销售价区间</span><span class="metric-value">¥42–168</span><span class="metric-sub">均价 ¥96.00</span></div><div class="metric-stock"><span class="metric-label">可用库存</span><span class="stock-row"><span class="metric-value">926 只</span><span class="status-text">充足</span></span></div></div>
+          <span class="chevron" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="panel-collapse" id="panel-3"><div class="panel-collapse-inner"><div class="panel-body"><div class="detail-head"><h2 class="detail-title">品牌库存明细</h2><span class="detail-hint">价格含税 · 库存实时汇总</span></div><div class="brand-table" role="table" aria-label="烟感探测器品牌库存明细"><div class="table-row table-head" role="row"><span>品牌 / 产地</span><span>型号</span><span>认证编号</span><span>可用</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="table-body">
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>海湾</strong><span class="subline">河北秦皇岛</span></span><span class="table-cell" data-label="型号">JTY-GD-G3X</span><span class="table-cell" data-label="认证编号">202301180431</span><span class="table-cell number stock-count" data-label="可用">436 只</span><span class="table-cell number" data-label="进货价">¥102.00</span><span class="table-cell number" data-label="销售价">¥168.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span></div>
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>青鸟消防</strong><span class="subline">河北张家口</span></span><span class="table-cell" data-label="型号">JBF5100</span><span class="table-cell" data-label="认证编号">202201180176</span><span class="table-cell number stock-count" data-label="可用">298 只</span><span class="table-cell number" data-label="进货价">¥79.00</span><span class="table-cell number" data-label="销售价">¥126.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span></div>
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>凌防</strong><span class="subline">广东深圳</span></span><span class="table-cell" data-label="型号">LF-SD01</span><span class="table-cell" data-label="认证编号">202401180088</span><span class="table-cell number stock-count" data-label="可用">192 只</span><span class="table-cell number" data-label="进货价">¥28.00</span><span class="table-cell number" data-label="销售价">¥42.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span></div>
+        </div></div></div></div></div></div>
+      </article>
+
+      <article class="goods-panel" data-category="应急照明" data-stock="缺货" data-keywords="消防应急照明灯 led 双头 应急灯">
+        <button class="panel-trigger" type="button" aria-expanded="false" aria-controls="panel-4">
+          <div class="goods-identity"><span class="goods-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9h10v11H7z"></path><path d="m8 9-3-4 3-2 3 6"></path><path d="m16 9 3-4-3-2-3 6"></path><path d="M10 13h4"></path><path d="M12 13v4"></path></svg></span><span><span class="goods-name">消防应急照明灯</span><span class="goods-meta"><span>LED 双头 / 3W</span><span class="meta-divider">·</span><span>货号 EL-0032</span><span class="meta-divider">·</span><span class="meta-stat">4 个品牌</span><span class="meta-divider">·</span><span>单位：台</span></span></span></div>
+          <div class="panel-summary" aria-label="库存与价格摘要"><div class="metric-price"><span class="metric-label">销售价区间</span><span class="metric-value">¥36–75</span><span class="metric-sub">均价 ¥52.80</span></div><div class="metric-stock"><span class="metric-label">可用库存</span><span class="stock-row"><span class="metric-value">86 台</span><span class="status-text" style="--status-color:var(--red)">部分缺货</span></span></div></div>
+          <span class="chevron" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="panel-collapse" id="panel-4"><div class="panel-collapse-inner"><div class="panel-body"><div class="detail-head"><h2 class="detail-title">品牌库存明细</h2><span class="detail-hint">价格含税 · 库存实时汇总</span></div><div class="brand-table" role="table" aria-label="消防应急照明灯品牌库存明细"><div class="table-row table-head" role="row"><span>品牌 / 产地</span><span>型号</span><span>认证编号</span><span>可用</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="table-body">
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>敏华</strong><span class="subline">广东江门</span></span><span class="table-cell" data-label="型号">M-ZFZD-E5W</span><span class="table-cell" data-label="认证编号">202319180112</span><span class="table-cell number stock-count" data-label="可用">54 台</span><span class="table-cell number" data-label="进货价">¥42.00</span><span class="table-cell number" data-label="销售价">¥75.00</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span></div>
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>劳士</strong><span class="subline">广东江门</span></span><span class="table-cell" data-label="型号">L-ZFZD-E3W</span><span class="table-cell" data-label="认证编号">202219180807</span><span class="table-cell number stock-count low" data-label="可用">24 台</span><span class="table-cell number" data-label="进货价">¥31.00</span><span class="table-cell number" data-label="销售价">¥52.00</span><span class="table-cell" data-label="状态"><span class="badge warning">偏低</span></span></div>
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>拿斯特</strong><span class="subline">浙江温州</span></span><span class="table-cell" data-label="型号">N-ZFZD-E3W</span><span class="table-cell" data-label="认证编号">202419180019</span><span class="table-cell number stock-count low" data-label="可用">8 台</span><span class="table-cell number" data-label="进货价">¥26.00</span><span class="table-cell number" data-label="销售价">¥42.00</span><span class="table-cell" data-label="状态"><span class="badge warning">需补货</span></span></div>
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>左向</strong><span class="subline">广东中山</span></span><span class="table-cell" data-label="型号">ZX-ZFZD-E3W</span><span class="table-cell" data-label="认证编号">202319180934</span><span class="table-cell number stock-count out" data-label="可用">0 台</span><span class="table-cell number" data-label="进货价">¥24.00</span><span class="table-cell number" data-label="销售价">¥36.00</span><span class="table-cell" data-label="状态"><span class="badge danger">缺货</span></span></div>
+        </div></div></div></div></div></div>
+      </article>
+
+      <article class="goods-panel" data-category="消防防护" data-stock="充足" data-keywords="消防员灭火防护服 五件套 阻燃 防护">
+        <button class="panel-trigger" type="button" aria-expanded="false" aria-controls="panel-5">
+          <div class="goods-identity"><span class="goods-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-5 3 3 5 2-1v11h6V10l2 1 3-5-5-3c0 1.7-1.3 3-3 3S9 4.7 9 3Z"></path><path d="M9 14h6"></path></svg></span><span><span class="goods-name">消防员灭火防护服</span><span class="goods-meta"><span>五件套 / 02 款</span><span class="meta-divider">·</span><span>货号 PF-0205</span><span class="meta-divider">·</span><span class="meta-stat">2 个品牌</span><span class="meta-divider">·</span><span>单位：套</span></span></span></div>
+          <div class="panel-summary" aria-label="库存与价格摘要"><div class="metric-price"><span class="metric-label">销售价区间</span><span class="metric-value">¥1,580–2,360</span><span class="metric-sub">均价 ¥1,920</span></div><div class="metric-stock"><span class="metric-label">可用库存</span><span class="stock-row"><span class="metric-value">132 套</span><span class="status-text">充足</span></span></div></div>
+          <span class="chevron" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="panel-collapse" id="panel-5"><div class="panel-collapse-inner"><div class="panel-body"><div class="detail-head"><h2 class="detail-title">品牌库存明细</h2><span class="detail-hint">价格含税 · 库存实时汇总</span></div><div class="brand-table" role="table" aria-label="消防员灭火防护服品牌库存明细"><div class="table-row table-head" role="row"><span>品牌 / 产地</span><span>型号</span><span>认证编号</span><span>可用</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="table-body">
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>东安</strong><span class="subline">江苏泰州</span></span><span class="table-cell" data-label="型号">ZFMH-DA</span><span class="table-cell" data-label="认证编号">202303181731</span><span class="table-cell number stock-count" data-label="可用">78 套</span><span class="table-cell number" data-label="进货价">¥1,260</span><span class="table-cell number" data-label="销售价">¥1,880</span><span class="table-cell" data-label="状态"><span class="badge">正常</span></span></div>
+          <div class="table-row" role="row"><span class="table-cell" data-label="品牌 / 产地"><strong>莱曼</strong><span class="subline">江西九江</span></span><span class="table-cell" data-label="型号">ZFMH-LM02</span><span class="table-cell" data-label="认证编号">202403181055</span><span class="table-cell number stock-count" data-label="可用">54 套</span><span class="table-cell number" data-label="进货价">¥1,680</span><span class="table-cell number" data-label="销售价">¥2,360</span><span class="table-cell" data-label="状态"><span class="badge info">项目预留</span></span></div>
+        </div></div></div></div></div></div>
+      </article>
+    </section>
+
+    <section class="empty-state" id="empty-state" hidden aria-live="polite">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path><path d="M8.5 11h5"></path></svg>
+      <h2>没有找到匹配的货物</h2>
+      <p>尝试更换关键词，或重置筛选条件后再次查询。</p>
+    </section>
+
+    <nav class="pagination" aria-label="货物列表分页">
+      <div class="pagination-info">第 <span id="current-page-label">1</span> / 13 页 · 每页 10 条 · 共 128 条</div>
+      <div class="page-controls">
+        <button class="page-button" id="prev-page" type="button" aria-label="上一页" disabled><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+        <button class="page-button page-number" type="button" aria-current="page" data-page="1">1</button>
+        <button class="page-button page-number" type="button" data-page="2">2</button>
+        <button class="page-button page-number" type="button" data-page="3">3</button>
+        <button class="page-button page-number hide-mobile" type="button" data-page="4">4</button>
+        <span class="page-ellipsis" aria-hidden="true">…</span>
+        <button class="page-button page-number" type="button" data-page="13">13</button>
+        <button class="page-button" id="next-page" type="button" aria-label="下一页"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+      </div>
+    </nav>
+  </main>
+
+  <script>
+    const panels = [...document.querySelectorAll('.goods-panel')];
+    const searchForm = document.getElementById('search-form');
+    const keywordInput = document.getElementById('keyword');
+    const categorySelect = document.getElementById('category');
+    const stockSelect = document.getElementById('stock');
+    const resultCount = document.getElementById('result-count');
+    const emptyState = document.getElementById('empty-state');
+    const pagination = document.querySelector('.pagination');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    panels.forEach((panel) => {
+      const trigger = panel.querySelector('.panel-trigger');
+      const collapse = panel.querySelector('.panel-collapse');
+      collapse.setAttribute('aria-hidden', String(!panel.classList.contains('is-open')));
+      trigger.addEventListener('click', () => {
+        const willOpen = !panel.classList.contains('is-open');
+        panel.classList.toggle('is-open', willOpen);
+        trigger.setAttribute('aria-expanded', String(willOpen));
+        collapse.setAttribute('aria-hidden', String(!willOpen));
+      });
+    });
+
+    function applyFilters() {
+      const keyword = keywordInput.value.trim().toLowerCase();
+      const category = categorySelect.value;
+      const stock = stockSelect.value;
+      let visible = 0;
+
+      panels.forEach((panel) => {
+        const copy = `${panel.dataset.keywords} ${panel.textContent}`.toLowerCase();
+        const matches = (!keyword || copy.includes(keyword)) &&
+          (!category || panel.dataset.category === category) &&
+          (!stock || panel.dataset.stock === stock);
+        panel.hidden = !matches;
+        if (matches) visible += 1;
+      });
+
+      resultCount.textContent = visible;
+      emptyState.hidden = visible !== 0;
+      pagination.hidden = visible === 0;
+    }
+
+    searchForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      applyFilters();
+      document.getElementById('goods-list').scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    document.getElementById('reset-button').addEventListener('click', () => {
+      searchForm.reset();
+      applyFilters();
+      keywordInput.focus();
+    });
+
+    let currentPage = 1;
+    const pageButtons = [...document.querySelectorAll('.page-number')];
+    const currentPageLabel = document.getElementById('current-page-label');
+    const prevPage = document.getElementById('prev-page');
+    const nextPage = document.getElementById('next-page');
+
+    function setPage(page) {
+      currentPage = Math.max(1, Math.min(13, page));
+      currentPageLabel.textContent = currentPage;
+      pageButtons.forEach((button) => {
+        const isCurrent = Number(button.dataset.page) === currentPage;
+        button.toggleAttribute('aria-current', isCurrent);
+        if (isCurrent) button.setAttribute('aria-current', 'page');
+      });
+      prevPage.disabled = currentPage === 1;
+      nextPage.disabled = currentPage === 13;
+    }
+
+    pageButtons.forEach((button) => button.addEventListener('click', () => setPage(Number(button.dataset.page))));
+    prevPage.addEventListener('click', () => setPage(currentPage - 1));
+    nextPage.addEventListener('click', () => setPage(currentPage + 1));
+  </script>
+</body>
+</html>
