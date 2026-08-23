@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>货物详情 · 燧安库存</title>
+  <link rel="stylesheet" href="css/common.css">
+  <style>
+    .content-breadcrumb {
+      min-height: 28px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .content-breadcrumb a {
+      padding: 4px 2px;
+      color: var(--ink-2);
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .content-breadcrumb a:hover { color: var(--ink); }
+    .content-breadcrumb a:focus-visible { outline: none; box-shadow: var(--focus); }
+    .content-breadcrumb svg { color: #b7b7bc; }
+
+    .page-head {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      color: var(--red-deep);
+      font-size: var(--type-base);
+      font-weight: 720;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      background: var(--red);
+      border-radius: 999px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(var(--type-title), 3vw, var(--type-display));
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+      font-weight: 720;
+    }
+
+    .head-copy {
+      margin: 10px 0 0;
+      color: var(--ink-2);
+      font-size: var(--type-base);
+    }
+
+    .head-status {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, .58);
+      border: 1px solid rgba(255, 255, 255, .82);
+      border-radius: 15px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .head-code span,
+    .head-code strong { display: block; }
+    .head-code span { color: var(--ink-3); font-size: var(--type-base); }
+    .head-code strong { margin-top: 2px; font-size: var(--type-emphasis); font-weight: 680; font-variant-numeric: tabular-nums; }
+
+    .status-badge {
+      min-height: 26px;
+      padding: 4px 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      background: var(--green-soft);
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    .detail-panel,
+    .inventory-panel {
+      background: var(--surface-solid);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .detail-panel { padding: 24px 26px 26px; }
+
+    .panel-heading {
+      margin-bottom: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .panel-heading h2,
+    .inventory-heading h2 {
+      margin: 0;
+      font-size: var(--type-section);
+      line-height: 1.25;
+      letter-spacing: -.025em;
+      font-weight: 690;
+    }
+
+    .panel-heading p {
+      margin: 5px 0 0;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .record-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      white-space: nowrap;
+    }
+
+    .record-label svg { color: var(--red); }
+
+    .info-groups {
+      padding-top: 22px;
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .info-group { min-width: 0; }
+    .info-group + .info-group { padding-left: 30px; border-left: 1px solid var(--line); }
+    .info-group:first-child { padding-right: 30px; }
+
+    .group-title {
+      margin: 0 0 16px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 24px;
+      row-gap: 19px;
+    }
+
+    .info-grid.commercial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .info-item { min-width: 0; }
+
+    .info-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      font-weight: 560;
+    }
+
+    .info-value {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--ink);
+      font-size: var(--type-emphasis);
+      line-height: 1.45;
+      font-weight: 620;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .info-value small { color: var(--ink-3); font-size: var(--type-base); font-weight: 500; }
+
+    .inventory-panel { margin-top: 16px; padding: 24px 26px 26px; }
+
+    .inventory-head {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .inventory-heading p {
+      margin: 6px 0 0;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .updated-at {
+      padding-left: 18px;
+      position: relative;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      white-space: nowrap;
+    }
+
+    .updated-at::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(20, 125, 79, .10);
+      transform: translateY(-50%);
+    }
+
+    .inventory-summary {
+      width: min(100%, 640px);
+      margin-bottom: 17px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .summary-metric {
+      min-width: 0;
+      min-height: 66px;
+      padding: 11px 14px 11px 16px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      overflow: hidden;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .summary-metric::before {
+      content: "";
+      width: 3px;
+      position: absolute;
+      inset: 10px auto 10px 0;
+      background: var(--red);
+      border-radius: 0 999px 999px 0;
+    }
+
+    .summary-metric.near-date::before { background: var(--amber); }
+    .summary-copy { min-width: 0; }
+    .summary-label { display: block; color: var(--ink-2); font-size: var(--type-base); font-weight: 650; }
+
+    .summary-value {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      color: var(--red-deep);
+      font-size: var(--type-data);
+      line-height: 1;
+      font-weight: 720;
+      letter-spacing: -.035em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .near-date .summary-value { color: var(--amber); }
+    .summary-value small { color: var(--ink-3); font-size: var(--type-base); font-weight: 560; }
+    .summary-note { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--type-base); line-height: var(--leading-compact); }
+
+    .year-browser { margin-top: 18px; }
+
+    .year-tabs-row {
+      min-height: 52px;
+      margin-bottom: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .year-tabs {
+      padding: 3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: #eaeaed;
+      border-radius: 13px;
+    }
+
+    .year-tab {
+      min-width: 104px;
+      min-height: 44px;
+      padding: 0 15px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+      transition: color var(--motion-fast), background-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .year-tab:hover { color: var(--ink); }
+    .year-tab:active { transform: scale(.97); }
+    .year-tab:focus-visible { box-shadow: var(--focus); }
+    .year-tab[aria-selected="true"] { color: var(--ink); background: #fff; box-shadow: 0 1px 5px rgba(10, 10, 15, .11); }
+
+    .year-overview { text-align: right; }
+    .year-overview strong { display: block; font-size: var(--type-emphasis); line-height: var(--leading-compact); font-weight: 680; font-variant-numeric: tabular-nums; }
+    .year-overview span { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--type-base); }
+    .year-panel[hidden] { display: none; }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .month-card {
+      width: 100%;
+      min-width: 0;
+      min-height: 146px;
+      padding: 12px;
+      position: relative;
+      color: var(--ink);
+      text-align: left;
+      background: var(--surface-solid);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      outline: none;
+      transition: border-color var(--motion-fast), background-color var(--motion-fast), box-shadow var(--motion-normal), transform 120ms ease-out;
+    }
+
+    .month-card:hover {
+      background: #fdfdfd;
+      border-color: var(--line-strong);
+      box-shadow: 0 10px 28px rgba(10, 10, 15, .065);
+      transform: translateY(-2px);
+    }
+
+    .month-card:active { transform: scale(.98); }
+    .month-card:focus-visible { box-shadow: var(--focus); border-color: rgba(217, 45, 32, .42); }
+    .month-card.latest { border-color: rgba(217, 45, 32, .26); }
+    .month-card.aged { background: #fffdf9; border-color: rgba(173, 92, 12, .2); }
+
+    .month-top,
+    .month-meta,
+    .month-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .month-date {
+      min-height: 26px;
+      padding: 0 7px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 1px solid rgba(60, 60, 67, .07);
+      border-radius: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .month-date strong { font-size: var(--type-base); line-height: 1; letter-spacing: .01em; font-weight: 680; }
+    .month-date span { color: var(--ink-3); font-size: var(--type-base); font-weight: 620; }
+    .month-card.latest .month-date { color: var(--red-deep); background: var(--red-soft); border-color: rgba(216, 50, 41, .08); }
+    .month-card.aged .month-date { color: var(--amber); background: var(--amber-soft); border-color: rgba(173, 92, 12, .1); }
+
+    .month-tag {
+      min-height: 26px;
+      padding: 2px 6px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .month-tag.aged-tag { color: var(--amber); background: var(--amber-soft); }
+
+    .month-quantity {
+      margin-top: 10px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .quantity-label {
+      margin-right: auto;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1.2;
+      font-weight: 620;
+      letter-spacing: .04em;
+    }
+
+    .month-quantity strong {
+      font-size: var(--type-data);
+      font-weight: 720;
+      letter-spacing: -.035em;
+    }
+
+    .month-quantity small { color: var(--ink-3); font-size: var(--type-base); font-weight: 600; }
+
+    .month-meta { margin-top: 6px; color: var(--ink-3); font-size: var(--type-base); }
+
+    .month-meta > span {
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    .month-action {
+      margin-top: 8px;
+      padding-top: 8px;
+      color: var(--ink-2);
+      font-size: var(--type-base);
+      font-weight: 620;
+      border-top: 1px solid var(--line);
+    }
+
+    .month-card:hover .month-action { color: var(--red-deep); }
+
+    .month-action-icon {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      color: var(--ink-3);
+      background: var(--surface-soft);
+      border-radius: 50%;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .month-card:hover .month-action-icon { color: #fff; background: var(--red); transform: translateX(2px); }
+
+    .inventory-note {
+      margin-top: 15px;
+      padding: 11px 13px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #74420e;
+      background: var(--amber-soft);
+      border: 1px solid rgba(173, 92, 12, .12);
+      border-radius: 12px;
+      font-size: var(--type-base);
+    }
+
+    .inventory-note svg { flex: 0 0 auto; color: var(--amber); }
+    .inventory-note strong { color: #5f3308; font-weight: 680; }
+
+    .flow-dialog {
+      width: min(980px, calc(100% - 32px));
+      max-width: none;
+      max-height: calc(100dvh - 40px);
+      padding: 0;
+      overflow: visible;
+      color: var(--ink);
+      background: transparent;
+      border: 0;
+      border-radius: var(--radius-xl);
+      opacity: 0;
+      transform: translateY(10px) scale(.965);
+      transform-origin: 50% 55%;
+      transition: opacity 180ms ease-out, transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .flow-dialog[open] { display: block; }
+    .flow-dialog.is-open { opacity: 1; transform: translateY(0) scale(1); }
+
+    .flow-dialog::backdrop {
+      background: rgba(15, 15, 18, 0);
+      backdrop-filter: blur(0);
+      -webkit-backdrop-filter: blur(0);
+      transition: background-color 220ms ease-out, backdrop-filter 280ms ease-out;
+    }
+
+    .flow-dialog.is-open::backdrop {
+      background: rgba(15, 15, 18, .38);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .dialog-shell {
+      max-height: calc(100dvh - 40px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(255, 255, 255, .9);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-dialog);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+    }
+
+    .dialog-head {
+      padding: 23px 24px 19px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialog-kicker { margin: 0 0 5px; color: var(--red-deep); font-size: var(--type-base); font-weight: 700; letter-spacing: .08em; }
+
+    .dialog-head h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+      font-weight: 700;
+    }
+
+    .dialog-head p { margin: 6px 0 0; color: var(--ink-3); font-size: var(--type-base); }
+
+    .dialog-close {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 0;
+      border-radius: 50%;
+      outline: none;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .dialog-close:hover { color: var(--ink); background: #ececef; }
+    .dialog-close:active { transform: scale(.92); }
+    .dialog-close:focus-visible { box-shadow: var(--focus); }
+
+    .dialog-toolbar {
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: rgba(247, 247, 249, .72);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .flow-filters {
+      padding: 3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: #eaeaed;
+      border-radius: 12px;
+    }
+
+    .filter-button {
+      min-width: 86px;
+      min-height: 44px;
+      padding: 0 12px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 9px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 620;
+      transition: color var(--motion-fast), background-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .filter-button:hover { color: var(--ink); }
+    .filter-button:active { transform: scale(.96); }
+    .filter-button:focus-visible { box-shadow: var(--focus); }
+    .filter-button[aria-pressed="true"] { color: var(--ink); background: #fff; box-shadow: 0 1px 4px rgba(10, 10, 15, .1); }
+
+    .flow-summary { display: flex; align-items: center; gap: 18px; }
+    .flow-summary-item { text-align: right; }
+    .flow-summary-item span { display: block; color: var(--ink-3); font-size: var(--type-base); }
+    .flow-summary-item strong { display: block; margin-top: 2px; font-size: var(--type-emphasis); font-weight: 680; font-variant-numeric: tabular-nums; }
+    .flow-summary-item.in strong { color: var(--green); }
+    .flow-summary-item.out strong { color: var(--red-deep); }
+
+    .table-scroll {
+      min-height: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: #fff;
+    }
+
+    .table-scroll:focus-visible {
+      outline: 2px solid rgba(217, 45, 32, .55);
+      outline-offset: -2px;
+    }
+
+    .flow-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .flow-table thead { position: sticky; top: 0; z-index: 2; background: rgba(255, 255, 255, .94); backdrop-filter: blur(16px); }
+    .flow-table th { padding: 12px 14px; color: var(--ink-3); text-align: left; font-size: var(--type-base); font-weight: 680; letter-spacing: .03em; border-bottom: 1px solid var(--line); }
+    .flow-table td { padding: 14px; color: var(--ink-2); font-size: var(--type-base); line-height: var(--leading-base); border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+    .flow-table tbody tr:last-child td { border-bottom: 0; }
+    .flow-table tbody tr { transition: background-color var(--motion-fast); }
+    .flow-table tbody tr:hover { background: #fafafd; }
+    .flow-table .primary-cell { color: var(--ink); font-weight: 620; }
+
+    .flow-type {
+      min-height: 24px;
+      padding: 3px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .flow-type::before { content: ""; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }
+    .flow-type.in { color: var(--green); background: var(--green-soft); }
+    .flow-type.out { color: var(--red-deep); background: var(--red-soft); }
+    .quantity-in { color: var(--green) !important; font-weight: 680; }
+    .quantity-out { color: var(--red-deep) !important; font-weight: 680; }
+
+    .empty-flow { padding: 54px 20px; color: var(--ink-3); text-align: center; font-size: var(--type-base); }
+
+    .dialog-foot {
+      min-height: 52px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--ink-3);
+      background: rgba(247, 247, 249, .8);
+      border-top: 1px solid var(--line);
+      font-size: var(--type-base);
+    }
+
+    .dialog-foot strong { color: var(--ink-2); font-weight: 650; }
+
+    @media (max-width: 1180px) {
+      .month-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 980px) {
+      .info-groups { grid-template-columns: 1fr; }
+      .info-group:first-child { padding-right: 0; }
+      .info-group + .info-group { margin-top: 26px; padding: 24px 0 0; border-top: 1px solid var(--line); border-left: 0; }
+      .info-grid.commercial { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .page-head { align-items: flex-start; flex-direction: column; gap: 16px; }
+      .head-status { width: 100%; justify-content: space-between; }
+      .detail-panel, .inventory-panel { padding: 23px 20px; }
+      .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .info-grid.commercial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .inventory-head { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .inventory-summary { width: 100%; }
+      .year-tabs-row { align-items: flex-start; flex-direction: column; gap: 9px; }
+      .year-overview { text-align: left; }
+      .month-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .dialog-toolbar { align-items: flex-start; flex-direction: column; }
+      .flow-summary { width: 100%; justify-content: flex-start; }
+      .flow-summary-item { text-align: left; }
+    }
+
+    @media (max-width: 540px) {
+      h1 { font-size: var(--type-display); }
+      .page-head { margin-bottom: 18px; }
+      .panel-heading { align-items: flex-start; flex-direction: column; gap: 7px; }
+      .record-label { white-space: normal; }
+      .summary-metric { min-height: 88px; padding: 12px; align-items: flex-start; flex-direction: column; gap: 8px; }
+      .summary-value { margin-top: auto; }
+      .year-tabs { width: 100%; }
+      .year-tab { min-width: 0; flex: 1; }
+      .month-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .month-card { min-height: 146px; padding: 12px; }
+      .month-date strong { font-size: var(--type-base); }
+      .month-quantity strong { font-size: var(--type-data); }
+      .month-meta { gap: 4px; }
+      .month-tag { padding-inline: 5px; }
+      .flow-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
+      .dialog-shell { max-height: calc(100dvh - 20px); border-radius: 20px; }
+      .dialog-head { padding: 19px 18px 16px; }
+      .dialog-head h2 { font-size: 20px; }
+      .dialog-toolbar { padding: 12px 14px; gap: 12px; }
+      .flow-filters { width: 100%; }
+      .filter-button { min-width: 0; flex: 1; padding-inline: 7px; }
+      .dialog-foot { min-height: 56px; padding: 0 16px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 1px; }
+    }
+
+    @media (max-width: 370px) {
+      .nav, main { width: min(100% - 24px, 1180px); }
+      .info-grid, .info-grid.commercial { grid-template-columns: 1fr; }
+      .month-card { padding: 12px; }
+      .month-tag { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .month-card:hover { transform: none; }
+      .flow-dialog { transform: none !important; }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .dialog-shell, .flow-table thead { backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .dialog-shell, .flow-table thead { background: #fff; }
+      .flow-dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
+    }
+
+    @media (prefers-contrast: more) {
+      .month-card, .detail-panel, .inventory-panel { border-color: var(--line-strong); }
+    }
+  </style>
+</head>
+<body class="admin-shell">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+  <aside class="sidebar" aria-label="主导航">
+    <div class="side-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3c2.5 3 5.2 5.5 5.2 9.1A5.2 5.2 0 0 1 12 17.3a5.2 5.2 0 0 1-5.2-5.2C6.8 9.7 8 7.5 9.4 6c.2 2 1 3.1 2 3.7.7-2.7.4-4.7.6-6.7Z"></path>
+          <path d="M5 21h14"></path>
+        </svg>
+      </span>
+      <span class="side-brand-copy"><span class="side-brand-name">燧安进销存</span><span class="side-brand-sub">消防器材管理系统</span></span>
+    </div>
+    <div class="side-scroll">
+      <p class="side-label">工作台</p>
+      <nav class="side-nav" aria-label="业务模块">
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="14" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="14" width="7" height="7" rx="2"></rect><rect x="14" y="14" width="7" height="7" rx="2"></rect></svg>
+          <span>经营概览</span>
+        </a>
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v13H4z"></path><path d="M8 7V5a4 4 0 0 1 8 0v2"></path><path d="M9 12h6"></path></svg>
+          <span>采购管理</span>
+        </a>
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"></circle><circle cx="19" cy="20" r="1"></circle><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 8H7"></path></svg>
+          <span>销售管理</span>
+        </a>
+        <a class="side-link parent-active" href="goods-list.html" aria-expanded="true">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>
+          <span>库存管理</span>
+          <svg class="nav-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"></path></svg>
+        </a>
+        <div class="subnav">
+          <a class="sub-link active" href="goods-list.html">货物列表</a>
+          <a class="sub-link" href="#">库存盘点</a>
+          <a class="sub-link" href="#">仓库调拨</a>
+          <a class="sub-link" href="#">出入库记录</a>
+        </div>
+        <a class="side-link" href="#">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v15H4z"></path><path d="M8 5V3h8v2M8 10h8M8 14h5"></path></svg>
+          <span>基础资料</span>
+        </a>
+      </nav>
+    </div>
+    <div class="side-user" aria-label="当前用户：仓库管理员">
+      <span class="user-avatar" aria-hidden="true">陈</span>
+      <span class="user-meta"><strong>陈晓峰</strong><span>仓库管理员</span></span>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <nav class="nav" aria-label="顶部工具栏">
+      <div class="mobile-brand">
+        <span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3c2.5 3 5.2 5.5 5.2 9.1A5.2 5.2 0 0 1 12 17.3a5.2 5.2 0 0 1-5.2-5.2C6.8 9.7 8 7.5 9.4 6c.2 2 1 3.1 2 3.7.7-2.7.4-4.7.6-6.7Z"></path></svg></span>
+        <span>燧安进销存</span>
+      </div>
+      <div class="breadcrumb" aria-label="当前位置">
+        <span>库存管理</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+        <span>货物列表</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+        <strong>货物详情</strong>
+      </div>
+      <div class="top-tools">
+        <div class="sync-state" aria-label="库存数据状态：已同步"><span class="sync-dot" aria-hidden="true"></span><span>库存数据已同步</span></div>
+        <span class="top-divider" aria-hidden="true"></span>
+        <div class="top-user"><span class="user-avatar" aria-hidden="true">陈</span><span>仓库管理员</span></div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="detail-main" id="main-content" tabindex="-1">
+    <nav class="content-breadcrumb" aria-label="面包屑导航">
+      <a href="goods-list.html">货物管理</a>
+      <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+      <span aria-current="page">货物详情</span>
+    </nav>
+
+    <header class="page-head">
+      <div>
+        <p class="eyebrow">Goods profile</p>
+        <h1>手提式干粉灭火器</h1>
+        <p class="head-copy">淮海 · MFZ/ABC4 · 4 kg ABC 干粉</p>
+      </div>
+      <div class="head-status" aria-label="货物状态">
+        <div class="head-code"><span>货号</span><strong>FE-DP-0048</strong></div>
+        <span class="status-badge">正常在售</span>
+      </div>
+    </header>
+
+    <section class="detail-panel" aria-labelledby="basic-title">
+      <div class="panel-heading">
+        <div>
+          <h2 id="basic-title">基本信息</h2>
+          <p>记录货物规格、资质与基础管理信息。</p>
+        </div>
+        <span class="record-label">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+          档案更新于 2026-08-22 17:35
+        </span>
+      </div>
+
+      <div class="info-groups">
+        <div class="info-group">
+          <h3 class="group-title">规格与资质</h3>
+          <div class="info-grid">
+            <div class="info-item"><span class="info-label">货物分类</span><span class="info-value">灭火器材</span></div>
+            <div class="info-item"><span class="info-label">品牌</span><span class="info-value">淮海</span></div>
+            <div class="info-item"><span class="info-label">规格型号</span><span class="info-value">MFZ/ABC4</span></div>
+            <div class="info-item"><span class="info-label">计量单位</span><span class="info-value">具</span></div>
+            <div class="info-item"><span class="info-label">灭火剂量</span><span class="info-value">4 ± 0.08 kg</span></div>
+            <div class="info-item"><span class="info-label">灭火级别</span><span class="info-value">2A · 55B · C · E</span></div>
+            <div class="info-item"><span class="info-label">执行标准</span><span class="info-value">GB 4351.1-2005</span></div>
+            <div class="info-item"><span class="info-label">认证编号</span><span class="info-value">202408181234</span></div>
+            <div class="info-item"><span class="info-label">生产企业</span><span class="info-value">徐州市淮海消防器材有限公司</span></div>
+            <div class="info-item"><span class="info-label">产地</span><span class="info-value">江苏徐州</span></div>
+            <div class="info-item"><span class="info-label">包装规格</span><span class="info-value">2 具 / 箱</span></div>
+          </div>
+        </div>
+        <div class="info-group">
+          <h3 class="group-title">价格与管理</h3>
+          <div class="info-grid commercial">
+            <div class="info-item"><span class="info-label">参考进货价</span><span class="info-value">¥62.00 <small>/ 具</small></span></div>
+            <div class="info-item"><span class="info-label">参考销售价</span><span class="info-value">¥89.00 <small>/ 具</small></span></div>
+            <div class="info-item"><span class="info-label">适用税率</span><span class="info-value">13%</span></div>
+            <div class="info-item"><span class="info-label">库存下限</span><span class="info-value">300 具</span></div>
+            <div class="info-item"><span class="info-label">保管要求</span><span class="info-value">阴凉干燥 · 避免暴晒</span></div>
+            <div class="info-item"><span class="info-label">维保说明</span><span class="info-value">以瓶体铭牌为准</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="inventory-panel" aria-labelledby="inventory-title">
+      <div class="inventory-head">
+        <div class="inventory-heading">
+          <h2 id="inventory-title">生产年月库存</h2>
+          <p>按瓶体标注的生产年月汇总；点击卡片可查看对应进出货流水。</p>
+        </div>
+        <span class="updated-at">更新于 2026-08-23 09:42</span>
+      </div>
+
+      <div class="inventory-summary" aria-label="库存汇总">
+        <div class="summary-metric total-stock">
+          <span class="summary-copy">
+            <span class="summary-label">总库存数</span>
+            <span class="summary-note">全部生产年月汇总</span>
+          </span>
+          <span class="summary-value">2,769 <small>具</small></span>
+        </div>
+        <div class="summary-metric near-date">
+          <span class="summary-copy">
+            <span class="summary-label">临近日期库存</span>
+            <span class="summary-note">生产日期距当前月 1–3 个月</span>
+          </span>
+          <span class="summary-value">1,264 <small>具</small></span>
+        </div>
+      </div>
+
+      <div class="year-browser">
+        <div class="year-tabs-row">
+          <div class="year-tabs" role="tablist" aria-label="按生产年份查看库存">
+            <button class="year-tab" id="year-tab-2026" type="button" role="tab" aria-selected="true" aria-controls="year-panel-2026" tabindex="0" data-year="2026" data-total="2401" data-months="8" data-batches="32">2026 年</button>
+            <button class="year-tab" id="year-tab-2025" type="button" role="tab" aria-selected="false" aria-controls="year-panel-2025" tabindex="-1" data-year="2025" data-total="368" data-months="12" data-batches="17">2025 年</button>
+          </div>
+          <div class="year-overview" aria-live="polite">
+            <strong id="year-total">2026 年 · 2,401 具</strong>
+            <span id="year-meta">8 个生产月份 · 32 批</span>
+          </div>
+        </div>
+
+        <div class="year-panel" id="year-panel-2026" role="tabpanel" aria-labelledby="year-tab-2026">
+          <div class="month-grid" aria-label="2026年各生产月份库存">
+        <button class="month-card latest" type="button" data-month="2026-08" data-stock="326" data-batches="4" aria-haspopup="dialog" aria-label="查看2026年08月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-08"><strong>08</strong><span>月</span></time><span class="month-tag">最新</span></span>
+          <span class="month-quantity"><span class="quantity-label">库存</span><strong>326</strong><small>具</small></span>
+          <span class="month-meta"><span>4 批</span><span>占比 13.1%</span></span>
+          <span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card" type="button" data-month="2026-07" data-stock="488" data-batches="6" aria-haspopup="dialog" aria-label="查看2026年07月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-07"><strong>07</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>488</strong><small>具</small></span><span class="month-meta"><span>6 批</span><span>占比 19.6%</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card" type="button" data-month="2026-06" data-stock="412" data-batches="5" aria-haspopup="dialog" aria-label="查看2026年06月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-06"><strong>06</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>412</strong><small>具</small></span><span class="month-meta"><span>5 批</span><span>占比 16.6%</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card" type="button" data-month="2026-05" data-stock="364" data-batches="5" aria-haspopup="dialog" aria-label="查看2026年05月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-05"><strong>05</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>364</strong><small>具</small></span><span class="month-meta"><span>5 批</span><span>占比 14.6%</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card" type="button" data-month="2026-04" data-stock="296" data-batches="4" aria-haspopup="dialog" aria-label="查看2026年04月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-04"><strong>04</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>296</strong><small>具</small></span><span class="month-meta"><span>4 批</span><span>占比 11.9%</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card" type="button" data-month="2026-03" data-stock="241" data-batches="3" aria-haspopup="dialog" aria-label="查看2026年03月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-03"><strong>03</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>241</strong><small>具</small></span><span class="month-meta"><span>3 批</span><span>占比 9.7%</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card" type="button" data-month="2026-02" data-stock="176" data-batches="3" aria-haspopup="dialog" aria-label="查看2026年02月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-02"><strong>02</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>176</strong><small>具</small></span><span class="month-meta"><span>3 批</span><span>占比 7.1%</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card" type="button" data-month="2026-01" data-stock="98" data-batches="2" aria-haspopup="dialog" aria-label="查看2026年01月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2026-01"><strong>01</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>98</strong><small>具</small></span><span class="month-meta"><span>2 批</span><span>占比 3.9%</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+          </div>
+        </div>
+
+        <div class="year-panel" id="year-panel-2025" role="tabpanel" aria-labelledby="year-tab-2025" hidden>
+          <div class="month-grid" aria-label="2025年各生产月份库存">
+        <button class="month-card aged" type="button" data-month="2025-12" data-stock="64" data-batches="2" aria-haspopup="dialog" aria-label="查看2025年12月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-12"><strong>12</strong><span>月</span></time><span class="month-tag aged-tag">优先</span></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>64</strong><small>具</small></span><span class="month-meta"><span>2 批</span><span>库龄 8 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-11" data-stock="21" data-batches="1" aria-haspopup="dialog" aria-label="查看2025年11月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-11"><strong>11</strong><span>月</span></time><span class="month-tag aged-tag">优先</span></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>21</strong><small>具</small></span><span class="month-meta"><span>1 批</span><span>库龄 9 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-10" data-stock="48" data-batches="2" aria-haspopup="dialog" aria-label="查看2025年10月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-10"><strong>10</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>48</strong><small>具</small></span><span class="month-meta"><span>2 批</span><span>库龄 10 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-09" data-stock="36" data-batches="2" aria-haspopup="dialog" aria-label="查看2025年09月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-09"><strong>09</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>36</strong><small>具</small></span><span class="month-meta"><span>2 批</span><span>库龄 11 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-08" data-stock="55" data-batches="2" aria-haspopup="dialog" aria-label="查看2025年08月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-08"><strong>08</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>55</strong><small>具</small></span><span class="month-meta"><span>2 批</span><span>库龄 12 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-07" data-stock="42" data-batches="2" aria-haspopup="dialog" aria-label="查看2025年07月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-07"><strong>07</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>42</strong><small>具</small></span><span class="month-meta"><span>2 批</span><span>库龄 13 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-06" data-stock="31" data-batches="1" aria-haspopup="dialog" aria-label="查看2025年06月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-06"><strong>06</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>31</strong><small>具</small></span><span class="month-meta"><span>1 批</span><span>库龄 14 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-05" data-stock="26" data-batches="1" aria-haspopup="dialog" aria-label="查看2025年05月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-05"><strong>05</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>26</strong><small>具</small></span><span class="month-meta"><span>1 批</span><span>库龄 15 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-04" data-stock="18" data-batches="1" aria-haspopup="dialog" aria-label="查看2025年04月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-04"><strong>04</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>18</strong><small>具</small></span><span class="month-meta"><span>1 批</span><span>库龄 16 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-03" data-stock="12" data-batches="1" aria-haspopup="dialog" aria-label="查看2025年03月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-03"><strong>03</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>12</strong><small>具</small></span><span class="month-meta"><span>1 批</span><span>库龄 17 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-02" data-stock="9" data-batches="1" aria-haspopup="dialog" aria-label="查看2025年02月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-02"><strong>02</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>9</strong><small>具</small></span><span class="month-meta"><span>1 批</span><span>库龄 18 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+        <button class="month-card aged" type="button" data-month="2025-01" data-stock="6" data-batches="1" aria-haspopup="dialog" aria-label="查看2025年01月生产货物的进出货流水">
+          <span class="month-top"><time class="month-date" datetime="2025-01"><strong>01</strong><span>月</span></time></span><span class="month-quantity"><span class="quantity-label">库存</span><strong>6</strong><small>具</small></span><span class="month-meta"><span>1 批</span><span>库龄 19 个月</span></span><span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></span></span>
+        </button>
+      </div>
+
+      <div class="inventory-note" role="note">
+        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16.5h.01"></path></svg>
+        <span><strong>库龄提示：</strong>2025 年全年生产的 368 具库存已单独标记，建议后续出库时按生产月份优先安排。</span>
+      </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="flow-dialog" id="flow-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+    <div class="dialog-shell">
+      <header class="dialog-head">
+        <div>
+          <p class="dialog-kicker">INVENTORY FLOW</p>
+          <h2 id="dialog-title">2026 年 08 月进出货流水</h2>
+          <p id="dialog-description">手提式干粉灭火器 · 淮海 · 对应生产年月货物流转记录</p>
+        </div>
+        <button class="dialog-close" id="dialog-close" type="button" aria-label="关闭流水弹框">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+
+      <div class="dialog-toolbar">
+        <div class="flow-filters" role="group" aria-label="流水类型快速筛选">
+          <button class="filter-button" type="button" data-filter="all" aria-pressed="true">全部 6</button>
+          <button class="filter-button" type="button" data-filter="in" aria-pressed="false">进货 3</button>
+          <button class="filter-button" type="button" data-filter="out" aria-pressed="false">出货 3</button>
+        </div>
+        <div class="flow-summary" aria-label="本组流水汇总">
+          <div class="flow-summary-item in"><span>累计进货</span><strong id="total-in">+0 具</strong></div>
+          <div class="flow-summary-item out"><span>累计出货</span><strong id="total-out">-0 具</strong></div>
+          <div class="flow-summary-item"><span>当前结存</span><strong id="current-stock">0 具</strong></div>
+        </div>
+      </div>
+
+      <div class="table-scroll" tabindex="0" aria-label="流水明细表格，可横向滚动">
+        <table class="flow-table">
+          <caption class="visually-hidden" id="table-caption">2026 年 08 月生产货物进出货流水</caption>
+          <colgroup><col style="width:16%"><col style="width:17%"><col style="width:10%"><col style="width:15%"><col style="width:14%"><col style="width:10%"><col style="width:9%"><col style="width:9%"></colgroup>
+          <thead>
+            <tr><th scope="col">发生时间</th><th scope="col">流水号</th><th scope="col">类型</th><th scope="col">业务来源</th><th scope="col">来源单据</th><th scope="col">经办人</th><th scope="col">数量</th><th scope="col">结存</th></tr>
+          </thead>
+          <tbody id="flow-table-body"></tbody>
+        </table>
+        <div class="empty-flow" id="empty-flow" hidden>当前筛选条件下没有流水记录。</div>
+      </div>
+
+      <footer class="dialog-foot">
+        <span id="flow-count" aria-live="polite"><strong>6</strong> 条流水记录</span>
+        <span>数量单位：具 · 按发生时间倒序</span>
+      </footer>
+    </div>
+  </dialog>
+
+  <script>
+    const yearTabs = [...document.querySelectorAll('.year-tab')];
+    const yearPanels = [...document.querySelectorAll('.year-panel')];
+    const monthCards = [...document.querySelectorAll('.month-card')];
+    const dialog = document.getElementById('flow-dialog');
+    const dialogTitle = document.getElementById('dialog-title');
+    const tableCaption = document.getElementById('table-caption');
+    const tableBody = document.getElementById('flow-table-body');
+    const emptyFlow = document.getElementById('empty-flow');
+    const filterButtons = [...document.querySelectorAll('.filter-button')];
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const handlers = ['陈晓宁', '周明远', '林嘉怡', '许文博', '罗静', '张予安'];
+    let activeRows = [];
+    let activeFilter = 'all';
+    let activeTrigger = null;
+    let closeTimer = 0;
+    let yearPanelAnimation = null;
+
+    function selectYear(year, shouldFocus = false) {
+      const nextTab = yearTabs.find((tab) => tab.dataset.year === year);
+      const nextPanel = document.getElementById(`year-panel-${year}`);
+      if (!nextTab || !nextPanel) return;
+      const isAlreadySelected = nextTab.getAttribute('aria-selected') === 'true';
+      yearTabs.forEach((tab) => {
+        const selected = tab === nextTab;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+      yearPanels.forEach((panel) => { panel.hidden = panel !== nextPanel; });
+      document.getElementById('year-total').textContent = `${year} 年 · ${formatNumber(Number(nextTab.dataset.total))} 具`;
+      document.getElementById('year-meta').textContent = `${nextTab.dataset.months} 个生产月份 · ${nextTab.dataset.batches} 批`;
+      if (!isAlreadySelected && !prefersReducedMotion) {
+        yearPanelAnimation?.cancel();
+        yearPanelAnimation = nextPanel.animate(
+          [{ opacity: 0, transform: 'translateY(7px)' }, { opacity: 1, transform: 'translateY(0)' }],
+          { duration: 280, easing: 'cubic-bezier(.2, .8, .2, 1)' }
+        );
+      }
+      if (shouldFocus) nextTab.focus();
+    }
+
+    function createFlowRows(month, stock) {
+      const [year, monthNumber] = month.split('-');
+      const seed = Number(monthNumber) + Number(year.slice(-2));
+      const inFirst = Math.round(stock * .72) + 52;
+      const outFirst = Math.round(stock * .20) + 8;
+      const inSecond = Math.round(stock * .48) + 34;
+      const outSecond = Math.round(stock * .16) + 7;
+      const inThird = Math.round(stock * .26) + 16;
+      const outThird = inFirst - outFirst + inSecond - outSecond + inThird - stock;
+      const events = [
+        { day: '02', time: '09:18', type: 'in', source: '采购到货', prefix: 'CG', quantity: inFirst },
+        { day: '06', time: '14:36', type: 'out', source: '销售出库', prefix: 'XS', quantity: outFirst },
+        { day: '11', time: '10:05', type: 'in', source: '采购到货', prefix: 'CG', quantity: inSecond },
+        { day: '16', time: '16:22', type: 'out', source: '项目领用', prefix: 'XM', quantity: outSecond },
+        { day: '21', time: '11:47', type: 'in', source: '退货入库', prefix: 'TH', quantity: inThird },
+        { day: '26', time: '15:20', type: 'out', source: '销售出库', prefix: 'XS', quantity: outThird }
+      ];
+      let balance = 0;
+      return events.map((event, index) => {
+        balance += event.type === 'in' ? event.quantity : -event.quantity;
+        return {
+          ...event,
+          date: `${year}-${monthNumber}-${event.day} ${event.time}`,
+          flowNo: `LS${year.slice(-2)}${monthNumber}${event.day}${String(seed + index).padStart(2, '0')}`,
+          documentNo: `${event.prefix}-${year.slice(-2)}${monthNumber}-${String(seed * 7 + index * 13).padStart(4, '0')}`,
+          handler: handlers[(seed + index) % handlers.length],
+          balance
+        };
+      }).reverse();
+    }
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat('zh-CN').format(value);
+    }
+
+    function renderRows() {
+      const rows = activeFilter === 'all' ? activeRows : activeRows.filter((row) => row.type === activeFilter);
+      tableBody.innerHTML = rows.map((row) => {
+        const isIn = row.type === 'in';
+        const sign = isIn ? '+' : '-';
+        return `
+          <tr>
+            <td>${row.date}</td>
+            <td class="primary-cell">${row.flowNo}</td>
+            <td><span class="flow-type ${row.type}">${isIn ? '进货' : '出货'}</span></td>
+            <td>${row.source}</td>
+            <td>${row.documentNo}</td>
+            <td>${row.handler}</td>
+            <td class="${isIn ? 'quantity-in' : 'quantity-out'}">${sign}${formatNumber(row.quantity)}</td>
+            <td class="primary-cell">${formatNumber(row.balance)}</td>
+          </tr>`;
+      }).join('');
+      emptyFlow.hidden = rows.length !== 0;
+      document.getElementById('flow-count').innerHTML = `<strong>${rows.length}</strong> 条流水记录`;
+    }
+
+    function setFilter(filter) {
+      activeFilter = filter;
+      filterButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.filter === filter)));
+      renderRows();
+    }
+
+    function openFlowDialog(card) {
+      if (closeTimer) {
+        window.clearTimeout(closeTimer);
+        closeTimer = 0;
+      }
+      activeTrigger = card;
+      const month = card.dataset.month;
+      const stock = Number(card.dataset.stock);
+      const [year, monthNumber] = month.split('-');
+      activeRows = createFlowRows(month, stock);
+      activeFilter = 'all';
+      dialogTitle.textContent = `${year} 年 ${monthNumber} 月进出货流水`;
+      tableCaption.textContent = `${year} 年 ${monthNumber} 月生产货物进出货流水`;
+      const totalIn = activeRows.filter((row) => row.type === 'in').reduce((sum, row) => sum + row.quantity, 0);
+      const totalOut = activeRows.filter((row) => row.type === 'out').reduce((sum, row) => sum + row.quantity, 0);
+      document.getElementById('total-in').textContent = `+${formatNumber(totalIn)} 具`;
+      document.getElementById('total-out').textContent = `-${formatNumber(totalOut)} 具`;
+      document.getElementById('current-stock').textContent = `${formatNumber(stock)} 具`;
+      filterButtons.forEach((button) => {
+        const count = button.dataset.filter === 'all' ? activeRows.length : activeRows.filter((row) => row.type === button.dataset.filter).length;
+        button.textContent = `${button.dataset.filter === 'all' ? '全部' : button.dataset.filter === 'in' ? '进货' : '出货'} ${count}`;
+        button.setAttribute('aria-pressed', String(button.dataset.filter === 'all'));
+      });
+      renderRows();
+      if (!dialog.open) dialog.showModal();
+      const cardRect = card.getBoundingClientRect();
+      const dialogRect = dialog.getBoundingClientRect();
+      const originX = Math.min(dialogRect.width - 48, Math.max(48, cardRect.left + cardRect.width / 2 - dialogRect.left));
+      const originY = Math.min(dialogRect.height - 48, Math.max(48, cardRect.top + cardRect.height / 2 - dialogRect.top));
+      dialog.style.transformOrigin = `${originX}px ${originY}px`;
+      requestAnimationFrame(() => {
+        dialog.classList.add('is-open');
+        document.getElementById('dialog-close').focus();
+      });
+    }
+
+    function closeFlowDialog() {
+      if (!dialog.open) return;
+      if (closeTimer) window.clearTimeout(closeTimer);
+      dialog.classList.remove('is-open');
+      const finishClose = () => {
+        if (dialog.open) dialog.close();
+        closeTimer = 0;
+        activeTrigger?.focus();
+      };
+      if (prefersReducedMotion) finishClose();
+      else closeTimer = window.setTimeout(finishClose, 240);
+    }
+
+    yearTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectYear(tab.dataset.year));
+      tab.addEventListener('keydown', (event) => {
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % yearTabs.length;
+        else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + yearTabs.length) % yearTabs.length;
+        else if (event.key === 'Home') nextIndex = 0;
+        else if (event.key === 'End') nextIndex = yearTabs.length - 1;
+        else return;
+        event.preventDefault();
+        selectYear(yearTabs[nextIndex].dataset.year, true);
+      });
+    });
+    monthCards.forEach((card) => card.addEventListener('click', () => openFlowDialog(card)));
+    filterButtons.forEach((button) => button.addEventListener('click', () => setFilter(button.dataset.filter)));
+    document.getElementById('dialog-close').addEventListener('click', closeFlowDialog);
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeFlowDialog();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && dialog.open) {
+        event.preventDefault();
+        closeFlowDialog();
+      }
+    });
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) closeFlowDialog();
+    });
+  </script>
+</body>
+</html>

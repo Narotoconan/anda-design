@@ -6,140 +6,8 @@
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f5f5f7">
   <title>货物列表 · 燧安库存</title>
+  <link rel="stylesheet" href="css/common.css">
   <style>
-    :root {
-      --bg: #f5f5f7;
-      --surface: rgba(255, 255, 255, 0.88);
-      --surface-solid: #ffffff;
-      --surface-soft: #f7f7f9;
-      --ink: #1d1d1f;
-      --ink-2: #5d5d64;
-      --ink-3: #7d7d85;
-      --line: rgba(29, 29, 31, 0.09);
-      --line-strong: rgba(29, 29, 31, 0.14);
-      --red: #d92d20;
-      --red-dark: #b42318;
-      --red-soft: #fff0ee;
-      --orange: #e9701a;
-      --orange-soft: #fff5e8;
-      --green: #138a52;
-      --green-soft: #ecf8f1;
-      --blue: #2675d8;
-      --blue-soft: #edf5ff;
-      --shadow-sm: 0 1px 2px rgba(10, 10, 15, 0.04), 0 8px 24px rgba(10, 10, 15, 0.04);
-      --shadow-md: 0 2px 4px rgba(10, 10, 15, 0.04), 0 18px 50px rgba(10, 10, 15, 0.07);
-      --focus: 0 0 0 4px rgba(217, 45, 32, 0.16);
-      --radius-xl: 24px;
-      --radius-lg: 18px;
-      --radius-md: 13px;
-      --motion-fast: 150ms;
-      --motion-normal: 300ms;
-      --ease-spring: cubic-bezier(.2, .8, .2, 1);
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      scroll-behavior: smooth;
-      scrollbar-gutter: stable;
-    }
-
-    @supports not (scrollbar-gutter: stable) {
-      html { overflow-y: scroll; }
-    }
-
-    body {
-      margin: 0;
-      min-width: 320px;
-      min-height: 100dvh;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 82% -10%, rgba(217, 45, 32, 0.06), transparent 30rem),
-        var(--bg);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    button, input, select { font: inherit; }
-    button, select { cursor: pointer; }
-    button { touch-action: manipulation; }
-    svg { display: block; }
-
-    .skip-link {
-      position: fixed;
-      left: 16px;
-      top: 12px;
-      z-index: 100;
-      padding: 10px 14px;
-      color: #fff;
-      background: var(--ink);
-      border-radius: 10px;
-      transform: translateY(-160%);
-      transition: transform var(--motion-fast) ease-out;
-    }
-
-    .skip-link:focus { transform: translateY(0); }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background: rgba(245, 245, 247, 0.72);
-      backdrop-filter: blur(24px) saturate(170%);
-      -webkit-backdrop-filter: blur(24px) saturate(170%);
-    }
-
-    .topbar::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 -16px;
-      height: 16px;
-      pointer-events: none;
-      background: linear-gradient(to bottom, rgba(245, 245, 247, 0.52), transparent);
-    }
-
-    .nav {
-      width: min(1180px, calc(100% - 48px));
-      min-height: 72px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 11px;
-      min-width: 0;
-    }
-
-    .brand-mark {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      color: #fff;
-      background: var(--red);
-      border-radius: 10px;
-      box-shadow: 0 5px 14px rgba(217, 45, 32, 0.2);
-    }
-
-    .brand-name { font-weight: 680; letter-spacing: -0.02em; }
-
-    .brand-section {
-      margin-left: 4px;
-      padding-left: 15px;
-      color: var(--ink-2);
-      font-size: 14px;
-      border-left: 1px solid var(--line-strong);
-    }
-
     .sync-state {
       display: flex;
       align-items: center;
@@ -158,8 +26,6 @@
     }
 
     main {
-      width: min(1180px, calc(100% - 48px));
-      margin: 0 auto;
       padding: 58px 0 72px;
     }
 
@@ -638,9 +504,7 @@
     }
 
     @media (max-width: 760px) {
-      .nav, main { width: min(100% - 32px, 1180px); }
-      .nav { min-height: 64px; }
-      .brand-section, .sync-state span { display: none; }
+      .sync-state span { display: none; }
       main { padding: 36px 0 48px; }
       .page-head { align-items: flex-start; margin-bottom: 24px; flex-direction: column; gap: 18px; }
       h1 { font-size: 36px; }
@@ -709,17 +573,11 @@
       .page-button { min-width: 38px; }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-    }
-
     @media (prefers-reduced-transparency: reduce) {
-      .topbar, .search-card, .summary-note, .pagination { background: #f9f9fa; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .search-card, .summary-note, .pagination { background: #f9f9fa; backdrop-filter: none; -webkit-backdrop-filter: none; }
     }
 
     @media (prefers-contrast: more) {
-      :root { --line: rgba(29,29,31,.22); --line-strong: rgba(29,29,31,.4); }
       .topbar, .search-card, .summary-note, .pagination { background: #fff; }
     }
 
@@ -727,13 +585,10 @@
     :root {
       --sidebar-width: 232px;
       --topbar-height: 60px;
-      --bg: #f4f5f7;
       --surface-soft: #f7f8fa;
       --radius-xl: 13px;
       --radius-lg: 12px;
       --radius-md: 9px;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, .035);
-      --shadow-md: 0 3px 12px rgba(15, 23, 42, .055);
     }
 
     body { background: var(--bg); font-size: 14px; }
@@ -999,27 +854,6 @@
     }
 
     /* Apple-inspired material and interaction layer */
-    :root {
-      --bg: #f5f5f7;
-      --ink: #1d1d1f;
-      --ink-2: rgba(60, 60, 67, .72);
-      --ink-3: rgba(60, 60, 67, .52);
-      --line: rgba(60, 60, 67, .105);
-      --line-strong: rgba(60, 60, 67, .18);
-      --red: #d83229;
-      --red-dark: #b92720;
-      --red-soft: rgba(216, 50, 41, .09);
-      --focus: 0 0 0 3px rgba(216, 50, 41, .18);
-      --shadow-sm: 0 .5px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(0,0,0,.025), 0 4px 14px rgba(0,0,0,.025);
-      --shadow-md: 0 .5px 0 rgba(255,255,255,.92) inset, 0 8px 28px rgba(0,0,0,.07), 0 2px 7px rgba(0,0,0,.035);
-      --ease-spring: cubic-bezier(.22, .82, .23, 1);
-    }
-
-    body {
-      background: var(--bg);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
-      font-optical-sizing: auto;
-    }
 
     .sidebar {
       background: rgba(239, 239, 243, .84);
@@ -1030,11 +864,6 @@
     }
 
     .side-brand { border-bottom-color: rgba(60,60,67,.1); }
-
-    .brand-mark {
-      background: linear-gradient(145deg, #f4554d 0%, #c9231b 100%);
-      box-shadow: 0 .5px 0 rgba(255,255,255,.4) inset, 0 2px 5px rgba(155,20,15,.2);
-    }
 
     .side-brand-name { font-weight: 680; letter-spacing: -.025em; }
     .side-brand-sub { color: rgba(60,60,67,.48); }
