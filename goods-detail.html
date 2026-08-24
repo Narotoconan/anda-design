@@ -118,10 +118,10 @@
       box-shadow: var(--shadow-sm);
     }
 
-    .detail-panel { padding: 24px 26px 26px; }
+    .detail-panel { padding: 18px 26px 20px; }
 
     .panel-heading {
-      margin-bottom: 21px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -143,66 +143,175 @@
       font-size: var(--type-base);
     }
 
-    .record-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+    .panel-updated {
       color: var(--ink-3);
       font-size: var(--type-base);
+      font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
 
-    .record-label svg { color: var(--red); }
-
-    .info-groups {
-      padding-top: 22px;
+    .info-layout {
       display: grid;
-      grid-template-columns: 1.55fr 1fr;
-      gap: 0;
-      border-top: 1px solid var(--line);
+      grid-template-columns: minmax(0, 1.38fr) minmax(330px, .92fr);
+      gap: 12px;
     }
 
-    .info-group { min-width: 0; }
-    .info-group + .info-group { padding-left: 30px; border-left: 1px solid var(--line); }
-    .info-group:first-child { padding-right: 30px; }
+    .info-block {
+      min-width: 0;
+      overflow: hidden;
+      background: rgba(248, 248, 250, .88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 3px 12px rgba(10, 10, 15, .025);
+    }
 
-    .group-title {
-      margin: 0 0 16px;
+    .info-block-head {
+      min-height: 56px;
+      padding: 8px 13px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .86), rgba(248, 248, 250, .7));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .info-block-icon {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border: 1px solid rgba(217, 45, 32, .08);
+      border-radius: 10px;
+    }
+
+    .business-block .info-block-icon {
+      color: var(--green);
+      background: var(--green-soft);
+      border-color: rgba(20, 125, 79, .08);
+    }
+
+    .info-block-head h3 {
+      margin: 0;
+      font-size: var(--type-emphasis);
+      line-height: var(--leading-compact);
+      font-weight: 680;
+    }
+
+    .info-block-head p {
+      margin: 3px 0 0;
       color: var(--ink-3);
       font-size: var(--type-base);
-      font-weight: 700;
-      letter-spacing: .08em;
+      line-height: var(--leading-compact);
     }
 
-    .info-grid {
+    .attribute-list,
+    .business-list { margin: 0; }
+
+    .attribute-row {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      column-gap: 24px;
-      row-gap: 19px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      background: rgba(255, 255, 255, .68);
     }
 
-    .info-grid.commercial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .info-item { min-width: 0; }
+    .attribute-row + .attribute-row { border-top: 1px solid var(--line); }
 
-    .info-label {
-      display: block;
-      margin-bottom: 4px;
+    .attribute-pair {
+      min-width: 0;
+      min-height: 43px;
+      padding: 7px 12px;
+      display: grid;
+      grid-template-columns: minmax(70px, .8fr) minmax(0, 1.2fr);
+      align-items: center;
+      gap: 9px;
+    }
+
+    .attribute-pair + .attribute-pair { border-left: 1px solid var(--line); }
+
+    .attribute-pair dt,
+    .business-row dt,
+    .price-metric span {
       color: var(--ink-3);
       font-size: var(--type-base);
+      line-height: var(--leading-compact);
       font-weight: 560;
     }
 
-    .info-value {
-      display: block;
-      overflow-wrap: anywhere;
+    .attribute-pair dd,
+    .business-row dd {
+      min-width: 0;
+      margin: 0;
       color: var(--ink);
-      font-size: var(--type-emphasis);
-      line-height: 1.45;
-      font-weight: 620;
+      text-align: right;
+      font-size: var(--type-base);
+      line-height: var(--leading-base);
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .price-overview {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      background: rgba(255, 255, 255, .76);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .price-metric {
+      min-width: 0;
+      min-height: 70px;
+      padding: 10px 13px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .price-metric + .price-metric { border-left: 1px solid var(--line); }
+
+    .price-metric strong {
+      margin-top: 5px;
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: -.025em;
+      font-weight: 710;
       font-variant-numeric: tabular-nums;
     }
 
-    .info-value small { color: var(--ink-3); font-size: var(--type-base); font-weight: 500; }
+    .price-metric.purchase strong { color: var(--green); }
+    .price-metric.sale strong { color: var(--red-deep); }
+    .price-metric small { color: var(--ink-3); font-size: var(--type-base); font-weight: 520; letter-spacing: 0; }
+
+    .business-row {
+      min-height: 43px;
+      padding: 7px 13px;
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, .68);
+    }
+
+    .business-row + .business-row { border-top: 1px solid var(--line); }
+
+    .threshold-value {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    .threshold-value::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      background: var(--amber);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(173, 92, 12, .09);
+    }
 
     .inventory-panel { margin-top: 16px; padding: 24px 26px 26px; }
 
@@ -351,26 +460,57 @@
       min-height: 146px;
       padding: 12px;
       position: relative;
+      isolation: isolate;
+      overflow: hidden;
       color: var(--ink);
       text-align: left;
-      background: var(--surface-solid);
-      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff 0%, #fbfbfc 100%);
+      border: 1px solid rgba(60, 60, 67, .14);
       border-radius: 13px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .96),
+        0 1px 2px rgba(10, 10, 15, .035),
+        0 5px 14px rgba(10, 10, 15, .035);
       outline: none;
-      transition: border-color var(--motion-fast), background-color var(--motion-fast), box-shadow var(--motion-normal), transform 120ms ease-out;
+      transition: border-color var(--motion-fast), background var(--motion-fast), box-shadow var(--motion-normal), transform 120ms ease-out;
     }
 
     .month-card:hover {
-      background: #fdfdfd;
-      border-color: var(--line-strong);
-      box-shadow: 0 10px 28px rgba(10, 10, 15, .065);
+      background: linear-gradient(180deg, #fff 0%, #fdfdfe 100%);
+      border-color: rgba(60, 60, 67, .24);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .98),
+        0 2px 4px rgba(10, 10, 15, .04),
+        0 12px 28px rgba(10, 10, 15, .075);
       transform: translateY(-2px);
     }
 
     .month-card:active { transform: scale(.98); }
     .month-card:focus-visible { box-shadow: var(--focus); border-color: rgba(217, 45, 32, .42); }
-    .month-card.latest { border-color: rgba(217, 45, 32, .26); }
-    .month-card.aged { background: #fffdf9; border-color: rgba(173, 92, 12, .2); }
+    .month-card.latest {
+      border-color: rgba(217, 45, 32, .3);
+      box-shadow: inset 3px 0 0 rgba(217, 45, 32, .82), 0 1px 2px rgba(10, 10, 15, .035), 0 5px 14px rgba(10, 10, 15, .035);
+    }
+    .month-card.aged {
+      background: linear-gradient(180deg, #fffefa 0%, #fffaf2 100%);
+      border-color: rgba(173, 92, 12, .24);
+      box-shadow: inset 3px 0 0 rgba(173, 92, 12, .68), 0 1px 2px rgba(10, 10, 15, .035), 0 5px 14px rgba(10, 10, 15, .035);
+    }
+
+    .month-card.latest:hover {
+      box-shadow: inset 3px 0 0 rgba(217, 45, 32, .9), 0 2px 4px rgba(10, 10, 15, .04), 0 12px 28px rgba(10, 10, 15, .075);
+    }
+
+    .month-card.aged:hover {
+      background: linear-gradient(180deg, #fffefa 0%, #fff8ed 100%);
+      box-shadow: inset 3px 0 0 rgba(173, 92, 12, .78), 0 2px 4px rgba(10, 10, 15, .04), 0 12px 28px rgba(10, 10, 15, .075);
+    }
+
+    .month-card.latest:focus-visible,
+    .month-card.aged:focus-visible {
+      border-color: rgba(217, 45, 32, .42);
+      box-shadow: var(--focus);
+    }
 
     .month-top,
     .month-meta,
@@ -381,6 +521,25 @@
       gap: 8px;
     }
 
+    .month-top {
+      min-height: 42px;
+      margin: -12px -12px 0;
+      padding: 8px 11px;
+      background: rgba(118, 118, 128, .07);
+      border-bottom: 1px solid rgba(60, 60, 67, .09);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .88);
+    }
+
+    .month-card.latest .month-top {
+      background: linear-gradient(90deg, rgba(217, 45, 32, .11), rgba(217, 45, 32, .035));
+      border-bottom-color: rgba(217, 45, 32, .11);
+    }
+
+    .month-card.aged .month-top {
+      background: linear-gradient(90deg, rgba(173, 92, 12, .12), rgba(173, 92, 12, .035));
+      border-bottom-color: rgba(173, 92, 12, .12);
+    }
+
     .month-date {
       min-height: 26px;
       padding: 0 7px;
@@ -388,16 +547,17 @@
       align-items: center;
       gap: 3px;
       color: var(--ink-2);
-      background: var(--surface-soft);
-      border: 1px solid rgba(60, 60, 67, .07);
+      background: rgba(255, 255, 255, .82);
+      border: 1px solid rgba(60, 60, 67, .09);
       border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(10, 10, 15, .035);
       font-variant-numeric: tabular-nums;
     }
 
     .month-date strong { font-size: var(--type-base); line-height: 1; letter-spacing: .01em; font-weight: 680; }
     .month-date span { color: var(--ink-3); font-size: var(--type-base); font-weight: 620; }
-    .month-card.latest .month-date { color: var(--red-deep); background: var(--red-soft); border-color: rgba(216, 50, 41, .08); }
-    .month-card.aged .month-date { color: var(--amber); background: var(--amber-soft); border-color: rgba(173, 92, 12, .1); }
+    .month-card.latest .month-date { color: var(--red-deep); background: rgba(255, 255, 255, .76); border-color: rgba(216, 50, 41, .12); }
+    .month-card.aged .month-date { color: var(--amber); background: rgba(255, 255, 255, .76); border-color: rgba(173, 92, 12, .14); }
 
     .month-tag {
       min-height: 26px;
@@ -452,7 +612,7 @@
       padding-top: 8px;
       color: var(--ink-2);
       font-size: var(--type-base);
-      font-weight: 620;
+      font-weight: 650;
       border-top: 1px solid var(--line);
     }
 
@@ -683,18 +843,21 @@
     }
 
     @media (max-width: 980px) {
-      .info-groups { grid-template-columns: 1fr; }
-      .info-group:first-child { padding-right: 0; }
-      .info-group + .info-group { margin-top: 26px; padding: 24px 0 0; border-top: 1px solid var(--line); border-left: 0; }
-      .info-grid.commercial { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .info-layout { grid-template-columns: 1fr; }
+      .business-block { display: grid; grid-template-columns: minmax(240px, .82fr) minmax(0, 1.18fr); }
+      .business-block .info-block-head { border-right: 1px solid var(--line); border-bottom: 0; }
+      .business-block .price-overview { border-bottom: 0; }
+      .business-block .business-list { grid-column: 1 / -1; border-top: 1px solid var(--line); }
     }
 
     @media (max-width: 760px) {
       .page-head { align-items: flex-start; flex-direction: column; gap: 16px; }
       .head-status { width: 100%; justify-content: space-between; }
       .detail-panel, .inventory-panel { padding: 23px 20px; }
-      .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .info-grid.commercial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .business-block { display: block; }
+      .business-block .info-block-head { border-right: 0; border-bottom: 1px solid var(--line); }
+      .business-block .price-overview { border-bottom: 1px solid var(--line); }
+      .business-block .business-list { border-top: 0; }
       .inventory-head { align-items: flex-start; flex-direction: column; gap: 10px; }
       .inventory-summary { width: 100%; }
       .year-tabs-row { align-items: flex-start; flex-direction: column; gap: 9px; }
@@ -709,7 +872,9 @@
       h1 { font-size: var(--type-display); }
       .page-head { margin-bottom: 18px; }
       .panel-heading { align-items: flex-start; flex-direction: column; gap: 7px; }
-      .record-label { white-space: normal; }
+      .panel-updated { white-space: normal; }
+      .attribute-row { grid-template-columns: 1fr; }
+      .attribute-pair + .attribute-pair { border-top: 1px solid var(--line); border-left: 0; }
       .summary-metric { min-height: 88px; padding: 12px; align-items: flex-start; flex-direction: column; gap: 8px; }
       .summary-value { margin-top: auto; }
       .year-tabs { width: 100%; }
@@ -732,7 +897,7 @@
 
     @media (max-width: 370px) {
       .nav, main { width: min(100% - 24px, 1180px); }
-      .info-grid, .info-grid.commercial { grid-template-columns: 1fr; }
+      .attribute-pair, .business-row, .price-metric { padding-inline: 12px; }
       .month-card { padding: 12px; }
       .month-tag { display: none; }
     }
@@ -749,7 +914,7 @@
     }
 
     @media (prefers-contrast: more) {
-      .month-card, .detail-panel, .inventory-panel { border-color: var(--line-strong); }
+      .month-card, .detail-panel, .inventory-panel, .info-block { border-color: var(--line-strong); }
     }
   </style>
 </head>
@@ -848,42 +1013,56 @@
       <div class="panel-heading">
         <div>
           <h2 id="basic-title">基本信息</h2>
-          <p>记录货物规格、资质与基础管理信息。</p>
+          <p>用于采购核验、销售选型与库存管理。</p>
         </div>
-        <span class="record-label">
-          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
-          档案更新于 2026-08-22 17:35
-        </span>
+        <time class="panel-updated" datetime="2026-08-22T17:35">档案更新于 2026-08-22 17:35</time>
       </div>
 
-      <div class="info-groups">
-        <div class="info-group">
-          <h3 class="group-title">规格与资质</h3>
-          <div class="info-grid">
-            <div class="info-item"><span class="info-label">货物分类</span><span class="info-value">灭火器材</span></div>
-            <div class="info-item"><span class="info-label">品牌</span><span class="info-value">淮海</span></div>
-            <div class="info-item"><span class="info-label">规格型号</span><span class="info-value">MFZ/ABC4</span></div>
-            <div class="info-item"><span class="info-label">计量单位</span><span class="info-value">具</span></div>
-            <div class="info-item"><span class="info-label">灭火剂量</span><span class="info-value">4 ± 0.08 kg</span></div>
-            <div class="info-item"><span class="info-label">灭火级别</span><span class="info-value">2A · 55B · C · E</span></div>
-            <div class="info-item"><span class="info-label">执行标准</span><span class="info-value">GB 4351.1-2005</span></div>
-            <div class="info-item"><span class="info-label">认证编号</span><span class="info-value">202408181234</span></div>
-            <div class="info-item"><span class="info-label">生产企业</span><span class="info-value">徐州市淮海消防器材有限公司</span></div>
-            <div class="info-item"><span class="info-label">产地</span><span class="info-value">江苏徐州</span></div>
-            <div class="info-item"><span class="info-label">包装规格</span><span class="info-value">2 具 / 箱</span></div>
+      <div class="info-layout">
+        <section class="info-block profile-block" aria-labelledby="profile-block-title">
+          <div class="info-block-head">
+            <span class="info-block-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>
+            </span>
+            <div><h3 id="profile-block-title">货物档案</h3><p>采购识别与出入库核对</p></div>
           </div>
-        </div>
-        <div class="info-group">
-          <h3 class="group-title">价格与管理</h3>
-          <div class="info-grid commercial">
-            <div class="info-item"><span class="info-label">参考进货价</span><span class="info-value">¥62.00 <small>/ 具</small></span></div>
-            <div class="info-item"><span class="info-label">参考销售价</span><span class="info-value">¥89.00 <small>/ 具</small></span></div>
-            <div class="info-item"><span class="info-label">适用税率</span><span class="info-value">13%</span></div>
-            <div class="info-item"><span class="info-label">库存下限</span><span class="info-value">300 具</span></div>
-            <div class="info-item"><span class="info-label">保管要求</span><span class="info-value">阴凉干燥 · 避免暴晒</span></div>
-            <div class="info-item"><span class="info-label">维保说明</span><span class="info-value">以瓶体铭牌为准</span></div>
+          <dl class="attribute-list">
+            <div class="attribute-row">
+              <div class="attribute-pair"><dt>货物分类</dt><dd>灭火器材</dd></div>
+              <div class="attribute-pair"><dt>品牌</dt><dd>淮海</dd></div>
+            </div>
+            <div class="attribute-row">
+              <div class="attribute-pair"><dt>规格型号</dt><dd>MFZ/ABC4</dd></div>
+              <div class="attribute-pair"><dt>计量单位</dt><dd>具</dd></div>
+            </div>
+            <div class="attribute-row">
+              <div class="attribute-pair"><dt>灭火级别</dt><dd>2A · 55B · C · E</dd></div>
+              <div class="attribute-pair"><dt>包装规格</dt><dd>2 具 / 箱</dd></div>
+            </div>
+            <div class="attribute-row">
+              <div class="attribute-pair"><dt>执行标准</dt><dd>GB 4351.1-2005</dd></div>
+              <div class="attribute-pair"><dt>生产企业</dt><dd>徐州市淮海消防器材有限公司</dd></div>
+            </div>
+          </dl>
+        </section>
+
+        <section class="info-block business-block" aria-labelledby="business-block-title">
+          <div class="info-block-head">
+            <span class="info-block-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5v14h14"></path><path d="m8 15 3-4 3 2 4-6"></path></svg>
+            </span>
+            <div><h3 id="business-block-title">经营与库存</h3><p>定价、税率与库存预警设置</p></div>
           </div>
-        </div>
+          <div class="price-overview" aria-label="参考价格">
+            <div class="price-metric purchase"><span>参考进货价</span><strong>¥62.00 <small>/ 具</small></strong></div>
+            <div class="price-metric sale"><span>参考销售价</span><strong>¥89.00 <small>/ 具</small></strong></div>
+          </div>
+          <dl class="business-list">
+            <div class="business-row"><dt>适用税率</dt><dd>13%</dd></div>
+            <div class="business-row"><dt>库存下限</dt><dd class="threshold-value">300 具</dd></div>
+            <div class="business-row"><dt>保管要求</dt><dd>阴凉干燥 · 避免暴晒</dd></div>
+          </dl>
+        </section>
       </div>
     </section>
 
