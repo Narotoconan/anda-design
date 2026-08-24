@@ -224,6 +224,9 @@ main {
 }
 
 /* Shared admin workspace shell */
+admin-sidebar,
+admin-topbar { display: contents; }
+
 .admin-shell {
   --sidebar-width: 232px;
   --topbar-height: 60px;
