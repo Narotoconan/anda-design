@@ -112,6 +112,7 @@
     }
 
     .detail-panel,
+    .certificate-panel,
     .inventory-panel {
       background: var(--surface-solid);
       border: 1px solid var(--line);
@@ -314,6 +315,438 @@
       box-shadow: 0 0 0 4px rgba(173, 92, 12, .09);
     }
 
+    .certificate-panel {
+      margin-top: 16px;
+      padding: 20px 26px 22px;
+    }
+
+    .certificate-head {
+      margin-bottom: 14px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .certificate-title-line {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .certificate-heading h2 {
+      margin: 0;
+      font-size: var(--type-section);
+      line-height: 1.25;
+      letter-spacing: -.025em;
+      font-weight: 690;
+    }
+
+    .certificate-heading p {
+      margin: 5px 0 0;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .attachment-count {
+      min-height: 26px;
+      padding: 3px 8px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 620;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .upload-button {
+      min-height: 44px;
+      padding: 0 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      color: #fff;
+      background: var(--red);
+      border: 0;
+      border-radius: 11px;
+      box-shadow: inset 0 .5px 0 rgba(255,255,255,.34), 0 3px 8px rgba(173,30,24,.16);
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 660;
+      transition: filter var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .upload-button:hover { filter: brightness(.96); }
+    .upload-button:active { filter: brightness(.91); transform: scale(.965); }
+    .upload-button:focus-visible { box-shadow: var(--focus), 0 3px 8px rgba(173,30,24,.16); }
+
+    .attachment-list {
+      max-height: 222px;
+      padding: 1px 5px 1px 1px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-color: rgba(60,60,67,.24) transparent;
+      scrollbar-width: thin;
+    }
+
+    .attachment-list::-webkit-scrollbar { width: 6px; }
+    .attachment-list::-webkit-scrollbar-track { background: transparent; }
+    .attachment-list::-webkit-scrollbar-thumb { background: rgba(60,60,67,.2); border-radius: 999px; }
+    .attachment-list::-webkit-scrollbar-thumb:hover { background: rgba(60,60,67,.34); }
+
+    .attachment-item {
+      min-width: 0;
+      min-height: 64px;
+      padding: 8px 7px;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+      background: rgba(248,248,250,.72);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: inset 0 .5px 0 rgba(255,255,255,.9);
+      transition: opacity 170ms ease-out, background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast), transform 170ms ease-out;
+    }
+
+    .attachment-item:hover {
+      background: rgba(255,255,255,.96);
+      border-color: rgba(60,60,67,.18);
+      box-shadow: inset 0 .5px 0 rgba(255,255,255,.96), 0 3px 12px rgba(15,15,18,.045);
+    }
+    .attachment-item.is-removing { opacity: 0; transform: translateX(10px); }
+
+    .attachment-file {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .attachment-item .file-icon { display: none; }
+
+    .file-icon {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border: 1px solid rgba(217,45,32,.08);
+      border-radius: 10px;
+      box-shadow: inset 0 .5px 0 rgba(255,255,255,.8);
+    }
+
+    .file-icon.image {
+      color: var(--blue);
+      background: var(--blue-soft);
+      border-color: rgba(38,117,216,.09);
+    }
+
+    .file-copy { min-width: 0; }
+
+    .file-name {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: var(--type-base);
+      line-height: var(--leading-compact);
+      font-weight: 650;
+    }
+
+    .file-meta {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 5px;
+      overflow: hidden;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: var(--leading-compact);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .file-meta-separator { color: rgba(60,60,67,.28); }
+    .file-meta span { flex: 0 0 auto; }
+    .file-meta span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .file-meta span:nth-last-child(-n + 2) { display: none; }
+
+    .attachment-actions {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .file-action {
+      width: 34px;
+      min-width: 34px;
+      height: 44px;
+      min-height: 44px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      outline: none;
+      font-size: 0;
+      font-weight: 620;
+      white-space: nowrap;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .file-action svg { width: 19px; height: 19px; display: block; }
+    .file-action:hover { color: var(--ink); background: transparent; }
+    .file-action:active { transform: scale(.95); }
+    .file-action:focus-visible { box-shadow: var(--focus); }
+    .file-action.delete { color: var(--red-deep); }
+    .file-action.delete:hover { color: var(--red-deep); background: transparent; }
+
+    .attachment-footer {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .attachment-footer svg { flex: 0 0 auto; }
+
+    .attachment-empty {
+      padding: 34px 18px;
+      color: var(--ink-3);
+      text-align: center;
+      background: rgba(255,255,255,.7);
+      font-size: var(--type-base);
+    }
+
+    .attachment-empty strong { display: block; margin-bottom: 3px; color: var(--ink-2); font-size: var(--type-emphasis); font-weight: 650; }
+
+    .attachment-dialog {
+      max-width: none;
+      max-height: calc(100dvh - 32px);
+      padding: 0;
+      overflow: visible;
+      color: var(--ink);
+      background: transparent;
+      border: 0;
+      opacity: 0;
+      transform: translateY(10px) scale(.97);
+      transition: opacity 170ms ease-out, transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .attachment-dialog[open] { display: block; }
+    .attachment-dialog.is-open { opacity: 1; transform: translateY(0) scale(1); }
+
+    .attachment-dialog::backdrop {
+      background: rgba(15,15,18,0);
+      backdrop-filter: blur(0);
+      -webkit-backdrop-filter: blur(0);
+      transition: background-color 210ms ease-out, backdrop-filter 260ms ease-out;
+    }
+
+    .attachment-dialog.is-open::backdrop {
+      background: rgba(15,15,18,.38);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .preview-dialog { width: min(900px, calc(100% - 32px)); }
+
+    .preview-shell,
+    .confirm-shell {
+      overflow: hidden;
+      background: rgba(255,255,255,.95);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 22px;
+      box-shadow: var(--shadow-dialog);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+    }
+
+    .preview-shell {
+      height: min(760px, calc(100dvh - 32px));
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-head {
+      min-height: 76px;
+      padding: 14px 16px 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview-title {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .preview-title-copy { min-width: 0; }
+    .preview-title-copy h2 { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--type-emphasis); line-height: var(--leading-compact); font-weight: 680; }
+    .preview-title-copy p { margin: 3px 0 0; color: var(--ink-3); font-size: var(--type-base); }
+
+    .preview-head-actions { display: flex; align-items: center; gap: 7px; }
+
+    .preview-download {
+      min-height: 44px;
+      padding: 0 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: var(--ink);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 630;
+    }
+
+    .preview-download:hover { background: #eeeef1; }
+    .preview-download:active { transform: scale(.96); }
+    .preview-download:focus-visible { box-shadow: var(--focus); }
+
+    .preview-close {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 0;
+      border-radius: 50%;
+      outline: none;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .preview-close:hover { color: var(--ink); background: #ececef; }
+    .preview-close:active { transform: scale(.92); }
+    .preview-close:focus-visible { box-shadow: var(--focus); }
+
+    .preview-body {
+      min-height: 0;
+      padding: 24px;
+      flex: 1;
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: #e9eaed;
+    }
+
+    .preview-body img,
+    .preview-body iframe {
+      width: 100%;
+      min-height: 100%;
+      display: block;
+      background: #fff;
+      border: 0;
+      border-radius: 6px;
+      box-shadow: 0 14px 40px rgba(10,10,15,.12);
+    }
+
+    .preview-body img { height: auto; object-fit: contain; }
+
+    .certificate-sheet {
+      width: min(620px, 100%);
+      min-height: 690px;
+      margin: 0 auto;
+      padding: 58px 62px 48px;
+      position: relative;
+      overflow: hidden;
+      color: #27272b;
+      background: #fff;
+      border: 1px solid rgba(60,60,67,.08);
+      box-shadow: 0 14px 40px rgba(10,10,15,.12);
+    }
+
+    .certificate-sheet::before {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      pointer-events: none;
+      border: 2px solid rgba(190,34,28,.72);
+      outline: 1px solid rgba(190,34,28,.22);
+      outline-offset: 5px;
+    }
+
+    .certificate-brand { color: var(--red-deep); text-align: center; font-size: var(--type-base); font-weight: 700; letter-spacing: .14em; }
+    .certificate-sheet h3 { margin: 22px 0 38px; text-align: center; font-size: 32px; line-height: 1.15; letter-spacing: .16em; font-weight: 720; }
+    .certificate-fields { position: relative; display: grid; gap: 0; border-top: 1px solid rgba(60,60,67,.16); }
+    .certificate-field { min-height: 52px; display: grid; grid-template-columns: 112px minmax(0,1fr); align-items: center; gap: 16px; border-bottom: 1px solid rgba(60,60,67,.13); }
+    .certificate-field span { color: rgba(60,60,67,.62); font-size: var(--type-base); }
+    .certificate-field strong { font-size: var(--type-emphasis); font-weight: 650; }
+    .certificate-result { margin-top: 34px; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--green); font-size: 22px; font-weight: 700; }
+    .certificate-signature { margin-top: 48px; color: rgba(60,60,67,.62); text-align: right; font-size: var(--type-base); line-height: 1.8; }
+    .certificate-stamp { width: 92px; height: 92px; position: absolute; right: 58px; bottom: 44px; display: grid; place-items: center; color: rgba(190,34,28,.76); border: 4px double rgba(190,34,28,.7); border-radius: 50%; font-size: var(--type-base); line-height: 1.25; text-align: center; font-weight: 700; transform: rotate(-10deg); }
+
+    .confirm-dialog { width: min(420px, calc(100% - 28px)); }
+    .confirm-shell { padding: 24px; }
+    .confirm-icon { width: 44px; height: 44px; display: grid; place-items: center; color: var(--red-deep); background: var(--red-soft); border-radius: 13px; }
+    .confirm-shell h2 { margin: 18px 0 0; font-size: var(--type-section); line-height: 1.25; letter-spacing: -.02em; font-weight: 700; }
+    .confirm-shell p { margin: 8px 0 0; color: var(--ink-2); font-size: var(--type-base); line-height: var(--leading-base); overflow-wrap: anywhere; }
+    .confirm-actions { margin-top: 22px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+    .confirm-button { min-height: 44px; padding: 0 13px; border: 0; border-radius: 11px; outline: none; font-size: var(--type-base); font-weight: 650; transition: background-color var(--motion-fast), transform 100ms ease-out; }
+    .confirm-button:active { transform: scale(.96); }
+    .confirm-button:focus-visible { box-shadow: var(--focus); }
+    .confirm-button.cancel { color: var(--ink); background: var(--surface-soft); }
+    .confirm-button.cancel:hover { background: #ececef; }
+    .confirm-button.danger { color: #fff; background: var(--red); box-shadow: inset 0 .5px 0 rgba(255,255,255,.3); }
+    .confirm-button.danger:hover { background: var(--red-dark); }
+
+    .attachment-toast {
+      min-height: 48px;
+      padding: 10px 14px;
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 120;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #fff;
+      background: rgba(35,35,39,.92);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 13px;
+      box-shadow: 0 12px 36px rgba(10,10,15,.18);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px) scale(.98);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      font-size: var(--type-base);
+      font-weight: 620;
+      transition: opacity 160ms ease-out, transform 220ms var(--ease-spring), visibility 0s linear 220ms;
+    }
+
+    .attachment-toast.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition-delay: 0s; }
+    .attachment-toast.warning { background: rgba(116,66,14,.94); }
+
     .inventory-panel { margin-top: 16px; padding: 24px 26px 26px; }
 
     .inventory-head {
@@ -490,21 +923,21 @@
     .month-card:focus-visible { box-shadow: var(--focus); border-color: rgba(217, 45, 32, .42); }
     .month-card.latest {
       border-color: rgba(217, 45, 32, .3);
-      box-shadow: inset 3px 0 0 rgba(217, 45, 32, .82), 0 1px 2px rgba(10, 10, 15, .035), 0 5px 14px rgba(10, 10, 15, .035);
+      box-shadow: 0 1px 2px rgba(10, 10, 15, .035), 0 5px 14px rgba(10, 10, 15, .035);
     }
     .month-card.aged {
       background: linear-gradient(180deg, #fffefa 0%, #fffaf2 100%);
       border-color: rgba(173, 92, 12, .24);
-      box-shadow: inset 3px 0 0 rgba(173, 92, 12, .68), 0 1px 2px rgba(10, 10, 15, .035), 0 5px 14px rgba(10, 10, 15, .035);
+      box-shadow: 0 1px 2px rgba(10, 10, 15, .035), 0 5px 14px rgba(10, 10, 15, .035);
     }
 
     .month-card.latest:hover {
-      box-shadow: inset 3px 0 0 rgba(217, 45, 32, .9), 0 2px 4px rgba(10, 10, 15, .04), 0 12px 28px rgba(10, 10, 15, .075);
+      box-shadow: 0 2px 4px rgba(10, 10, 15, .04), 0 12px 28px rgba(10, 10, 15, .075);
     }
 
     .month-card.aged:hover {
       background: linear-gradient(180deg, #fffefa 0%, #fff8ed 100%);
-      box-shadow: inset 3px 0 0 rgba(173, 92, 12, .78), 0 2px 4px rgba(10, 10, 15, .04), 0 12px 28px rgba(10, 10, 15, .075);
+      box-shadow: 0 2px 4px rgba(10, 10, 15, .04), 0 12px 28px rgba(10, 10, 15, .075);
     }
 
     .month-card.latest:focus-visible,
@@ -840,6 +1273,7 @@
     .dialog-foot strong { color: var(--ink-2); font-weight: 650; }
 
     @media (max-width: 1180px) {
+      .attachment-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .month-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
 
@@ -849,16 +1283,21 @@
       .business-block .info-block-head { border-right: 1px solid var(--line); border-bottom: 0; }
       .business-block .price-overview { border-bottom: 0; }
       .business-block .business-list { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+      .attachment-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 760px) {
       .page-head { align-items: flex-start; flex-direction: column; gap: 16px; }
       .head-status { width: 100%; justify-content: space-between; }
-      .detail-panel, .inventory-panel { padding: 23px 20px; }
+      .detail-panel, .certificate-panel, .inventory-panel { padding: 23px 20px; }
       .business-block { display: block; }
       .business-block .info-block-head { border-right: 0; border-bottom: 1px solid var(--line); }
       .business-block .price-overview { border-bottom: 1px solid var(--line); }
       .business-block .business-list { border-top: 0; }
+      .certificate-head { align-items: stretch; flex-direction: column; gap: 12px; }
+      .upload-button { align-self: flex-start; }
+      .preview-body { padding: 16px; }
+      .certificate-sheet { min-height: 650px; padding: 48px 42px 42px; }
       .inventory-head { align-items: flex-start; flex-direction: column; gap: 10px; }
       .inventory-summary { width: 100%; }
       .year-tabs-row { align-items: flex-start; flex-direction: column; gap: 9px; }
@@ -878,6 +1317,21 @@
       .attribute-pair + .attribute-pair { border-top: 1px solid var(--line); border-left: 0; }
       .summary-metric { min-height: 88px; padding: 12px; align-items: flex-start; flex-direction: column; gap: 8px; }
       .summary-value { margin-top: auto; }
+      .upload-button { width: 100%; }
+      .attachment-list { max-height: 222px; }
+      .attachment-item { min-height: 64px; }
+      .attachment-list { grid-template-columns: minmax(0, 1fr); }
+      .preview-head { padding: 12px; align-items: flex-start; }
+      .preview-head .file-icon { display: none; }
+      .preview-download { width: 44px; padding: 0; }
+      .preview-download span { display: none; }
+      .preview-body { padding: 10px; }
+      .certificate-sheet { min-height: 600px; padding: 42px 30px 36px; }
+      .certificate-sheet::before { inset: 15px; }
+      .certificate-sheet h3 { margin-bottom: 30px; font-size: 26px; }
+      .certificate-field { grid-template-columns: 88px minmax(0, 1fr); gap: 10px; }
+      .certificate-stamp { right: 35px; bottom: 38px; }
+      .attachment-toast { right: 12px; bottom: 12px; left: 12px; justify-content: center; }
       .year-tabs { width: 100%; }
       .year-tab { min-width: 0; flex: 1; }
       .month-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -906,16 +1360,18 @@
     @media (prefers-reduced-motion: reduce) {
       .month-card:hover { transform: none; }
       .flow-dialog { transform: none !important; }
+      .attachment-dialog { transform: none !important; }
+      .attachment-item.is-removing { transform: none; }
     }
 
     @media (prefers-reduced-transparency: reduce) {
-      .dialog-shell, .flow-table thead { backdrop-filter: none; -webkit-backdrop-filter: none; }
-      .dialog-shell, .flow-table thead { background: #fff; }
-      .flow-dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .dialog-shell, .flow-table thead, .preview-shell, .confirm-shell, .attachment-toast { backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .dialog-shell, .flow-table thead, .preview-shell, .confirm-shell { background: #fff; }
+      .flow-dialog::backdrop, .attachment-dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
     }
 
     @media (prefers-contrast: more) {
-      .month-card, .detail-panel, .inventory-panel, .info-block { border-color: var(--line-strong); }
+      .month-card, .detail-panel, .certificate-panel, .inventory-panel, .info-block, .attachment-list { border-color: var(--line-strong); }
     }
   </style>
 </head>
@@ -999,6 +1455,112 @@
             <div class="business-row"><dt>保管要求</dt><dd>阴凉干燥 · 避免暴晒</dd></div>
           </dl>
         </section>
+      </div>
+    </section>
+
+    <section class="certificate-panel" aria-labelledby="certificate-title">
+      <div class="certificate-head">
+        <div class="certificate-heading">
+          <div class="certificate-title-line">
+            <h2 id="certificate-title">合格证附件</h2>
+            <span class="attachment-count" id="attachment-count" aria-live="polite">3 个文件</span>
+          </div>
+          <p>集中归档产品合格证与出厂检验材料，便于验收和追溯。</p>
+        </div>
+        <button class="upload-button" id="certificate-upload-trigger" type="button">
+          <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
+          上传附件
+        </button>
+        <input id="certificate-upload" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" multiple hidden>
+      </div>
+
+      <div class="attachment-list" id="attachment-list" aria-label="合格证附件列表">
+        <article class="attachment-item" data-id="cert-001" data-name="淮海_MFZ-ABC4_产品合格证.pdf" data-kind="pdf" data-size="2.4 MB" data-source="mock">
+          <div class="attachment-file">
+            <span class="file-icon" aria-hidden="true">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h8l4 4V21H6z"></path><path d="M14 2.5v4h4"></path><path d="M8.5 13h7M8.5 16.5h5"></path></svg>
+            </span>
+            <div class="file-copy">
+              <strong class="file-name">淮海_MFZ-ABC4_产品合格证.pdf</strong>
+              <div class="file-meta"><span>PDF</span><span class="file-meta-separator">·</span><span>2.4 MB</span><span class="file-meta-separator">·</span><span>2026-08-18</span></div>
+            </div>
+          </div>
+          <div class="attachment-actions" aria-label="淮海_MFZ-ABC4_产品合格证.pdf 操作">
+            <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+              预览
+            </button>
+            <button class="file-action" type="button" data-file-action="download">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+              下载
+            </button>
+            <button class="file-action delete" type="button" data-file-action="delete">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>
+              删除
+            </button>
+          </div>
+        </article>
+
+        <article class="attachment-item" data-id="cert-002" data-name="MFZ-ABC4_检验合格证_正面.jpg" data-kind="image" data-size="1.8 MB" data-source="mock">
+          <div class="attachment-file">
+            <span class="file-icon image" aria-hidden="true">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="9" r="1.6"></circle><path d="m4 17 5-5 3.5 3 2.5-2 5 4"></path></svg>
+            </span>
+            <div class="file-copy">
+              <strong class="file-name">MFZ-ABC4_检验合格证_正面.jpg</strong>
+              <div class="file-meta"><span>JPG</span><span class="file-meta-separator">·</span><span>1.8 MB</span><span class="file-meta-separator">·</span><span>2026-08-18</span></div>
+            </div>
+          </div>
+          <div class="attachment-actions" aria-label="MFZ-ABC4_检验合格证_正面.jpg 操作">
+            <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+              预览
+            </button>
+            <button class="file-action" type="button" data-file-action="download">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+              下载
+            </button>
+            <button class="file-action delete" type="button" data-file-action="delete">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>
+              删除
+            </button>
+          </div>
+        </article>
+
+        <article class="attachment-item" data-id="cert-003" data-name="MFZ-ABC4_出厂检验报告.pdf" data-kind="pdf" data-size="3.1 MB" data-source="mock">
+          <div class="attachment-file">
+            <span class="file-icon" aria-hidden="true">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h8l4 4V21H6z"></path><path d="M14 2.5v4h4"></path><path d="M8.5 13h7M8.5 16.5h5"></path></svg>
+            </span>
+            <div class="file-copy">
+              <strong class="file-name">MFZ-ABC4_出厂检验报告.pdf</strong>
+              <div class="file-meta"><span>PDF</span><span class="file-meta-separator">·</span><span>3.1 MB</span><span class="file-meta-separator">·</span><span>2026-08-18</span></div>
+            </div>
+          </div>
+          <div class="attachment-actions" aria-label="MFZ-ABC4_出厂检验报告.pdf 操作">
+            <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+              预览
+            </button>
+            <button class="file-action" type="button" data-file-action="download">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+              下载
+            </button>
+            <button class="file-action delete" type="button" data-file-action="delete">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>
+              删除
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <div class="attachment-empty" id="attachment-empty" hidden>
+        <strong>暂无合格证附件</strong>
+        点击“上传附件”添加产品合格证或检验材料。
+      </div>
+      <div class="attachment-footer" role="note">
+        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5"></path><path d="M12 8h.01"></path></svg>
+        <span>支持 PDF、JPG、PNG，单个文件不超过 10 MB；可一次选择多个文件。</span>
       </div>
     </section>
 
@@ -1121,6 +1683,51 @@
     </section>
   </main>
 
+  <dialog class="attachment-dialog preview-dialog" id="certificate-preview-dialog" aria-labelledby="preview-title">
+    <div class="preview-shell">
+      <header class="preview-head">
+        <div class="preview-title">
+          <span class="file-icon" id="preview-file-icon" aria-hidden="true">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h8l4 4V21H6z"></path><path d="M14 2.5v4h4"></path><path d="M8.5 13h7M8.5 16.5h5"></path></svg>
+          </span>
+          <div class="preview-title-copy">
+            <h2 id="preview-title">附件预览</h2>
+            <p id="preview-meta">PDF · 2.4 MB</p>
+          </div>
+        </div>
+        <div class="preview-head-actions">
+          <button class="preview-download" id="preview-download" type="button" aria-label="下载当前附件">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+            <span>下载</span>
+          </button>
+          <button class="preview-close" id="preview-close" type="button" aria-label="关闭附件预览">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+      </header>
+      <div class="preview-body" id="preview-body"></div>
+    </div>
+  </dialog>
+
+  <dialog class="attachment-dialog confirm-dialog" id="certificate-delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description">
+    <div class="confirm-shell">
+      <div class="confirm-icon" aria-hidden="true">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>
+      </div>
+      <h2 id="delete-title">删除附件？</h2>
+      <p id="delete-description">删除后，该附件将从当前货物档案中移除。</p>
+      <div class="confirm-actions">
+        <button class="confirm-button cancel" id="delete-cancel" type="button">取消</button>
+        <button class="confirm-button danger" id="delete-confirm" type="button">删除附件</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="attachment-toast" id="attachment-toast" role="status" aria-live="polite" aria-atomic="true">
+    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></svg>
+    <span id="attachment-toast-text">操作成功</span>
+  </div>
+
   <dialog class="flow-dialog" id="flow-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
     <div class="dialog-shell">
       <header class="dialog-head">
@@ -1183,6 +1790,249 @@
     let activeTrigger = null;
     let closeTimer = 0;
     let yearPanelAnimation = null;
+
+    const attachmentList = document.getElementById('attachment-list');
+    const attachmentEmpty = document.getElementById('attachment-empty');
+    const attachmentCount = document.getElementById('attachment-count');
+    const attachmentUpload = document.getElementById('certificate-upload');
+    const attachmentUploadTrigger = document.getElementById('certificate-upload-trigger');
+    const previewDialog = document.getElementById('certificate-preview-dialog');
+    const previewTitle = document.getElementById('preview-title');
+    const previewMeta = document.getElementById('preview-meta');
+    const previewBody = document.getElementById('preview-body');
+    const previewFileIcon = document.getElementById('preview-file-icon');
+    const deleteDialog = document.getElementById('certificate-delete-dialog');
+    const deleteDescription = document.getElementById('delete-description');
+    const attachmentToast = document.getElementById('attachment-toast');
+    const attachmentToastText = document.getElementById('attachment-toast-text');
+    let previewAttachmentRow = null;
+    let previewAttachmentTrigger = null;
+    let pendingDeleteRow = null;
+    let deleteAttachmentTrigger = null;
+    let previewCloseTimer = 0;
+    let deleteCloseTimer = 0;
+    let attachmentToastTimer = 0;
+
+    const attachmentIcons = {
+      pdf: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h8l4 4V21H6z"></path><path d="M14 2.5v4h4"></path><path d="M8.5 13h7M8.5 16.5h5"></path></svg>',
+      image: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="9" r="1.6"></circle><path d="m4 17 5-5 3.5 3 2.5-2 5 4"></path></svg>'
+    };
+
+    const attachmentActionIcons = {
+      preview: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>',
+      download: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>',
+      delete: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>'
+    };
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      })[character]);
+    }
+
+    function getAttachmentRows() {
+      return [...attachmentList.querySelectorAll('.attachment-item')];
+    }
+
+    function labelAttachmentActions(scope = attachmentList) {
+      const labels = { preview: '预览', download: '下载', delete: '删除' };
+      scope.querySelectorAll('.attachment-item').forEach((row) => {
+        const fileName = row.querySelector('.file-name');
+        if (fileName) fileName.title = row.dataset.name || fileName.textContent.trim();
+      });
+      scope.querySelectorAll('[data-file-action]').forEach((button) => {
+        const actionLabel = labels[button.dataset.fileAction];
+        const fileName = button.closest('.attachment-item')?.dataset.name || '附件';
+        button.setAttribute('aria-label', `${actionLabel}：${fileName}`);
+        button.title = actionLabel;
+      });
+    }
+
+    function updateAttachmentCount() {
+      const count = getAttachmentRows().length;
+      labelAttachmentActions();
+      attachmentCount.textContent = `${count} 个文件`;
+      attachmentList.hidden = count === 0;
+      attachmentEmpty.hidden = count !== 0;
+    }
+
+    function showAttachmentToast(message, isWarning = false) {
+      if (attachmentToastTimer) window.clearTimeout(attachmentToastTimer);
+      attachmentToastText.textContent = message;
+      attachmentToast.classList.toggle('warning', isWarning);
+      attachmentToast.classList.add('show');
+      attachmentToastTimer = window.setTimeout(() => {
+        attachmentToast.classList.remove('show');
+        attachmentToastTimer = 0;
+      }, 2800);
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function getFileKind(file) {
+      const extension = file.name.split('.').pop().toLowerCase();
+      if (file.type === 'application/pdf' || extension === 'pdf') return 'pdf';
+      if (['image/jpeg', 'image/png'].includes(file.type) || ['jpg', 'jpeg', 'png'].includes(extension)) return 'image';
+      return '';
+    }
+
+    function getFileTypeLabel(name, kind) {
+      if (kind === 'pdf') return 'PDF';
+      const extension = name.split('.').pop().toUpperCase();
+      return extension === 'JPEG' ? 'JPG' : extension;
+    }
+
+    function createAttachmentRow(file, index) {
+      const kind = getFileKind(file);
+      const name = escapeHtml(file.name);
+      const size = formatFileSize(file.size);
+      const typeLabel = getFileTypeLabel(file.name, kind);
+      const row = document.createElement('article');
+      row.className = 'attachment-item';
+      row.dataset.id = `cert-upload-${Date.now()}-${index}`;
+      row.dataset.name = file.name;
+      row.dataset.kind = kind;
+      row.dataset.size = size;
+      row.dataset.source = 'uploaded';
+      row.dataset.url = URL.createObjectURL(file);
+      row.innerHTML = `
+        <div class="attachment-file">
+          <span class="file-icon ${kind === 'image' ? 'image' : ''}" aria-hidden="true">${attachmentIcons[kind]}</span>
+          <div class="file-copy">
+            <strong class="file-name">${name}</strong>
+            <div class="file-meta"><span>${typeLabel}</span><span class="file-meta-separator">·</span><span>${size}</span><span class="file-meta-separator">·</span><span>刚刚上传</span></div>
+          </div>
+        </div>
+        <div class="attachment-actions" aria-label="${name} 操作">
+          <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">${attachmentActionIcons.preview}预览</button>
+          <button class="file-action" type="button" data-file-action="download">${attachmentActionIcons.download}下载</button>
+          <button class="file-action delete" type="button" data-file-action="delete">${attachmentActionIcons.delete}删除</button>
+        </div>`;
+      return row;
+    }
+
+    function mockCertificateMarkup(fileName) {
+      return `
+        <article class="certificate-sheet" aria-label="${escapeHtml(fileName)} 预览内容">
+          <div class="certificate-brand">徐州市淮海消防器材有限公司</div>
+          <h3>产品合格证</h3>
+          <div class="certificate-fields">
+            <div class="certificate-field"><span>产品名称</span><strong>手提式干粉灭火器</strong></div>
+            <div class="certificate-field"><span>规格型号</span><strong>MFZ/ABC4</strong></div>
+            <div class="certificate-field"><span>灭火级别</span><strong>2A · 55B · C · E</strong></div>
+            <div class="certificate-field"><span>执行标准</span><strong>GB 4351.1-2005</strong></div>
+            <div class="certificate-field"><span>生产批次</span><strong>HH-2026-0816</strong></div>
+            <div class="certificate-field"><span>检验日期</span><strong>2026 年 08 月 16 日</strong></div>
+          </div>
+          <div class="certificate-result">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.6 2.6L16.5 9"></path></svg>
+            检验合格
+          </div>
+          <div class="certificate-signature">检验员：0187<br>签发日期：2026-08-18</div>
+          <div class="certificate-stamp">质量检验<br>专用章</div>
+        </article>`;
+    }
+
+    function openPreview(row, trigger) {
+      if (previewCloseTimer) {
+        window.clearTimeout(previewCloseTimer);
+        previewCloseTimer = 0;
+      }
+      previewAttachmentRow = row;
+      previewAttachmentTrigger = trigger;
+      const { name, kind, size, source, url } = row.dataset;
+      previewTitle.textContent = name;
+      previewMeta.textContent = `${getFileTypeLabel(name, kind)} · ${size}`;
+      previewFileIcon.className = `file-icon ${kind === 'image' ? 'image' : ''}`;
+      previewFileIcon.innerHTML = attachmentIcons[kind];
+      previewBody.replaceChildren();
+
+      if (source === 'uploaded' && kind === 'image') {
+        const image = document.createElement('img');
+        image.src = url;
+        image.alt = `${name} 预览`;
+        previewBody.append(image);
+      } else if (source === 'uploaded' && kind === 'pdf') {
+        const frame = document.createElement('iframe');
+        frame.src = url;
+        frame.title = `${name} PDF 预览`;
+        previewBody.append(frame);
+      } else {
+        previewBody.innerHTML = mockCertificateMarkup(name);
+      }
+
+      if (!previewDialog.open) previewDialog.showModal();
+      requestAnimationFrame(() => {
+        previewDialog.classList.add('is-open');
+        document.getElementById('preview-close').focus();
+      });
+    }
+
+    function closePreview() {
+      if (!previewDialog.open) return;
+      if (previewCloseTimer) window.clearTimeout(previewCloseTimer);
+      previewDialog.classList.remove('is-open');
+      const finishClose = () => {
+        if (previewDialog.open) previewDialog.close();
+        previewBody.replaceChildren();
+        previewCloseTimer = 0;
+        previewAttachmentTrigger?.focus();
+      };
+      if (prefersReducedMotion) finishClose();
+      else previewCloseTimer = window.setTimeout(finishClose, 230);
+    }
+
+    function downloadAttachment(row) {
+      const { name, source, url } = row.dataset;
+      const link = document.createElement('a');
+      let downloadUrl = url;
+      let downloadName = name;
+      let shouldRevoke = false;
+      if (source === 'mock') {
+        const demoContent = `消防器材进销存系统附件下载演示\n\n文件：${name}\n货物：手提式干粉灭火器 MFZ/ABC4\n品牌：淮海\n状态：合格\n`;
+        downloadUrl = URL.createObjectURL(new Blob([demoContent], { type: 'text/plain;charset=utf-8' }));
+        downloadName = `${name.replace(/\.[^.]+$/, '')}_下载演示.txt`;
+        shouldRevoke = true;
+      }
+      link.href = downloadUrl;
+      link.download = downloadName;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      if (shouldRevoke) window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+      showAttachmentToast(`已开始下载“${name}”`);
+    }
+
+    function openDeleteConfirmation(row, trigger) {
+      if (deleteCloseTimer) {
+        window.clearTimeout(deleteCloseTimer);
+        deleteCloseTimer = 0;
+      }
+      pendingDeleteRow = row;
+      deleteAttachmentTrigger = trigger;
+      deleteDescription.textContent = `确认删除“${row.dataset.name}”？删除后，该附件将从当前货物档案中移除。`;
+      if (!deleteDialog.open) deleteDialog.showModal();
+      requestAnimationFrame(() => {
+        deleteDialog.classList.add('is-open');
+        document.getElementById('delete-cancel').focus();
+      });
+    }
+
+    function closeDeleteConfirmation(restoreFocus = true) {
+      if (!deleteDialog.open) return;
+      if (deleteCloseTimer) window.clearTimeout(deleteCloseTimer);
+      deleteDialog.classList.remove('is-open');
+      const finishClose = () => {
+        if (deleteDialog.open) deleteDialog.close();
+        deleteCloseTimer = 0;
+        if (restoreFocus) deleteAttachmentTrigger?.focus();
+      };
+      if (prefersReducedMotion) finishClose();
+      else deleteCloseTimer = window.setTimeout(finishClose, 210);
+    }
 
     function selectYear(year, shouldFocus = false) {
       const nextTab = yearTabs.find((tab) => tab.dataset.year === year);
@@ -1333,6 +2183,84 @@
     });
     monthCards.forEach((card) => card.addEventListener('click', () => openFlowDialog(card)));
     filterButtons.forEach((button) => button.addEventListener('click', () => setFilter(button.dataset.filter)));
+
+    attachmentUploadTrigger.addEventListener('click', () => attachmentUpload.click());
+
+    attachmentUpload.addEventListener('change', () => {
+      const files = [...attachmentUpload.files];
+      const validFiles = files.filter((file) => getFileKind(file) && file.size <= 10 * 1024 * 1024);
+      const invalidCount = files.length - validFiles.length;
+      const newRows = validFiles.map((file, index) => createAttachmentRow(file, index));
+      newRows.forEach((row) => attachmentList.append(row));
+      updateAttachmentCount();
+
+      if (!prefersReducedMotion) {
+        newRows.forEach((row, index) => row.animate(
+          [{ opacity: 0, transform: 'translateY(7px)' }, { opacity: 1, transform: 'translateY(0)' }],
+          { duration: 260, delay: index * 45, easing: 'cubic-bezier(.2,.8,.2,1)' }
+        ));
+      }
+
+      if (validFiles.length && !invalidCount) showAttachmentToast(`已添加 ${validFiles.length} 个附件`);
+      else if (validFiles.length) showAttachmentToast(`已添加 ${validFiles.length} 个附件，${invalidCount} 个文件未通过校验`, true);
+      else if (invalidCount) showAttachmentToast('未添加文件，请检查格式或 10 MB 大小限制', true);
+      attachmentUpload.value = '';
+    });
+
+    attachmentList.addEventListener('click', (event) => {
+      const actionButton = event.target.closest('[data-file-action]');
+      if (!actionButton) return;
+      const row = actionButton.closest('.attachment-item');
+      if (!row) return;
+      if (actionButton.dataset.fileAction === 'preview') openPreview(row, actionButton);
+      else if (actionButton.dataset.fileAction === 'download') downloadAttachment(row);
+      else if (actionButton.dataset.fileAction === 'delete') openDeleteConfirmation(row, actionButton);
+    });
+
+    document.getElementById('preview-close').addEventListener('click', closePreview);
+    document.getElementById('preview-download').addEventListener('click', () => {
+      if (previewAttachmentRow) downloadAttachment(previewAttachmentRow);
+    });
+    previewDialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closePreview();
+    });
+    previewDialog.addEventListener('click', (event) => {
+      if (event.target === previewDialog) closePreview();
+    });
+
+    document.getElementById('delete-cancel').addEventListener('click', () => {
+      closeDeleteConfirmation();
+      pendingDeleteRow = null;
+    });
+    document.getElementById('delete-confirm').addEventListener('click', () => {
+      const row = pendingDeleteRow;
+      if (!row) return;
+      const fileName = row.dataset.name;
+      closeDeleteConfirmation(false);
+      row.classList.add('is-removing');
+      window.setTimeout(() => {
+        if (row.dataset.source === 'uploaded' && row.dataset.url) URL.revokeObjectURL(row.dataset.url);
+        row.remove();
+        updateAttachmentCount();
+        pendingDeleteRow = null;
+        showAttachmentToast(`已删除“${fileName}”`);
+      }, prefersReducedMotion ? 0 : 170);
+      window.setTimeout(() => attachmentUploadTrigger.focus(), prefersReducedMotion ? 0 : 230);
+    });
+    deleteDialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeDeleteConfirmation();
+      pendingDeleteRow = null;
+    });
+    deleteDialog.addEventListener('click', (event) => {
+      if (event.target === deleteDialog) {
+        closeDeleteConfirmation();
+        pendingDeleteRow = null;
+      }
+    });
+
+    updateAttachmentCount();
     document.getElementById('dialog-close').addEventListener('click', closeFlowDialog);
     dialog.addEventListener('cancel', (event) => {
       event.preventDefault();
