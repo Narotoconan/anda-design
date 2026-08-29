@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>货物列表 V2 · 燧安进销存</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23d83229'/%3E%3Cpath d='M16 7c3 3.8 5.5 6.4 5.5 10a5.5 5.5 0 1 1-11 0c0-2.7 1.4-5.1 3-6.8.3 2.1 1.1 3.2 2 3.8.8-2.7.4-4.7.5-7Z' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/common.css">
+  <script src="js/admin-shell.js" defer></script>
+  <style>
+    .page-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 7px;
+      color: var(--red-dark);
+      font-size: var(--type-base);
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      background: var(--red);
+      border-radius: 999px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 3vw, 36px);
+      line-height: 1.1;
+      font-weight: 720;
+      letter-spacing: -.04em;
+    }
+
+    .head-copy {
+      max-width: 720px;
+      margin: 9px 0 0;
+      color: var(--ink-2);
+      font-size: var(--type-base);
+      line-height: 1.55;
+    }
+
+    .catalog-summary {
+      min-width: 220px;
+      min-height: 66px;
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      align-items: center;
+      gap: 15px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.92);
+      border-radius: 17px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+    }
+
+    .summary-item { min-width: 0; }
+    .summary-item span {
+      display: block;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      font-weight: 600;
+    }
+
+    .summary-item strong {
+      display: block;
+      margin-top: 1px;
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -.025em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-divider { align-self: stretch; background: var(--line); }
+
+    .filter-panel {
+      padding: 9px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: minmax(250px, 1.4fr) repeat(3, minmax(125px, .62fr)) auto;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,.92);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(22px) saturate(170%);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+    }
+
+    .field { position: relative; min-width: 0; }
+
+    .field-label {
+      position: absolute;
+      top: 6px;
+      left: 14px;
+      z-index: 1;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .field.has-icon .field-label { left: 43px; }
+
+    .field-icon {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      width: 18px;
+      height: 18px;
+      color: var(--ink-3);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .control {
+      width: 100%;
+      height: 56px;
+      color: var(--ink);
+      background-color: var(--surface-soft);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      outline: none;
+      font-size: var(--type-base);
+      transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    input.control { padding: 23px 14px 5px 43px; }
+    select.control {
+      padding: 23px 36px 5px 14px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d7d85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+    }
+
+    .control::placeholder { color: rgba(60,60,67,.45); }
+    .control:hover { background-color: #f1f1f3; }
+    .control:focus-visible { border-color: rgba(216,50,41,.42); box-shadow: var(--focus); }
+
+    .search-action {
+      min-width: 112px;
+      min-height: 56px;
+      padding: 0 19px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      background: linear-gradient(180deg, #e54138 0%, var(--red) 100%);
+      border: 0;
+      border-radius: var(--radius-md);
+      box-shadow: 0 1px 1px rgba(255,255,255,.2) inset, 0 3px 8px rgba(173,33,27,.18);
+      font-size: var(--type-base);
+      font-weight: 650;
+      transition: transform 90ms ease-out, filter var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    .search-action:hover { filter: brightness(.97); box-shadow: 0 1px 1px rgba(255,255,255,.2) inset, 0 5px 12px rgba(173,33,27,.22); }
+    .search-action:active { transform: scale(.97); filter: brightness(.92); }
+    .search-action:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(216,50,41,.2); }
+
+    .result-bar {
+      min-height: 48px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .result-copy { color: var(--ink-2); font-size: var(--type-base); }
+    .result-copy strong { color: var(--ink); font-weight: 680; font-variant-numeric: tabular-nums; }
+
+    .result-actions { display: flex; align-items: center; gap: 4px; }
+
+    .quiet-button {
+      min-height: 44px;
+      padding: 0 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 11px;
+      font-size: var(--type-base);
+      white-space: nowrap;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 90ms ease-out;
+    }
+
+    .quiet-button svg { width: 17px; height: 17px; transition: transform var(--motion-normal) var(--ease-spring); }
+    .quiet-button:hover { color: var(--ink); background: rgba(255,255,255,.72); }
+    .quiet-button:active { transform: scale(.97); }
+    .quiet-button:focus-visible { outline: none; box-shadow: var(--focus); }
+    .quiet-button:disabled { opacity: .42; cursor: default; transform: none; }
+    .quiet-button[data-all-open="true"] svg { transform: rotate(180deg); }
+
+    .list-guide {
+      padding: 0 18px 8px;
+      display: grid;
+      grid-template-columns: minmax(310px, 1.35fr) minmax(190px, .85fr) 122px 136px 44px;
+      gap: 16px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      font-weight: 600;
+    }
+
+    .spu-list { display: grid; gap: 10px; }
+
+    .spu-card {
+      --card-accent: var(--red);
+      --card-accent-soft: rgba(216,50,41,.09);
+      overflow: hidden;
+      background: rgba(255,255,255,.93);
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.95) inset, 0 1px 3px rgba(0,0,0,.025);
+      transition: border-color var(--motion-fast), box-shadow var(--motion-normal), transform var(--motion-fast);
+    }
+
+    .spu-card:hover { border-color: rgba(60,60,67,.16); box-shadow: 0 .5px 0 rgba(255,255,255,.95) inset, 0 4px 15px rgba(0,0,0,.045); }
+    .spu-card.is-open { background: #fff; border-color: rgba(60,60,67,.14); box-shadow: var(--shadow-md); }
+
+    .spu-trigger {
+      width: 100%;
+      min-height: 104px;
+      padding: 15px 18px;
+      display: grid;
+      grid-template-columns: minmax(310px, 1.35fr) minmax(190px, .85fr) 122px 136px 44px;
+      gap: 16px;
+      align-items: center;
+      color: inherit;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      transition: background-color var(--motion-fast), transform 90ms ease-out;
+    }
+
+    .spu-trigger:hover { background: rgba(247,247,249,.64); }
+    .spu-trigger:active { transform: scale(.997); background: rgba(242,242,244,.76); }
+    .spu-trigger:focus-visible { position: relative; z-index: 2; outline: none; box-shadow: var(--focus); }
+
+    .spu-identity {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      align-items: center;
+      gap: 13px;
+    }
+
+    .goods-symbol {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      color: var(--card-accent);
+      background: linear-gradient(145deg, var(--card-accent-soft), rgba(255,255,255,.82));
+      border: 1px solid rgba(216,50,41,.08);
+      border-radius: 14px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.9) inset;
+    }
+
+    .goods-symbol svg { width: 24px; height: 24px; }
+    .identity-copy { min-width: 0; }
+
+    .identity-kicker {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--red-dark);
+      font-size: var(--type-base);
+      line-height: 1.2;
+      font-weight: 650;
+    }
+
+    .identity-kicker::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      flex: 0 0 auto;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    .spu-title {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      font-size: var(--type-emphasis);
+      line-height: 1.3;
+      font-weight: 680;
+      letter-spacing: -.018em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .spu-title .brand-name { font-weight: 720; }
+
+    .spu-meta {
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1.35;
+      white-space: nowrap;
+    }
+
+    .meta-divider { color: rgba(60,60,67,.24); }
+    .meta-strong { color: var(--ink-2); font-weight: 620; }
+
+    .variant-rail { min-width: 0; }
+    .rail-label,
+    .metric-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .variant-chips { display: flex; align-items: center; gap: 5px; overflow: hidden; }
+
+    .variant-chip {
+      min-width: 38px;
+      height: 27px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      color: var(--ink-2);
+      background: #f3f3f5;
+      border: 1px solid rgba(60,60,67,.065);
+      border-radius: 8px;
+      font-size: var(--type-base);
+      line-height: 1;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .variant-chip.more { min-width: 31px; padding-inline: 7px; color: var(--red-dark); background: var(--red-soft); }
+
+    .metric { min-width: 0; }
+    .metric-value {
+      display: block;
+      color: var(--ink);
+      font-size: var(--type-emphasis);
+      line-height: 1.25;
+      font-weight: 680;
+      letter-spacing: -.015em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .metric-sub {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .stock-line { display: flex; align-items: center; gap: 7px; }
+    .stock-line .metric-value { font-size: 18px; }
+
+    .status-pill,
+    .sku-status {
+      --status-color: var(--green);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--status-color);
+      font-size: var(--type-base);
+      line-height: 1.2;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .status-pill::before,
+    .sku-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      flex: 0 0 auto;
+      background: currentColor;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 10%, transparent);
+    }
+
+    .status-pill.warning,
+    .sku-status.warning { --status-color: var(--amber); }
+    .status-pill.danger,
+    .sku-status.danger { --status-color: var(--red); }
+    .sku-status.info { --status-color: var(--blue); }
+
+    .chevron {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      justify-self: end;
+      color: var(--ink-3);
+      background: rgba(118,118,128,.075);
+      border-radius: 50%;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .spu-trigger:hover .chevron { color: var(--ink-2); background: rgba(118,118,128,.12); }
+    .spu-card.is-open .chevron { color: var(--red); background: var(--red-soft); transform: rotate(180deg); }
+    .chevron svg { width: 17px; height: 17px; }
+
+    .spu-collapse {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows var(--motion-normal) var(--ease-spring), opacity 180ms ease-out;
+    }
+
+    .spu-card.is-open .spu-collapse { grid-template-rows: 1fr; opacity: 1; }
+    .collapse-inner { min-height: 0; overflow: hidden; }
+
+    .sku-panel {
+      padding: 0 16px 16px;
+      transform: translateY(-5px);
+      transition: transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .spu-card.is-open .sku-panel { transform: translateY(0); }
+
+    .sku-panel-inner {
+      padding: 15px;
+      background: linear-gradient(180deg, rgba(247,247,249,.92) 0%, rgba(250,250,251,.76) 100%);
+      border: 1px solid rgba(60,60,67,.07);
+      border-radius: 13px;
+    }
+
+    .sku-panel-head {
+      min-height: 36px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .sku-heading-wrap { display: flex; align-items: baseline; gap: 9px; }
+    .sku-heading { margin: 0; font-size: var(--type-emphasis); line-height: 1.3; font-weight: 680; letter-spacing: -.015em; }
+    .sku-count { color: var(--ink-3); font-size: var(--type-base); font-weight: 600; }
+    .sku-hint { color: var(--ink-3); font-size: var(--type-base); white-space: nowrap; }
+
+    .sku-table { width: 100%; }
+    .sku-row {
+      display: grid;
+      grid-template-columns: minmax(90px,.82fr) minmax(135px,1.18fr) minmax(145px,1.2fr) minmax(95px,.82fr) minmax(86px,.76fr) minmax(86px,.76fr) minmax(80px,.68fr);
+      gap: 14px;
+      align-items: center;
+    }
+
+    .sku-table-head {
+      min-height: 34px;
+      padding: 0 13px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .sku-table-body {
+      overflow: hidden;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(60,60,67,.075);
+      border-radius: 10px;
+    }
+
+    .sku-table-body .sku-row {
+      min-height: 53px;
+      padding: 8px 13px;
+      color: var(--ink-2);
+      border-bottom: 1px solid rgba(60,60,67,.07);
+      font-size: var(--type-base);
+      transition: background-color var(--motion-fast);
+    }
+
+    .sku-table-body .sku-row:last-child { border-bottom: 0; }
+    .sku-table-body .sku-row:hover { background: rgba(255,255,255,.9); }
+    .sku-cell { min-width: 0; overflow-wrap: anywhere; }
+
+    .sku-spec {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+      font-weight: 680;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .spec-mark {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--red-dark);
+      background: var(--red-soft);
+      border-radius: 8px;
+      font-size: var(--type-base);
+      font-weight: 720;
+    }
+
+    .model-code,
+    .sku-code {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: var(--type-base);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.015em;
+    }
+
+    .number { color: var(--ink); font-weight: 620; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .stock-low { color: var(--amber); }
+    .stock-out { color: var(--red); }
+
+    .empty-state {
+      padding: 56px 24px;
+      color: var(--ink-2);
+      text-align: center;
+      background: rgba(255,255,255,.7);
+      border: 1px solid var(--line);
+      border-radius: 17px;
+    }
+
+    .empty-state svg { width: 34px; height: 34px; margin: 0 auto 12px; color: var(--ink-3); }
+    .empty-state h2 { margin: 0; color: var(--ink); font-size: var(--type-section); }
+    .empty-state p { margin: 7px 0 0; font-size: var(--type-base); }
+
+    .pagination {
+      min-height: 62px;
+      margin-top: 14px;
+      padding: 8px 12px 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 15px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+    }
+
+    .pagination-info { color: var(--ink-2); font-size: var(--type-base); font-variant-numeric: tabular-nums; }
+    .page-controls { display: flex; align-items: center; gap: 5px; }
+
+    .page-button {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      font-size: var(--type-base);
+      font-weight: 620;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 90ms ease-out;
+    }
+
+    .page-button:hover:not(:disabled) { color: var(--ink); background: rgba(118,118,128,.09); }
+    .page-button:active:not(:disabled) { transform: scale(.94); }
+    .page-button:focus-visible { outline: none; box-shadow: var(--focus); }
+    .page-button[aria-current="page"] { color: #fff; background: var(--ink); }
+    .page-button:disabled { color: rgba(60,60,67,.25); cursor: default; }
+    .page-button svg { width: 17px; height: 17px; }
+    .page-ellipsis { min-width: 25px; color: var(--ink-3); text-align: center; }
+
+    .spu-card[hidden],
+    .list-guide[hidden],
+    .empty-state[hidden],
+    .pagination[hidden] { display: none !important; }
+
+    @media (max-width: 1100px) {
+      .list-guide,
+      .spu-trigger { grid-template-columns: minmax(300px, 1.3fr) minmax(190px,.9fr) 138px 44px; }
+      .list-guide > :nth-child(3),
+      .price-metric { display: none; }
+
+      .sku-row { grid-template-columns: minmax(88px,.8fr) minmax(130px,1.15fr) minmax(140px,1.15fr) minmax(92px,.82fr) minmax(82px,.72fr) minmax(82px,.72fr) minmax(76px,.66fr); gap: 10px; }
+    }
+
+    @media (max-width: 920px) {
+      .page-head { align-items: flex-start; }
+      .catalog-summary { min-width: 200px; }
+      .filter-panel { grid-template-columns: 1fr 1fr; }
+      .filter-panel .field:first-child,
+      .filter-panel .stock-field { grid-column: 1 / -1; }
+      .search-action { grid-column: 1 / -1; }
+
+      .list-guide { display: none; }
+      .spu-trigger {
+        position: relative;
+        min-height: 126px;
+        padding-right: 68px;
+        grid-template-columns: minmax(0,1.4fr) minmax(165px,.75fr);
+        grid-template-areas: "identity identity" "variants stock";
+        gap: 12px 18px;
+      }
+      .spu-identity { grid-area: identity; }
+      .variant-rail { grid-area: variants; }
+      .stock-metric { grid-area: stock; }
+      .chevron { position: absolute; top: 18px; right: 18px; }
+
+      .sku-row { grid-template-columns: minmax(90px,.82fr) minmax(140px,1.2fr) minmax(95px,.84fr) minmax(86px,.75fr) minmax(86px,.75fr) minmax(78px,.68fr); }
+      .sku-table-head > :nth-child(3),
+      .sku-table-body .sku-row > :nth-child(3) { display: none; }
+    }
+
+    @media (max-width: 760px) {
+      .page-head { margin-bottom: 18px; }
+      h1 { font-size: 30px; }
+      .catalog-summary { display: none; }
+      .head-copy { max-width: none; }
+
+      .sku-panel { padding: 0 10px 10px; }
+      .sku-panel-inner { padding: 12px; }
+      .sku-hint { display: none; }
+      .sku-table-head { display: none; }
+      .sku-table-body { display: grid; gap: 8px; background: transparent; border: 0; border-radius: 0; }
+      .sku-table-body .sku-row {
+        min-height: 0;
+        padding: 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px 16px;
+        background: rgba(255,255,255,.86);
+        border: 1px solid rgba(60,60,67,.075);
+        border-radius: 10px;
+      }
+      .sku-table-body .sku-row > :nth-child(3) { display: block; }
+      .sku-spec { grid-column: 1 / -1; padding-bottom: 3px; }
+      .sku-cell::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 3px;
+        color: var(--ink-3);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: var(--type-base);
+        line-height: 1.2;
+        font-weight: 600;
+      }
+      .sku-spec::before { display: none; }
+
+      .pagination { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 560px) {
+      .filter-panel { grid-template-columns: 1fr; }
+      .filter-panel .field,
+      .filter-panel .field:first-child,
+      .search-action { grid-column: 1; }
+
+      .result-bar { align-items: flex-start; flex-direction: column; gap: 3px; }
+      .result-actions { width: 100%; justify-content: flex-end; }
+
+      .spu-trigger {
+        min-height: 144px;
+        padding: 14px 58px 14px 14px;
+        grid-template-columns: minmax(0, 1fr) minmax(105px,.55fr);
+      }
+      .spu-identity { grid-template-columns: 44px minmax(0,1fr); gap: 11px; }
+      .goods-symbol { width: 44px; height: 44px; border-radius: 13px; }
+      .spu-title { white-space: normal; }
+      .spu-meta .meta-secondary { display: none; }
+      .variant-chips { flex-wrap: wrap; max-height: 59px; }
+      .stock-line { align-items: flex-start; flex-direction: column; gap: 3px; }
+      .stock-line .metric-value { font-size: var(--type-emphasis); }
+      .chevron { top: 15px; right: 14px; }
+
+      .sku-panel-head { align-items: flex-start; }
+      .sku-heading-wrap { align-items: flex-start; flex-direction: column; gap: 1px; }
+      .sku-table-body .sku-row { grid-template-columns: 1fr; }
+      .sku-spec { grid-column: 1; }
+
+      .pagination { padding: 12px; }
+      .page-controls { width: 100%; justify-content: space-between; }
+      .page-button { min-width: 44px; }
+      .hide-phone { display: none; }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .catalog-summary,
+      .filter-panel,
+      .pagination { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .spu-card { background: #fff; }
+    }
+
+    @media (prefers-contrast: more) {
+      .catalog-summary,
+      .filter-panel,
+      .spu-card,
+      .sku-panel-inner,
+      .sku-table-body,
+      .pagination { border-color: rgba(29,29,31,.32); }
+    }
+
+    @supports not (color: color-mix(in srgb, red, transparent)) {
+      .status-pill::before,
+      .sku-status::before { box-shadow: none; }
+    }
+  </style>
+</head>
+<body class="admin-shell">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+
+  <admin-sidebar active="goods-list"></admin-sidebar>
+  <admin-topbar trail="库存管理|货物列表|SPU / SKU 视图"></admin-topbar>
+
+  <main id="main-content" tabindex="-1">
+    <section class="page-head" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Inventory catalog · V2</p>
+        <h1 id="page-title">货物列表</h1>
+        <p class="head-copy">按“类目 + 品牌”聚合为 SPU，展开即可查看对应规格、型号与库存，快速从货物概览定位到具体 SKU。</p>
+      </div>
+      <div class="catalog-summary" aria-label="货物统计：52 个 SPU，186 个 SKU">
+        <div class="summary-item"><span>SPU</span><strong>52</strong></div>
+        <span class="summary-divider" aria-hidden="true"></span>
+        <div class="summary-item"><span>SKU</span><strong>186</strong></div>
+      </div>
+    </section>
+
+    <form class="filter-panel" id="filter-form" aria-label="货物搜索与筛选">
+      <div class="field has-icon">
+        <label class="field-label" for="keyword">搜索 SPU / SKU</label>
+        <svg class="field-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input class="control" id="keyword" type="search" autocomplete="off" placeholder="品牌、类目、规格或型号">
+      </div>
+      <div class="field">
+        <label class="field-label" for="category">货物类目</label>
+        <select class="control" id="category">
+          <option value="">全部类目</option>
+          <option value="灭火器材">灭火器材</option>
+          <option value="消防水带">消防水带</option>
+          <option value="报警设备">报警设备</option>
+          <option value="应急照明">应急照明</option>
+          <option value="消防防护">消防防护</option>
+        </select>
+      </div>
+      <div class="field brand-field">
+        <label class="field-label" for="brand">品牌</label>
+        <select class="control" id="brand">
+          <option value="">全部品牌</option>
+          <option value="淮海">淮海</option>
+          <option value="桂安">桂安</option>
+          <option value="沱雨">沱雨</option>
+          <option value="海湾">海湾</option>
+          <option value="敏华">敏华</option>
+          <option value="东安">东安</option>
+        </select>
+      </div>
+      <div class="field stock-field">
+        <label class="field-label" for="stock">库存状态</label>
+        <select class="control" id="stock">
+          <option value="">全部状态</option>
+          <option value="充足">库存充足</option>
+          <option value="偏低">库存偏低</option>
+          <option value="缺货">包含缺货</option>
+        </select>
+      </div>
+      <button class="search-action" type="submit">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        查询货物
+      </button>
+    </form>
+
+    <div class="result-bar">
+      <div class="result-copy" aria-live="polite">当前显示 <strong id="spu-result-count">6</strong> 个 SPU · 包含 <strong id="sku-result-count">23</strong> 个 SKU</div>
+      <div class="result-actions">
+        <button class="quiet-button" id="toggle-all" type="button" data-all-open="false">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+          <span>全部展开</span>
+        </button>
+        <button class="quiet-button" id="reset-button" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
+          重置筛选
+        </button>
+      </div>
+    </div>
+
+    <div class="list-guide" aria-hidden="true">
+      <span>货物 / SPU</span><span>包含规格</span><span>销售价</span><span>可用库存</span><span></span>
+    </div>
+
+    <section class="spu-list" id="spu-list" aria-label="SPU 货物列表">
+      <article class="spu-card is-open" data-category="灭火器材" data-brand="淮海" data-stock="充足" data-sku-count="5" data-keywords="淮海 手提式干粉灭火器 1kg 2kg 4kg 5kg 8kg mfz abce">
+        <button class="spu-trigger" id="spu-trigger-1" type="button" aria-expanded="true" aria-controls="spu-panel-1">
+          <div class="spu-identity">
+            <span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span>
+            <span class="identity-copy">
+              <span class="identity-kicker">灭火器材</span>
+              <span class="spu-title"><span class="brand-name">淮海</span> · 手提式干粉灭火器</span>
+              <span class="spu-meta"><span>SPU FE-HH-MFZ</span><span class="meta-divider">·</span><span class="meta-strong">5 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span>
+            </span>
+          </div>
+          <div class="variant-rail">
+            <span class="rail-label">规格</span>
+            <span class="variant-chips"><span class="variant-chip">1KG</span><span class="variant-chip">2KG</span><span class="variant-chip">4KG</span><span class="variant-chip more">+2</span></span>
+          </div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥52–138</span><span class="metric-sub">含税价</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">1,286 具</span><span class="status-pill">充足</span></span><span class="metric-sub">在途 120 具</span></div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-1" role="region" aria-labelledby="spu-trigger-1" aria-hidden="false">
+          <div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
+            <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 5 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+            <div class="sku-table" role="table" aria-label="淮海手提式干粉灭火器 SKU 规格明细">
+              <div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div>
+              <div class="sku-table-body" role="rowgroup">
+                <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">1</span>1 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABCE1</span><span class="sku-cell sku-code" data-label="SKU 编码">HH-MFZ-01</span><span class="sku-cell number" data-label="可用库存">236 具</span><span class="sku-cell number" data-label="进货价">¥36.00</span><span class="sku-cell number" data-label="销售价">¥52.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+                <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">2</span>2 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABCE2</span><span class="sku-cell sku-code" data-label="SKU 编码">HH-MFZ-02</span><span class="sku-cell number" data-label="可用库存">318 具</span><span class="sku-cell number" data-label="进货价">¥45.00</span><span class="sku-cell number" data-label="销售价">¥65.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+                <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">4</span>4 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABCE4</span><span class="sku-cell sku-code" data-label="SKU 编码">HH-MFZ-04</span><span class="sku-cell number" data-label="可用库存">412 具</span><span class="sku-cell number" data-label="进货价">¥62.00</span><span class="sku-cell number" data-label="销售价">¥88.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+                <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">5</span>5 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABCE5</span><span class="sku-cell sku-code" data-label="SKU 编码">HH-MFZ-05</span><span class="sku-cell number" data-label="可用库存">246 具</span><span class="sku-cell number" data-label="进货价">¥72.00</span><span class="sku-cell number" data-label="销售价">¥102.00</span><span class="sku-cell" data-label="状态"><span class="sku-status info">项目预留</span></span></div>
+                <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">8</span>8 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABCE8</span><span class="sku-cell sku-code" data-label="SKU 编码">HH-MFZ-08</span><span class="sku-cell number stock-low" data-label="可用库存">74 具</span><span class="sku-cell number" data-label="进货价">¥98.00</span><span class="sku-cell number" data-label="销售价">¥138.00</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
+              </div>
+            </div>
+          </div></div></div>
+        </div>
+      </article>
+
+      <article class="spu-card" data-category="灭火器材" data-brand="桂安" data-stock="充足" data-sku-count="4" data-keywords="桂安 手提式干粉灭火器 1kg 2kg 4kg 5kg mfz abc">
+        <button class="spu-trigger" id="spu-trigger-2" type="button" aria-expanded="false" aria-controls="spu-panel-2">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span><span class="identity-copy"><span class="identity-kicker">灭火器材</span><span class="spu-title"><span class="brand-name">桂安</span> · 手提式干粉灭火器</span><span class="spu-meta"><span>SPU FE-GA-MFZ</span><span class="meta-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span></span></div>
+          <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">1KG</span><span class="variant-chip">2KG</span><span class="variant-chip">4KG</span><span class="variant-chip more">+1</span></span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥48–96</span><span class="metric-sub">含税价</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">604 具</span><span class="status-pill">充足</span></span><span class="metric-sub">在途 80 具</span></div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-2" role="region" aria-labelledby="spu-trigger-2" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-table" role="table" aria-label="桂安手提式干粉灭火器 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">1</span>1 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABC1-A</span><span class="sku-cell sku-code" data-label="SKU 编码">GA-MFZ-01</span><span class="sku-cell number" data-label="可用库存">118 具</span><span class="sku-cell number" data-label="进货价">¥32.50</span><span class="sku-cell number" data-label="销售价">¥48.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">2</span>2 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABC2-A</span><span class="sku-cell sku-code" data-label="SKU 编码">GA-MFZ-02</span><span class="sku-cell number" data-label="可用库存">166 具</span><span class="sku-cell number" data-label="进货价">¥42.00</span><span class="sku-cell number" data-label="销售价">¥59.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">4</span>4 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABC4-A</span><span class="sku-cell sku-code" data-label="SKU 编码">GA-MFZ-04</span><span class="sku-cell number" data-label="可用库存">228 具</span><span class="sku-cell number" data-label="进货价">¥56.00</span><span class="sku-cell number" data-label="销售价">¥78.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">5</span>5 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABC5-A</span><span class="sku-cell sku-code" data-label="SKU 编码">GA-MFZ-05</span><span class="sku-cell number" data-label="可用库存">92 具</span><span class="sku-cell number" data-label="进货价">¥68.00</span><span class="sku-cell number" data-label="销售价">¥96.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+          </div></div>
+        </div></div></div></div>
+      </article>
+
+      <article class="spu-card" data-category="消防水带" data-brand="沱雨" data-stock="偏低" data-sku-count="3" data-keywords="沱雨 有衬里消防水带 8-50-20 8-65-25 10-65-25 聚氨酯 水带">
+        <button class="spu-trigger" id="spu-trigger-3" type="button" aria-expanded="false" aria-controls="spu-panel-3">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg></span><span class="identity-copy"><span class="identity-kicker">消防水带</span><span class="spu-title"><span class="brand-name">沱雨</span> · 有衬里消防水带</span><span class="spu-meta"><span>SPU HD-TY-PU</span><span class="meta-divider">·</span><span class="meta-strong">3 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：盘</span></span></span></div>
+          <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">50/20</span><span class="variant-chip">65/25</span><span class="variant-chip">65/30</span></span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥168–228</span><span class="metric-sub">含税价</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">174 盘</span><span class="status-pill warning">偏低</span></span><span class="metric-sub">2 个规格需关注</span></div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-3" role="region" aria-labelledby="spu-trigger-3" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 3 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-table" role="table" aria-label="沱雨有衬里消防水带 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">20</span>50 / 20m</span><span class="sku-cell model-code" data-label="型号">8-50-20-PU</span><span class="sku-cell sku-code" data-label="SKU 编码">TY-HD-5020</span><span class="sku-cell number" data-label="可用库存">74 盘</span><span class="sku-cell number" data-label="进货价">¥118.00</span><span class="sku-cell number" data-label="销售价">¥168.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">25</span>65 / 25m</span><span class="sku-cell model-code" data-label="型号">8-65-25-PU</span><span class="sku-cell sku-code" data-label="SKU 编码">TY-HD-6525</span><span class="sku-cell number stock-low" data-label="可用库存">64 盘</span><span class="sku-cell number" data-label="进货价">¥142.00</span><span class="sku-cell number" data-label="销售价">¥198.00</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">30</span>65 / 30m</span><span class="sku-cell model-code" data-label="型号">10-65-30-PU</span><span class="sku-cell sku-code" data-label="SKU 编码">TY-HD-6530</span><span class="sku-cell number stock-low" data-label="可用库存">36 盘</span><span class="sku-cell number" data-label="进货价">¥166.00</span><span class="sku-cell number" data-label="销售价">¥228.00</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">需补货</span></span></div>
+          </div></div>
+        </div></div></div></div>
+      </article>
+
+      <article class="spu-card" data-category="报警设备" data-brand="海湾" data-stock="充足" data-sku-count="3" data-keywords="海湾 点型光电感烟火灾探测器 烟感 jty gd 独立式 联动型">
+        <button class="spu-trigger" id="spu-trigger-4" type="button" aria-expanded="false" aria-controls="spu-panel-4">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14l-1.4-7.2A4 4 0 0 0 13.7 5h-3.4a4 4 0 0 0-3.9 3.8L5 16Z"></path><path d="M3 16h18"></path><path d="M9 20h6"></path><path d="M12 2v1"></path></svg></span><span class="identity-copy"><span class="identity-kicker">报警设备</span><span class="spu-title"><span class="brand-name">海湾</span> · 点型光电感烟火灾探测器</span><span class="spu-meta"><span>SPU AL-GST-JTY</span><span class="meta-divider">·</span><span class="meta-strong">3 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：只</span></span></span></div>
+          <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">独立</span><span class="variant-chip">编码</span><span class="variant-chip">隔爆</span></span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥98–286</span><span class="metric-sub">含税价</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">926 只</span><span class="status-pill">充足</span></span><span class="metric-sub">在途 240 只</span></div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-4" role="region" aria-labelledby="spu-trigger-4" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 3 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-table" role="table" aria-label="海湾点型光电感烟火灾探测器 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">独</span>独立式</span><span class="sku-cell model-code" data-label="型号">JTY-GD-G3T</span><span class="sku-cell sku-code" data-label="SKU 编码">GST-JTY-01</span><span class="sku-cell number" data-label="可用库存">346 只</span><span class="sku-cell number" data-label="进货价">¥64.00</span><span class="sku-cell number" data-label="销售价">¥98.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">编</span>编码型</span><span class="sku-cell model-code" data-label="型号">JTY-GD-G3X</span><span class="sku-cell sku-code" data-label="SKU 编码">GST-JTY-02</span><span class="sku-cell number" data-label="可用库存">436 只</span><span class="sku-cell number" data-label="进货价">¥102.00</span><span class="sku-cell number" data-label="销售价">¥168.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">爆</span>隔爆型</span><span class="sku-cell model-code" data-label="型号">JTY-GD-G3EX</span><span class="sku-cell sku-code" data-label="SKU 编码">GST-JTY-EX</span><span class="sku-cell number" data-label="可用库存">144 只</span><span class="sku-cell number" data-label="进货价">¥196.00</span><span class="sku-cell number" data-label="销售价">¥286.00</span><span class="sku-cell" data-label="状态"><span class="sku-status info">项目预留</span></span></div>
+          </div></div>
+        </div></div></div></div>
+      </article>
+
+      <article class="spu-card" data-category="应急照明" data-brand="敏华" data-stock="缺货" data-sku-count="4" data-keywords="敏华 消防应急照明灯 双头 壁挂 吸顶 集中电源 led">
+        <button class="spu-trigger" id="spu-trigger-5" type="button" aria-expanded="false" aria-controls="spu-panel-5">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9h10v11H7z"></path><path d="m8 9-3-4 3-2 3 6"></path><path d="m16 9 3-4-3-2-3 6"></path><path d="M10 13h4"></path><path d="M12 13v4"></path></svg></span><span class="identity-copy"><span class="identity-kicker">应急照明</span><span class="spu-title"><span class="brand-name">敏华</span> · 消防应急照明灯</span><span class="spu-meta"><span>SPU EL-MH-ZFZD</span><span class="meta-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：台</span></span></span></div>
+          <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">双头</span><span class="variant-chip">壁挂</span><span class="variant-chip">吸顶</span><span class="variant-chip more">+1</span></span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥75–268</span><span class="metric-sub">含税价</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">86 台</span><span class="status-pill danger">含缺货</span></span><span class="metric-sub">1 个规格缺货</span></div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-5" role="region" aria-labelledby="spu-trigger-5" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-table" role="table" aria-label="敏华消防应急照明灯 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">双</span>双头 5W</span><span class="sku-cell model-code" data-label="型号">M-ZFZD-E5W</span><span class="sku-cell sku-code" data-label="SKU 编码">MH-EL-DT05</span><span class="sku-cell number" data-label="可用库存">42 台</span><span class="sku-cell number" data-label="进货价">¥42.00</span><span class="sku-cell number" data-label="销售价">¥75.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">壁</span>壁挂 3W</span><span class="sku-cell model-code" data-label="型号">M-ZFZD-B3W</span><span class="sku-cell sku-code" data-label="SKU 编码">MH-EL-BG03</span><span class="sku-cell number stock-low" data-label="可用库存">18 台</span><span class="sku-cell number" data-label="进货价">¥48.00</span><span class="sku-cell number" data-label="销售价">¥82.00</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">吸</span>吸顶 5W</span><span class="sku-cell model-code" data-label="型号">M-ZFJC-E5W</span><span class="sku-cell sku-code" data-label="SKU 编码">MH-EL-XD05</span><span class="sku-cell number" data-label="可用库存">26 台</span><span class="sku-cell number" data-label="进货价">¥86.00</span><span class="sku-cell number" data-label="销售价">¥136.00</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">集</span>集中电源型</span><span class="sku-cell model-code" data-label="型号">M-ZFJC-C8W</span><span class="sku-cell sku-code" data-label="SKU 编码">MH-EL-C08</span><span class="sku-cell number stock-out" data-label="可用库存">0 台</span><span class="sku-cell number" data-label="进货价">¥182.00</span><span class="sku-cell number" data-label="销售价">¥268.00</span><span class="sku-cell" data-label="状态"><span class="sku-status danger">缺货</span></span></div>
+          </div></div>
+        </div></div></div></div>
+      </article>
+
+      <article class="spu-card" data-category="消防防护" data-brand="东安" data-stock="偏低" data-sku-count="4" data-keywords="东安 消防员灭火防护服 s m l xl 阻燃 防护服">
+        <button class="spu-trigger" id="spu-trigger-6" type="button" aria-expanded="false" aria-controls="spu-panel-6">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-5 3 3 5 2-1v11h6V10l2 1 3-5-5-3c0 1.7-1.3 3-3 3S9 4.7 9 3Z"></path><path d="M9 14h6"></path></svg></span><span class="identity-copy"><span class="identity-kicker">消防防护</span><span class="spu-title"><span class="brand-name">东安</span> · 消防员灭火防护服</span><span class="spu-meta"><span>SPU PF-DA-ZFMH</span><span class="meta-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：套</span></span></span></div>
+          <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">S</span><span class="variant-chip">M</span><span class="variant-chip">L</span><span class="variant-chip more">+1</span></span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥1,760–1,980</span><span class="metric-sub">含税价</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">132 套</span><span class="status-pill warning">偏低</span></span><span class="metric-sub">XL 规格需补货</span></div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-6" role="region" aria-labelledby="spu-trigger-6" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-table" role="table" aria-label="东安消防员灭火防护服 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">S</span>S / 165</span><span class="sku-cell model-code" data-label="型号">ZFMH-DA-S</span><span class="sku-cell sku-code" data-label="SKU 编码">DA-PF-165</span><span class="sku-cell number stock-low" data-label="可用库存">18 套</span><span class="sku-cell number" data-label="进货价">¥1,180</span><span class="sku-cell number" data-label="销售价">¥1,760</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">M</span>M / 170</span><span class="sku-cell model-code" data-label="型号">ZFMH-DA-M</span><span class="sku-cell sku-code" data-label="SKU 编码">DA-PF-170</span><span class="sku-cell number" data-label="可用库存">48 套</span><span class="sku-cell number" data-label="进货价">¥1,220</span><span class="sku-cell number" data-label="销售价">¥1,820</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">L</span>L / 175</span><span class="sku-cell model-code" data-label="型号">ZFMH-DA-L</span><span class="sku-cell sku-code" data-label="SKU 编码">DA-PF-175</span><span class="sku-cell number" data-label="可用库存">44 套</span><span class="sku-cell number" data-label="进货价">¥1,260</span><span class="sku-cell number" data-label="销售价">¥1,880</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
+            <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">XL</span>XL / 180</span><span class="sku-cell model-code" data-label="型号">ZFMH-DA-XL</span><span class="sku-cell sku-code" data-label="SKU 编码">DA-PF-180</span><span class="sku-cell number stock-low" data-label="可用库存">22 套</span><span class="sku-cell number" data-label="进货价">¥1,320</span><span class="sku-cell number" data-label="销售价">¥1,980</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">需补货</span></span></div>
+          </div></div>
+        </div></div></div></div>
+      </article>
+    </section>
+
+    <section class="empty-state" id="empty-state" hidden aria-live="polite">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path><path d="M8.5 11h5"></path></svg>
+      <h2>没有找到匹配的货物</h2>
+      <p>尝试更换品牌、类目或关键词，也可以重置筛选条件。</p>
+    </section>
+
+    <nav class="pagination" aria-label="货物列表分页">
+      <div class="pagination-info">第 <span id="current-page-label">1</span> / 7 页 · 每页 8 个 SPU · 共 52 个</div>
+      <div class="page-controls">
+        <button class="page-button" id="prev-page" type="button" aria-label="上一页" disabled><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+        <button class="page-button page-number" type="button" aria-current="page" data-page="1">1</button>
+        <button class="page-button page-number" type="button" data-page="2">2</button>
+        <button class="page-button page-number" type="button" data-page="3">3</button>
+        <button class="page-button page-number hide-phone" type="button" data-page="4">4</button>
+        <span class="page-ellipsis" aria-hidden="true">…</span>
+        <button class="page-button page-number" type="button" data-page="7">7</button>
+        <button class="page-button" id="next-page" type="button" aria-label="下一页"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+      </div>
+    </nav>
+  </main>
+
+  <script>
+    const cards = [...document.querySelectorAll('.spu-card')];
+    const filterForm = document.getElementById('filter-form');
+    const keywordInput = document.getElementById('keyword');
+    const categorySelect = document.getElementById('category');
+    const brandSelect = document.getElementById('brand');
+    const stockSelect = document.getElementById('stock');
+    const spuResultCount = document.getElementById('spu-result-count');
+    const skuResultCount = document.getElementById('sku-result-count');
+    const listGuide = document.querySelector('.list-guide');
+    const emptyState = document.getElementById('empty-state');
+    const pagination = document.querySelector('.pagination');
+    const toggleAllButton = document.getElementById('toggle-all');
+    const toggleAllLabel = toggleAllButton.querySelector('span');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function setCardOpen(card, open) {
+      const trigger = card.querySelector('.spu-trigger');
+      const panel = card.querySelector('.spu-collapse');
+      card.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+      panel.setAttribute('aria-hidden', String(!open));
+    }
+
+    function updateToggleAllState() {
+      const visibleCards = cards.filter((card) => !card.hidden);
+      const allOpen = visibleCards.length > 0 && visibleCards.every((card) => card.classList.contains('is-open'));
+      toggleAllButton.dataset.allOpen = String(allOpen);
+      toggleAllLabel.textContent = allOpen ? '全部收起' : '全部展开';
+      toggleAllButton.disabled = visibleCards.length === 0;
+    }
+
+    cards.forEach((card) => {
+      const trigger = card.querySelector('.spu-trigger');
+      trigger.addEventListener('click', () => {
+        setCardOpen(card, !card.classList.contains('is-open'));
+        updateToggleAllState();
+      });
+    });
+
+    function applyFilters() {
+      const keyword = keywordInput.value.trim().toLowerCase();
+      const category = categorySelect.value;
+      const brand = brandSelect.value;
+      const stock = stockSelect.value;
+      let visibleSpu = 0;
+      let visibleSku = 0;
+
+      cards.forEach((card) => {
+        const searchable = `${card.dataset.keywords} ${card.textContent}`.toLowerCase();
+        const matches = (!keyword || searchable.includes(keyword)) &&
+          (!category || card.dataset.category === category) &&
+          (!brand || card.dataset.brand === brand) &&
+          (!stock || card.dataset.stock === stock);
+        card.hidden = !matches;
+        if (matches) {
+          visibleSpu += 1;
+          visibleSku += Number(card.dataset.skuCount || 0);
+        }
+      });
+
+      spuResultCount.textContent = visibleSpu;
+      skuResultCount.textContent = visibleSku;
+      listGuide.hidden = visibleSpu === 0;
+      emptyState.hidden = visibleSpu !== 0;
+      pagination.hidden = visibleSpu === 0;
+      updateToggleAllState();
+    }
+
+    filterForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      applyFilters();
+      document.getElementById('spu-list').scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    document.getElementById('reset-button').addEventListener('click', () => {
+      filterForm.reset();
+      applyFilters();
+      keywordInput.focus();
+    });
+
+    toggleAllButton.addEventListener('click', () => {
+      const shouldOpen = toggleAllButton.dataset.allOpen !== 'true';
+      cards.filter((card) => !card.hidden).forEach((card) => setCardOpen(card, shouldOpen));
+      updateToggleAllState();
+    });
+
+    let currentPage = 1;
+    const pageButtons = [...document.querySelectorAll('.page-number')];
+    const currentPageLabel = document.getElementById('current-page-label');
+    const prevPage = document.getElementById('prev-page');
+    const nextPage = document.getElementById('next-page');
+
+    function setPage(page) {
+      currentPage = Math.max(1, Math.min(7, page));
+      currentPageLabel.textContent = currentPage;
+      pageButtons.forEach((button) => {
+        const isCurrent = Number(button.dataset.page) === currentPage;
+        if (isCurrent) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
+      prevPage.disabled = currentPage === 1;
+      nextPage.disabled = currentPage === 7;
+      document.getElementById('spu-list').scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+
+    pageButtons.forEach((button) => button.addEventListener('click', () => setPage(Number(button.dataset.page))));
+    prevPage.addEventListener('click', () => setPage(currentPage - 1));
+    nextPage.addEventListener('click', () => setPage(currentPage + 1));
+
+    updateToggleAllState();
+  </script>
+</body>
+</html>
