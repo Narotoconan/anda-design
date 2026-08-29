@@ -283,26 +283,6 @@
     .goods-symbol svg { width: 24px; height: 24px; }
     .identity-copy { min-width: 0; }
 
-    .identity-kicker {
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--red-dark);
-      font-size: var(--type-base);
-      line-height: 1.2;
-      font-weight: 650;
-    }
-
-    .identity-kicker::before {
-      content: "";
-      width: 5px;
-      height: 5px;
-      flex: 0 0 auto;
-      background: currentColor;
-      border-radius: 50%;
-    }
-
     .spu-title {
       display: block;
       overflow: hidden;
@@ -317,6 +297,24 @@
 
     .spu-title .brand-name { font-weight: 720; }
 
+    .category-tag {
+      height: 26px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      color: var(--red-dark);
+      background: linear-gradient(180deg, #fff7f6 0%, #fcecea 100%);
+      border: 1px solid rgba(216,50,41,.14);
+      border-radius: 8px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.95) inset;
+      font-size: var(--type-base);
+      line-height: 1;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
     .spu-meta {
       margin-top: 5px;
       display: flex;
@@ -329,8 +327,15 @@
       white-space: nowrap;
     }
 
+    .meta-code {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .meta-divider { color: rgba(60,60,67,.24); }
     .meta-strong { color: var(--ink-2); font-weight: 620; }
+    .spu-meta .meta-secondary { display: none; }
 
     .variant-rail { min-width: 0; }
     .rail-label,
@@ -365,7 +370,12 @@
 
     .variant-chip.more { min-width: 31px; padding-inline: 7px; color: var(--red-dark); background: var(--red-soft); }
 
-    .metric { min-width: 0; }
+    .metric {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     .metric-value {
       display: block;
       color: var(--ink);
@@ -377,47 +387,47 @@
       white-space: nowrap;
     }
 
-    .metric-sub {
-      display: block;
-      margin-top: 3px;
-      color: var(--ink-3);
-      font-size: var(--type-base);
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-
     .stock-line { display: flex; align-items: center; gap: 7px; }
     .stock-line .metric-value { font-size: 18px; }
 
     .status-pill,
     .sku-status {
-      --status-color: var(--green);
+      --status-color: #0a6f3c;
+      --status-bg: var(--green-soft);
+      --status-border: rgba(19,138,82,.18);
+      min-height: 26px;
+      padding: 0 8px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
       color: var(--status-color);
+      background: var(--status-bg);
+      border: 1px solid var(--status-border);
+      border-radius: 8px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.88) inset;
       font-size: var(--type-base);
-      line-height: 1.2;
+      line-height: 1;
       font-weight: 650;
       white-space: nowrap;
     }
 
-    .status-pill::before,
-    .sku-status::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      flex: 0 0 auto;
-      background: currentColor;
-      border-radius: 50%;
-      box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 10%, transparent);
-    }
-
     .status-pill.warning,
-    .sku-status.warning { --status-color: var(--amber); }
+    .sku-status.warning {
+      --status-color: #8a4a08;
+      --status-bg: var(--amber-soft);
+      --status-border: rgba(173,92,12,.2);
+    }
     .status-pill.danger,
-    .sku-status.danger { --status-color: var(--red); }
-    .sku-status.info { --status-color: var(--blue); }
+    .sku-status.danger {
+      --status-color: var(--red-dark);
+      --status-bg: var(--red-soft);
+      --status-border: rgba(216,50,41,.2);
+    }
+    .sku-status.info {
+      --status-color: #1d61b6;
+      --status-bg: var(--blue-soft);
+      --status-border: rgba(38,117,216,.18);
+    }
 
     .chevron {
       width: 38px;
@@ -472,8 +482,6 @@
     .sku-heading-wrap { display: flex; align-items: baseline; gap: 9px; }
     .sku-heading { margin: 0; font-size: var(--type-emphasis); line-height: 1.3; font-weight: 680; letter-spacing: -.015em; }
     .sku-count { color: var(--ink-3); font-size: var(--type-base); font-weight: 600; }
-    .sku-hint { color: var(--ink-3); font-size: var(--type-base); white-space: nowrap; }
-
     .sku-table { width: 100%; }
     .sku-row {
       display: grid;
@@ -651,7 +659,6 @@
 
       .sku-panel { padding: 0 10px 10px; }
       .sku-panel-inner { padding: 12px; }
-      .sku-hint { display: none; }
       .sku-table-head { display: none; }
       .sku-table-body { display: grid; gap: 8px; background: transparent; border: 0; border-radius: 0; }
       .sku-table-body .sku-row {
@@ -698,7 +705,8 @@
       .spu-identity { grid-template-columns: 44px minmax(0,1fr); gap: 11px; }
       .goods-symbol { width: 44px; height: 44px; border-radius: 13px; }
       .spu-title { white-space: normal; }
-      .spu-meta .meta-secondary { display: none; }
+      .spu-meta .meta-code,
+      .spu-meta .meta-code-divider { display: none; }
       .variant-chips { flex-wrap: wrap; max-height: 59px; }
       .stock-line { align-items: flex-start; flex-direction: column; gap: 3px; }
       .stock-line .metric-value { font-size: var(--type-emphasis); }
@@ -731,10 +739,6 @@
       .pagination { border-color: rgba(29,29,31,.32); }
     }
 
-    @supports not (color: color-mix(in srgb, red, transparent)) {
-      .status-pill::before,
-      .sku-status::before { box-shadow: none; }
-    }
   </style>
 </head>
 <body class="admin-shell">
@@ -792,7 +796,7 @@
           <option value="">全部状态</option>
           <option value="充足">库存充足</option>
           <option value="偏低">库存偏低</option>
-          <option value="缺货">包含缺货</option>
+          <option value="缺货">库存缺货</option>
         </select>
       </div>
       <button class="search-action" type="submit">
@@ -825,22 +829,21 @@
           <div class="spu-identity">
             <span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span>
             <span class="identity-copy">
-              <span class="identity-kicker">灭火器材</span>
               <span class="spu-title"><span class="brand-name">淮海</span> · 手提式干粉灭火器</span>
-              <span class="spu-meta"><span>SPU FE-HH-MFZ</span><span class="meta-divider">·</span><span class="meta-strong">5 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span>
+              <span class="spu-meta"><span class="category-tag">灭火器材</span><span class="meta-code">SPU FE-HH-MFZ</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">5 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span>
             </span>
           </div>
           <div class="variant-rail">
             <span class="rail-label">规格</span>
             <span class="variant-chips"><span class="variant-chip">1KG</span><span class="variant-chip">2KG</span><span class="variant-chip">4KG</span><span class="variant-chip more">+2</span></span>
           </div>
-          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥52–138</span><span class="metric-sub">含税价</span></div>
-          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">1,286 具</span><span class="status-pill">充足</span></span><span class="metric-sub">在途 120 具</span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥52–138</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">1,286 具</span><span class="status-pill">充足</span></span></div>
           <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
         </button>
         <div class="spu-collapse" id="spu-panel-1" role="region" aria-labelledby="spu-trigger-1" aria-hidden="false">
           <div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
-            <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 5 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+            <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 5 个规格</span></div></div>
             <div class="sku-table" role="table" aria-label="淮海手提式干粉灭火器 SKU 规格明细">
               <div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div>
               <div class="sku-table-body" role="rowgroup">
@@ -857,14 +860,14 @@
 
       <article class="spu-card" data-category="灭火器材" data-brand="桂安" data-stock="充足" data-sku-count="4" data-keywords="桂安 手提式干粉灭火器 1kg 2kg 4kg 5kg mfz abc">
         <button class="spu-trigger" id="spu-trigger-2" type="button" aria-expanded="false" aria-controls="spu-panel-2">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span><span class="identity-copy"><span class="identity-kicker">灭火器材</span><span class="spu-title"><span class="brand-name">桂安</span> · 手提式干粉灭火器</span><span class="spu-meta"><span>SPU FE-GA-MFZ</span><span class="meta-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">桂安</span> · 手提式干粉灭火器</span><span class="spu-meta"><span class="category-tag">灭火器材</span><span class="meta-code">SPU FE-GA-MFZ</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span></span></div>
           <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">1KG</span><span class="variant-chip">2KG</span><span class="variant-chip">4KG</span><span class="variant-chip more">+1</span></span></div>
-          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥48–96</span><span class="metric-sub">含税价</span></div>
-          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">604 具</span><span class="status-pill">充足</span></span><span class="metric-sub">在途 80 具</span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥48–96</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">604 具</span><span class="status-pill">充足</span></span></div>
           <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
         </button>
         <div class="spu-collapse" id="spu-panel-2" role="region" aria-labelledby="spu-trigger-2" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
-          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div></div>
           <div class="sku-table" role="table" aria-label="桂安手提式干粉灭火器 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">1</span>1 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABC1-A</span><span class="sku-cell sku-code" data-label="SKU 编码">GA-MFZ-01</span><span class="sku-cell number" data-label="可用库存">118 具</span><span class="sku-cell number" data-label="进货价">¥32.50</span><span class="sku-cell number" data-label="销售价">¥48.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">2</span>2 KG</span><span class="sku-cell model-code" data-label="型号">MFZ/ABC2-A</span><span class="sku-cell sku-code" data-label="SKU 编码">GA-MFZ-02</span><span class="sku-cell number" data-label="可用库存">166 具</span><span class="sku-cell number" data-label="进货价">¥42.00</span><span class="sku-cell number" data-label="销售价">¥59.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
@@ -876,14 +879,14 @@
 
       <article class="spu-card" data-category="消防水带" data-brand="沱雨" data-stock="偏低" data-sku-count="3" data-keywords="沱雨 有衬里消防水带 8-50-20 8-65-25 10-65-25 聚氨酯 水带">
         <button class="spu-trigger" id="spu-trigger-3" type="button" aria-expanded="false" aria-controls="spu-panel-3">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg></span><span class="identity-copy"><span class="identity-kicker">消防水带</span><span class="spu-title"><span class="brand-name">沱雨</span> · 有衬里消防水带</span><span class="spu-meta"><span>SPU HD-TY-PU</span><span class="meta-divider">·</span><span class="meta-strong">3 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：盘</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">沱雨</span> · 有衬里消防水带</span><span class="spu-meta"><span class="category-tag">消防水带</span><span class="meta-code">SPU HD-TY-PU</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">3 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：盘</span></span></span></div>
           <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">50/20</span><span class="variant-chip">65/25</span><span class="variant-chip">65/30</span></span></div>
-          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥168–228</span><span class="metric-sub">含税价</span></div>
-          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">174 盘</span><span class="status-pill warning">偏低</span></span><span class="metric-sub">2 个规格需关注</span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥168–228</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">174 盘</span><span class="status-pill warning">偏低</span></span></div>
           <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
         </button>
         <div class="spu-collapse" id="spu-panel-3" role="region" aria-labelledby="spu-trigger-3" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
-          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 3 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 3 个规格</span></div></div>
           <div class="sku-table" role="table" aria-label="沱雨有衬里消防水带 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">20</span>50 / 20m</span><span class="sku-cell model-code" data-label="型号">8-50-20-PU</span><span class="sku-cell sku-code" data-label="SKU 编码">TY-HD-5020</span><span class="sku-cell number" data-label="可用库存">74 盘</span><span class="sku-cell number" data-label="进货价">¥118.00</span><span class="sku-cell number" data-label="销售价">¥168.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">25</span>65 / 25m</span><span class="sku-cell model-code" data-label="型号">8-65-25-PU</span><span class="sku-cell sku-code" data-label="SKU 编码">TY-HD-6525</span><span class="sku-cell number stock-low" data-label="可用库存">64 盘</span><span class="sku-cell number" data-label="进货价">¥142.00</span><span class="sku-cell number" data-label="销售价">¥198.00</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
@@ -894,14 +897,14 @@
 
       <article class="spu-card" data-category="报警设备" data-brand="海湾" data-stock="充足" data-sku-count="3" data-keywords="海湾 点型光电感烟火灾探测器 烟感 jty gd 独立式 联动型">
         <button class="spu-trigger" id="spu-trigger-4" type="button" aria-expanded="false" aria-controls="spu-panel-4">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14l-1.4-7.2A4 4 0 0 0 13.7 5h-3.4a4 4 0 0 0-3.9 3.8L5 16Z"></path><path d="M3 16h18"></path><path d="M9 20h6"></path><path d="M12 2v1"></path></svg></span><span class="identity-copy"><span class="identity-kicker">报警设备</span><span class="spu-title"><span class="brand-name">海湾</span> · 点型光电感烟火灾探测器</span><span class="spu-meta"><span>SPU AL-GST-JTY</span><span class="meta-divider">·</span><span class="meta-strong">3 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：只</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14l-1.4-7.2A4 4 0 0 0 13.7 5h-3.4a4 4 0 0 0-3.9 3.8L5 16Z"></path><path d="M3 16h18"></path><path d="M9 20h6"></path><path d="M12 2v1"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">海湾</span> · 点型光电感烟火灾探测器</span><span class="spu-meta"><span class="category-tag">报警设备</span><span class="meta-code">SPU AL-GST-JTY</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">3 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：只</span></span></span></div>
           <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">独立</span><span class="variant-chip">编码</span><span class="variant-chip">隔爆</span></span></div>
-          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥98–286</span><span class="metric-sub">含税价</span></div>
-          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">926 只</span><span class="status-pill">充足</span></span><span class="metric-sub">在途 240 只</span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥98–286</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">926 只</span><span class="status-pill">充足</span></span></div>
           <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
         </button>
         <div class="spu-collapse" id="spu-panel-4" role="region" aria-labelledby="spu-trigger-4" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
-          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 3 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 3 个规格</span></div></div>
           <div class="sku-table" role="table" aria-label="海湾点型光电感烟火灾探测器 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">独</span>独立式</span><span class="sku-cell model-code" data-label="型号">JTY-GD-G3T</span><span class="sku-cell sku-code" data-label="SKU 编码">GST-JTY-01</span><span class="sku-cell number" data-label="可用库存">346 只</span><span class="sku-cell number" data-label="进货价">¥64.00</span><span class="sku-cell number" data-label="销售价">¥98.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">编</span>编码型</span><span class="sku-cell model-code" data-label="型号">JTY-GD-G3X</span><span class="sku-cell sku-code" data-label="SKU 编码">GST-JTY-02</span><span class="sku-cell number" data-label="可用库存">436 只</span><span class="sku-cell number" data-label="进货价">¥102.00</span><span class="sku-cell number" data-label="销售价">¥168.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
@@ -912,14 +915,14 @@
 
       <article class="spu-card" data-category="应急照明" data-brand="敏华" data-stock="缺货" data-sku-count="4" data-keywords="敏华 消防应急照明灯 双头 壁挂 吸顶 集中电源 led">
         <button class="spu-trigger" id="spu-trigger-5" type="button" aria-expanded="false" aria-controls="spu-panel-5">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9h10v11H7z"></path><path d="m8 9-3-4 3-2 3 6"></path><path d="m16 9 3-4-3-2-3 6"></path><path d="M10 13h4"></path><path d="M12 13v4"></path></svg></span><span class="identity-copy"><span class="identity-kicker">应急照明</span><span class="spu-title"><span class="brand-name">敏华</span> · 消防应急照明灯</span><span class="spu-meta"><span>SPU EL-MH-ZFZD</span><span class="meta-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：台</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9h10v11H7z"></path><path d="m8 9-3-4 3-2 3 6"></path><path d="m16 9 3-4-3-2-3 6"></path><path d="M10 13h4"></path><path d="M12 13v4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">敏华</span> · 消防应急照明灯</span><span class="spu-meta"><span class="category-tag">应急照明</span><span class="meta-code">SPU EL-MH-ZFZD</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：台</span></span></span></div>
           <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">双头</span><span class="variant-chip">壁挂</span><span class="variant-chip">吸顶</span><span class="variant-chip more">+1</span></span></div>
-          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥75–268</span><span class="metric-sub">含税价</span></div>
-          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">86 台</span><span class="status-pill danger">含缺货</span></span><span class="metric-sub">1 个规格缺货</span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥75–268</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">86 台</span><span class="status-pill danger">缺货</span></span></div>
           <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
         </button>
         <div class="spu-collapse" id="spu-panel-5" role="region" aria-labelledby="spu-trigger-5" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
-          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div></div>
           <div class="sku-table" role="table" aria-label="敏华消防应急照明灯 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">双</span>双头 5W</span><span class="sku-cell model-code" data-label="型号">M-ZFZD-E5W</span><span class="sku-cell sku-code" data-label="SKU 编码">MH-EL-DT05</span><span class="sku-cell number" data-label="可用库存">42 台</span><span class="sku-cell number" data-label="进货价">¥42.00</span><span class="sku-cell number" data-label="销售价">¥75.00</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">壁</span>壁挂 3W</span><span class="sku-cell model-code" data-label="型号">M-ZFZD-B3W</span><span class="sku-cell sku-code" data-label="SKU 编码">MH-EL-BG03</span><span class="sku-cell number stock-low" data-label="可用库存">18 台</span><span class="sku-cell number" data-label="进货价">¥48.00</span><span class="sku-cell number" data-label="销售价">¥82.00</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
@@ -931,14 +934,14 @@
 
       <article class="spu-card" data-category="消防防护" data-brand="东安" data-stock="偏低" data-sku-count="4" data-keywords="东安 消防员灭火防护服 s m l xl 阻燃 防护服">
         <button class="spu-trigger" id="spu-trigger-6" type="button" aria-expanded="false" aria-controls="spu-panel-6">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-5 3 3 5 2-1v11h6V10l2 1 3-5-5-3c0 1.7-1.3 3-3 3S9 4.7 9 3Z"></path><path d="M9 14h6"></path></svg></span><span class="identity-copy"><span class="identity-kicker">消防防护</span><span class="spu-title"><span class="brand-name">东安</span> · 消防员灭火防护服</span><span class="spu-meta"><span>SPU PF-DA-ZFMH</span><span class="meta-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：套</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-5 3 3 5 2-1v11h6V10l2 1 3-5-5-3c0 1.7-1.3 3-3 3S9 4.7 9 3Z"></path><path d="M9 14h6"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">东安</span> · 消防员灭火防护服</span><span class="spu-meta"><span class="category-tag">消防防护</span><span class="meta-code">SPU PF-DA-ZFMH</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：套</span></span></span></div>
           <div class="variant-rail"><span class="rail-label">规格</span><span class="variant-chips"><span class="variant-chip">S</span><span class="variant-chip">M</span><span class="variant-chip">L</span><span class="variant-chip more">+1</span></span></div>
-          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥1,760–1,980</span><span class="metric-sub">含税价</span></div>
-          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">132 套</span><span class="status-pill warning">偏低</span></span><span class="metric-sub">XL 规格需补货</span></div>
+          <div class="metric price-metric"><span class="metric-label">销售价区间</span><span class="metric-value">¥1,760–1,980</span></div>
+          <div class="metric stock-metric"><span class="metric-label">可用库存</span><span class="stock-line"><span class="metric-value">132 套</span><span class="status-pill warning">偏低</span></span></div>
           <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
         </button>
         <div class="spu-collapse" id="spu-panel-6" role="region" aria-labelledby="spu-trigger-6" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner">
-          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div><span class="sku-hint">库存实时汇总 · 价格均为含税价</span></div>
+          <div class="sku-panel-head"><div class="sku-heading-wrap"><h2 class="sku-heading">SKU 规格明细</h2><span class="sku-count">共 4 个规格</span></div></div>
           <div class="sku-table" role="table" aria-label="东安消防员灭火防护服 SKU 规格明细"><div class="sku-row sku-table-head" role="row"><span>规格</span><span>型号</span><span>SKU 编码</span><span>可用库存</span><span>进货价</span><span>销售价</span><span>状态</span></div><div class="sku-table-body" role="rowgroup">
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">S</span>S / 165</span><span class="sku-cell model-code" data-label="型号">ZFMH-DA-S</span><span class="sku-cell sku-code" data-label="SKU 编码">DA-PF-165</span><span class="sku-cell number stock-low" data-label="可用库存">18 套</span><span class="sku-cell number" data-label="进货价">¥1,180</span><span class="sku-cell number" data-label="销售价">¥1,760</span><span class="sku-cell" data-label="状态"><span class="sku-status warning">偏低</span></span></div>
             <div class="sku-row" role="row"><span class="sku-cell sku-spec" data-label="规格"><span class="spec-mark">M</span>M / 170</span><span class="sku-cell model-code" data-label="型号">ZFMH-DA-M</span><span class="sku-cell sku-code" data-label="SKU 编码">DA-PF-170</span><span class="sku-cell number" data-label="可用库存">48 套</span><span class="sku-cell number" data-label="进货价">¥1,220</span><span class="sku-cell number" data-label="销售价">¥1,820</span><span class="sku-cell" data-label="状态"><span class="sku-status">正常</span></span></div>
