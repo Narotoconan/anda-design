@@ -215,16 +215,6 @@
     .quiet-button:disabled { opacity: .42; cursor: default; transform: none; }
     .quiet-button[data-all-open="true"] svg { transform: rotate(180deg); }
 
-    .list-guide {
-      padding: 0 18px 8px;
-      display: grid;
-      grid-template-columns: minmax(310px, 1.34fr) minmax(220px, .94fr) 122px 144px 44px;
-      gap: 14px;
-      color: var(--ink-3);
-      font-size: var(--type-base);
-      font-weight: 600;
-    }
-
     .spu-list { display: grid; gap: 10px; }
 
     .spu-card {
@@ -628,14 +618,11 @@
     .page-ellipsis { min-width: 25px; color: var(--ink-3); text-align: center; }
 
     .spu-card[hidden],
-    .list-guide[hidden],
     .empty-state[hidden],
     .pagination[hidden] { display: none !important; }
 
     @media (max-width: 1240px) {
-      .list-guide,
       .spu-trigger { grid-template-columns: minmax(290px, 1.28fr) minmax(210px,.96fr) 144px 44px; }
-      .list-guide > :nth-child(3),
       .price-metric { display: none; }
 
       .dimension-row { grid-template-columns: minmax(170px,1.35fr) minmax(105px,.78fr) minmax(120px,.86fr) minmax(130px,.94fr) minmax(90px,.66fr); gap: 11px; }
@@ -649,7 +636,6 @@
       .filter-panel .stock-field { grid-column: 1 / -1; }
       .search-action { grid-column: 1 / -1; }
 
-      .list-guide { display: none; }
       .spu-trigger {
         position: relative;
         min-height: 126px;
@@ -847,10 +833,6 @@
       </div>
     </div>
 
-    <div class="list-guide" aria-hidden="true">
-      <span>货物 / SPU</span><span>规格维度</span><span>销售价</span><span>可用库存</span><span></span>
-    </div>
-
     <section class="spu-list" id="spu-list" aria-label="SPU 货物列表">
       <article class="spu-card" data-category="灭火器材" data-brand="淮海" data-stock="充足" data-sku-count="5" data-keywords="淮海 手提式干粉灭火器 容量 1kg 2kg 4kg 5kg 8kg">
         <button class="spu-trigger" id="spu-trigger-1" type="button" aria-expanded="false" aria-controls="spu-panel-1">
@@ -961,7 +943,6 @@
     const stockSelect = document.getElementById('stock');
     const spuResultCount = document.getElementById('spu-result-count');
     const skuResultCount = document.getElementById('sku-result-count');
-    const listGuide = document.querySelector('.list-guide');
     const emptyState = document.getElementById('empty-state');
     const pagination = document.querySelector('.pagination');
     const toggleAllButton = document.getElementById('toggle-all');
@@ -1179,7 +1160,6 @@
 
       spuResultCount.textContent = visibleSpu;
       skuResultCount.textContent = visibleSku;
-      listGuide.hidden = visibleSpu === 0;
       emptyState.hidden = visibleSpu !== 0;
       pagination.hidden = visibleSpu === 0;
       updateToggleAllState();
