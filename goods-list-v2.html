@@ -236,8 +236,8 @@
       min-height: 104px;
       padding: 15px 18px;
       display: grid;
-      grid-template-columns: minmax(320px, 1fr) minmax(500px, 530px) 44px;
-      gap: 16px;
+      grid-template-columns: minmax(295px, 1fr) 186px minmax(340px, 370px) 44px;
+      gap: 12px;
       align-items: center;
       color: inherit;
       text-align: left;
@@ -324,16 +324,44 @@
     }
 
     .meta-divider { color: rgba(60,60,67,.24); }
-    .meta-strong { color: var(--ink-2); font-weight: 620; }
     .spu-meta .meta-secondary { display: none; }
+
+    .dimension-summary {
+      width: 100%;
+      min-width: 186px;
+      max-width: 186px;
+      height: 75px;
+      padding: 9px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-self: center;
+      justify-self: end;
+      background: rgba(118,118,128,.075);
+      border: 1px solid rgba(60,60,67,.055);
+      border-radius: 13px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.82) inset;
+      transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    .spu-trigger:hover .dimension-summary {
+      background: rgba(118,118,128,.095);
+      border-color: rgba(60,60,67,.075);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.88) inset;
+    }
+
+    .spu-card.is-open .dimension-summary {
+      background: rgba(118,118,128,.09);
+      border-color: rgba(60,60,67,.07);
+    }
 
     .spu-facts {
       width: 100%;
-      max-width: 530px;
+      max-width: 370px;
       min-width: 0;
       min-height: 72px;
       display: grid;
-      grid-template-columns: minmax(180px, 1.45fr) minmax(120px, .94fr) minmax(105px, .83fr) minmax(112px, .88fr);
+      grid-template-columns: minmax(124px, 1.06fr) minmax(108px, .92fr) minmax(116px, .98fr);
       align-items: stretch;
       justify-self: end;
       overflow: hidden;
@@ -357,15 +385,15 @@
 
     .fact-item {
       min-width: 0;
-      padding: 11px 9px 10px;
+      padding: 11px 10px 10px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
     .fact-item + .fact-item { border-left: 1px solid rgba(60,60,67,.085); }
-    .fact-item:nth-child(2) { padding-inline: 8px; }
 
+    .dimension-label,
     .fact-label {
       display: block;
       margin-bottom: 7px;
@@ -374,6 +402,13 @@
       line-height: 1.2;
       font-weight: 600;
       white-space: nowrap;
+    }
+
+    .dimension-summary .variant-chips {
+      width: 100%;
+      max-height: 28px;
+      flex-wrap: nowrap;
+      overflow: hidden;
     }
 
     .fact-value {
@@ -399,17 +434,18 @@
 
     .variant-chip {
       min-width: 0;
-      max-width: 88px;
+      max-width: 100%;
       height: 28px;
-      padding: 0 4px;
+      padding: 0 3px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex: 0 0 auto;
       color: var(--ink-2);
-      background: #f3f3f5;
-      border: 1px solid rgba(60,60,67,.065);
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(60,60,67,.075);
       border-radius: 8px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.96) inset, 0 1px 2px rgba(0,0,0,.025);
       font-size: var(--type-base);
       line-height: 1;
       font-weight: 650;
@@ -419,7 +455,20 @@
       white-space: nowrap;
     }
 
-    .variant-chip.more { min-width: 31px; padding-inline: 7px; color: var(--red-dark); background: var(--red-soft); }
+    .variant-chip[hidden] { display: none; }
+
+    .variant-chips.has-overflow .variant-chip:not(.more) { max-width: calc(100% - 32px); }
+
+    .variant-chip.more {
+      width: 28px;
+      min-width: 28px;
+      max-width: 28px;
+      padding: 0;
+      color: var(--ink-2);
+      background: rgba(255,255,255,.84);
+      font-weight: 680;
+      letter-spacing: -.02em;
+    }
 
     .stock-value { font-size: 18px; }
     .status-value { align-items: center; }
@@ -662,10 +711,26 @@
     .pagination[hidden] { display: none !important; }
 
     @media (max-width: 1240px) {
-      .spu-trigger { grid-template-columns: minmax(285px, 1fr) minmax(480px, 520px) 44px; gap: 12px; }
-      .spu-facts { max-width: 520px; }
+      .spu-trigger { grid-template-columns: minmax(235px, 1fr) 186px minmax(330px, 360px) 44px; gap: 10px; }
+      .spu-facts { max-width: 360px; }
 
       .dimension-row { grid-template-columns: minmax(170px,1.35fr) minmax(105px,.78fr) minmax(120px,.86fr) minmax(130px,.94fr) minmax(90px,.66fr); gap: 11px; }
+    }
+
+    @media (max-width: 1140px) {
+      .spu-trigger {
+        position: relative;
+        min-height: 164px;
+        padding-right: 68px;
+        grid-template-columns: 186px minmax(330px, 360px);
+        grid-template-areas: "identity identity" "dimension facts";
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .spu-identity { grid-area: identity; }
+      .dimension-summary { grid-area: dimension; justify-self: start; }
+      .spu-facts { grid-area: facts; }
+      .chevron { position: absolute; top: 18px; right: 18px; }
     }
 
     @media (max-width: 920px) {
@@ -675,18 +740,6 @@
       .filter-panel .field:first-child,
       .filter-panel .stock-field { grid-column: 1 / -1; }
       .search-action { grid-column: 1 / -1; }
-
-      .spu-trigger {
-        position: relative;
-        min-height: 164px;
-        padding-right: 68px;
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-areas: "identity" "facts";
-        gap: 12px;
-      }
-      .spu-identity { grid-area: identity; }
-      .spu-facts { grid-area: facts; }
-      .chevron { position: absolute; top: 18px; right: 18px; }
 
       .dimension-row { grid-template-columns: minmax(160px,1.3fr) minmax(100px,.8fr) minmax(112px,.9fr) minmax(125px,1fr) minmax(88px,.7fr); }
     }
@@ -728,11 +781,15 @@
       .pagination { align-items: flex-start; flex-direction: column; }
     }
 
-    @media (max-width: 720px) {
-      .spu-facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-      .fact-item + .fact-item { border-left: 0; }
-      .fact-item:nth-child(even) { border-left: 1px solid rgba(60,60,67,.085); }
-      .fact-item:nth-child(n + 3) { border-top: 1px solid rgba(60,60,67,.085); }
+    @media (max-width: 620px) {
+      .spu-trigger {
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "identity" "dimension" "facts";
+        justify-content: stretch;
+      }
+      .dimension-summary,
+      .spu-facts { justify-self: start; }
     }
 
     @media (max-width: 560px) {
@@ -752,10 +809,10 @@
       .spu-identity { grid-template-columns: 44px minmax(0,1fr); gap: 11px; }
       .goods-symbol { width: 44px; height: 44px; border-radius: 13px; }
       .spu-title { white-space: normal; }
-      .spu-meta .meta-code,
-      .spu-meta .meta-code-divider { display: none; }
-      .spu-facts { border-radius: 12px; }
+      .spu-meta .meta-code { display: none; }
+      .spu-facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-radius: 12px; }
       .fact-item { min-height: 66px; padding: 9px 10px; }
+      .fact-item:nth-child(3) { grid-column: 1 / -1; border-top: 1px solid rgba(60,60,67,.085); border-left: 0; }
       .fact-label { margin-bottom: 5px; }
       .variant-chips { flex-wrap: wrap; max-height: 61px; }
       .stock-value { font-size: var(--type-emphasis); }
@@ -777,6 +834,7 @@
       .filter-panel,
       .pagination { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
       .spu-card { background: #fff; }
+      .dimension-summary { background: #f2f2f4; }
       .spu-facts { background: #f5f5f7; }
     }
 
@@ -784,6 +842,7 @@
       .catalog-summary,
       .filter-panel,
       .spu-card,
+      .dimension-summary,
       .spu-facts,
       .sku-panel-inner,
       .dimension-table-body,
@@ -794,6 +853,7 @@
     @media (prefers-reduced-motion: reduce) {
       .spu-card,
       .spu-trigger,
+      .dimension-summary,
       .spu-facts,
       .chevron,
       .spu-collapse,
@@ -892,11 +952,11 @@
             <span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span>
             <span class="identity-copy">
               <span class="spu-title"><span class="brand-name">淮海</span> · 手提式干粉灭火器</span>
-              <span class="spu-meta"><span class="category-tag">灭火器材</span><span class="meta-code">SPU FE-HH-MFZ</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">5 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span>
+              <span class="spu-meta"><span class="category-tag">灭火器材</span><span class="meta-code">SPU FE-HH-MFZ</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span>
             </span>
           </div>
+          <div class="dimension-summary"><span class="dimension-label">规格维度</span><span class="variant-chips"><span class="variant-chip">容量</span></span></div>
           <div class="spu-facts">
-            <div class="fact-item"><span class="fact-label">规格维度</span><span class="variant-chips"><span class="variant-chip">容量</span></span></div>
             <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥52–138</span></div>
             <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">1,286 具</span></div>
             <div class="fact-item"><span class="fact-label">可用库存状态</span><span class="fact-value status-value"><span class="status-pill">充足</span></span></div>
@@ -910,9 +970,9 @@
 
       <article class="spu-card" data-category="灭火器材" data-brand="桂安" data-stock="充足" data-sku-count="4" data-keywords="桂安 手提式干粉灭火器 容量 1kg 2kg 4kg 5kg">
         <button class="spu-trigger" id="spu-trigger-2" type="button" aria-expanded="false" aria-controls="spu-panel-2">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">桂安</span> · 手提式干粉灭火器</span><span class="spu-meta"><span class="category-tag">灭火器材</span><span class="meta-code">SPU FE-GA-MFZ</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">桂安</span> · 手提式干粉灭火器</span><span class="spu-meta"><span class="category-tag">灭火器材</span><span class="meta-code">SPU FE-GA-MFZ</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：具</span></span></span></div>
+          <div class="dimension-summary"><span class="dimension-label">规格维度</span><span class="variant-chips"><span class="variant-chip">容量</span></span></div>
           <div class="spu-facts">
-            <div class="fact-item"><span class="fact-label">规格维度</span><span class="variant-chips"><span class="variant-chip">容量</span></span></div>
             <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥48–96</span></div>
             <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">604 具</span></div>
             <div class="fact-item"><span class="fact-label">可用库存状态</span><span class="fact-value status-value"><span class="status-pill">充足</span></span></div>
@@ -924,9 +984,9 @@
 
       <article class="spu-card is-open" data-category="消防水带" data-brand="沱雨" data-stock="偏低" data-sku-count="8" data-keywords="沱雨 有衬里消防水带 压力 口径 长度 衬里 0.8mpa 1.0mpa dn50 dn65 20m 25m 30m 聚氨酯 水带">
         <button class="spu-trigger" id="spu-trigger-3" type="button" aria-expanded="true" aria-controls="spu-panel-3">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">沱雨</span> · 有衬里消防水带</span><span class="spu-meta"><span class="category-tag">消防水带</span><span class="meta-code">SPU HD-TY-PU</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">8 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：盘</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">沱雨</span> · 有衬里消防水带</span><span class="spu-meta"><span class="category-tag">消防水带</span><span class="meta-code">SPU HD-TY-PU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：盘</span></span></span></div>
+          <div class="dimension-summary"><span class="dimension-label">规格维度</span><span class="variant-chips"><span class="variant-chip">额定工作压力</span><span class="variant-chip">公称口径</span><span class="variant-chip">水带长度</span><span class="variant-chip">衬里材质</span></span></div>
           <div class="spu-facts">
-            <div class="fact-item"><span class="fact-label">规格维度</span><span class="variant-chips"><span class="variant-chip">压力</span><span class="variant-chip">口径</span><span class="variant-chip">长度</span><span class="variant-chip">衬里</span></span></div>
             <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥168–228</span></div>
             <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">347 盘</span></div>
             <div class="fact-item"><span class="fact-label">可用库存状态</span><span class="fact-value status-value"><span class="status-pill warning">偏低</span></span></div>
@@ -939,9 +999,9 @@
 
       <article class="spu-card" data-category="报警设备" data-brand="海湾" data-stock="充足" data-sku-count="3" data-keywords="海湾 点型光电感烟火灾探测器 烟感 类型 通讯 安装 独立式 编码型 隔爆型 二总线 吸顶">
         <button class="spu-trigger" id="spu-trigger-4" type="button" aria-expanded="false" aria-controls="spu-panel-4">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14l-1.4-7.2A4 4 0 0 0 13.7 5h-3.4a4 4 0 0 0-3.9 3.8L5 16Z"></path><path d="M3 16h18"></path><path d="M9 20h6"></path><path d="M12 2v1"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">海湾</span> · 点型光电感烟火灾探测器</span><span class="spu-meta"><span class="category-tag">报警设备</span><span class="meta-code">SPU AL-GST-JTY</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">3 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：只</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14l-1.4-7.2A4 4 0 0 0 13.7 5h-3.4a4 4 0 0 0-3.9 3.8L5 16Z"></path><path d="M3 16h18"></path><path d="M9 20h6"></path><path d="M12 2v1"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">海湾</span> · 点型光电感烟火灾探测器</span><span class="spu-meta"><span class="category-tag">报警设备</span><span class="meta-code">SPU AL-GST-JTY</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：只</span></span></span></div>
+          <div class="dimension-summary"><span class="dimension-label">规格维度</span><span class="variant-chips"><span class="variant-chip">产品类型</span><span class="variant-chip">通讯方式</span><span class="variant-chip">安装方式</span></span></div>
           <div class="spu-facts">
-            <div class="fact-item"><span class="fact-label">规格维度</span><span class="variant-chips"><span class="variant-chip">类型</span><span class="variant-chip">通讯</span><span class="variant-chip">安装</span></span></div>
             <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥98–286</span></div>
             <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">926 只</span></div>
             <div class="fact-item"><span class="fact-label">可用库存状态</span><span class="fact-value status-value"><span class="status-pill">充足</span></span></div>
@@ -953,9 +1013,9 @@
 
       <article class="spu-card" data-category="应急照明" data-brand="敏华" data-stock="缺货" data-sku-count="4" data-keywords="敏华 消防应急照明灯 款式 安装 功率 供电 双头 条形 圆盘 壁挂 吸顶 3w 5w 8w 自带电源 集中电源 led">
         <button class="spu-trigger" id="spu-trigger-5" type="button" aria-expanded="false" aria-controls="spu-panel-5">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9h10v11H7z"></path><path d="m8 9-3-4 3-2 3 6"></path><path d="m16 9 3-4-3-2-3 6"></path><path d="M10 13h4"></path><path d="M12 13v4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">敏华</span> · 消防应急照明灯</span><span class="spu-meta"><span class="category-tag">应急照明</span><span class="meta-code">SPU EL-MH-ZFZD</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：台</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9h10v11H7z"></path><path d="m8 9-3-4 3-2 3 6"></path><path d="m16 9 3-4-3-2-3 6"></path><path d="M10 13h4"></path><path d="M12 13v4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">敏华</span> · 消防应急照明灯</span><span class="spu-meta"><span class="category-tag">应急照明</span><span class="meta-code">SPU EL-MH-ZFZD</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：台</span></span></span></div>
+          <div class="dimension-summary"><span class="dimension-label">规格维度</span><span class="variant-chips"><span class="variant-chip">灯具款式</span><span class="variant-chip">安装方式</span><span class="variant-chip">额定功率</span><span class="variant-chip">供电方式</span></span></div>
           <div class="spu-facts">
-            <div class="fact-item"><span class="fact-label">规格维度</span><span class="variant-chips"><span class="variant-chip">款式</span><span class="variant-chip">安装</span><span class="variant-chip">功率</span><span class="variant-chip">供电</span></span></div>
             <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥75–268</span></div>
             <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">86 台</span></div>
             <div class="fact-item"><span class="fact-label">可用库存状态</span><span class="fact-value status-value"><span class="status-pill danger">缺货</span></span></div>
@@ -967,9 +1027,9 @@
 
       <article class="spu-card" data-category="消防防护" data-brand="东安" data-stock="偏低" data-sku-count="4" data-keywords="东安 消防员灭火防护服 尺码 适配身高 s m l xl 165cm 170cm 175cm 180cm 阻燃 防护服">
         <button class="spu-trigger" id="spu-trigger-6" type="button" aria-expanded="false" aria-controls="spu-panel-6">
-          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-5 3 3 5 2-1v11h6V10l2 1 3-5-5-3c0 1.7-1.3 3-3 3S9 4.7 9 3Z"></path><path d="M9 14h6"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">东安</span> · 消防员灭火防护服</span><span class="spu-meta"><span class="category-tag">消防防护</span><span class="meta-code">SPU PF-DA-ZFMH</span><span class="meta-divider meta-code-divider">·</span><span class="meta-strong">4 个 SKU</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：套</span></span></span></div>
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-5 3 3 5 2-1v11h6V10l2 1 3-5-5-3c0 1.7-1.3 3-3 3S9 4.7 9 3Z"></path><path d="M9 14h6"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">东安</span> · 消防员灭火防护服</span><span class="spu-meta"><span class="category-tag">消防防护</span><span class="meta-code">SPU PF-DA-ZFMH</span><span class="meta-divider meta-secondary">·</span><span class="meta-secondary">单位：套</span></span></span></div>
+          <div class="dimension-summary"><span class="dimension-label">规格维度</span><span class="variant-chips"><span class="variant-chip">服装尺码</span><span class="variant-chip">适配身高</span></span></div>
           <div class="spu-facts">
-            <div class="fact-item"><span class="fact-label">规格维度</span><span class="variant-chips"><span class="variant-chip">尺码</span><span class="variant-chip">适配身高</span></span></div>
             <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥1,760–1,980</span></div>
             <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">132 套</span></div>
             <div class="fact-item"><span class="fact-label">可用库存状态</span><span class="fact-value status-value"><span class="status-pill warning">偏低</span></span></div>
@@ -1015,6 +1075,65 @@
     const toggleAllButton = document.getElementById('toggle-all');
     const toggleAllLabel = toggleAllButton.querySelector('span');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dimensionSummaries = [...document.querySelectorAll('.dimension-summary')];
+
+    const dimensionSummaryLayouts = dimensionSummaries.map((summary) => {
+      const chipList = summary.querySelector('.variant-chips');
+      const chips = [...chipList.querySelectorAll('.variant-chip:not(.more)')];
+      const labels = chips.map((chip) => chip.textContent.trim());
+      const fullLabel = document.createElement('span');
+      const moreChip = document.createElement('span');
+
+      chipList.setAttribute('aria-hidden', 'true');
+      fullLabel.className = 'visually-hidden dimension-full-labels';
+      fullLabel.textContent = `：${labels.join('、')}`;
+      summary.append(fullLabel);
+
+      moreChip.className = 'variant-chip more';
+      moreChip.setAttribute('aria-hidden', 'true');
+      moreChip.hidden = true;
+      chipList.append(moreChip);
+
+      return { chipList, chips, moreChip };
+    });
+
+    function layoutDimensionSummary({ chipList, chips, moreChip }) {
+      chips.forEach((chip) => { chip.hidden = false; });
+      chipList.classList.remove('has-overflow');
+      moreChip.hidden = true;
+
+      if (!chipList.clientWidth || chipList.scrollWidth <= chipList.clientWidth + 1) return;
+
+      chipList.classList.add('has-overflow');
+      moreChip.textContent = '+1';
+      moreChip.hidden = false;
+      let hiddenCount = 0;
+
+      for (let index = chips.length - 1; index > 0 && chipList.scrollWidth > chipList.clientWidth + 1; index -= 1) {
+        chips[index].hidden = true;
+        hiddenCount += 1;
+        moreChip.textContent = `+${hiddenCount}`;
+      }
+
+      if (hiddenCount === 0) {
+        chipList.classList.remove('has-overflow');
+        moreChip.hidden = true;
+      }
+    }
+
+    function layoutAllDimensionSummaries() {
+      dimensionSummaryLayouts.forEach(layoutDimensionSummary);
+    }
+
+    let dimensionLayoutFrame = 0;
+    function scheduleDimensionSummaryLayout() {
+      cancelAnimationFrame(dimensionLayoutFrame);
+      dimensionLayoutFrame = requestAnimationFrame(layoutAllDimensionSummaries);
+    }
+
+    layoutAllDimensionSummaries();
+    window.addEventListener('resize', scheduleDimensionSummaryLayout, { passive: true });
+    if (document.fonts) document.fonts.ready.then(scheduleDimensionSummaryLayout);
 
     function setCardOpen(card, open) {
       const trigger = card.querySelector('.spu-trigger');
@@ -1067,20 +1186,20 @@
       tuoyu: {
         skuCount: 8,
         dimensions: [
-          { name: '压力', rows: [
+          { name: '额定工作压力', rows: [
             ['0.8 MPa', 4, '231 盘', '¥168–198', '偏低', 'warning'],
             ['1.0 MPa', 4, '116 盘', '¥206–228', '偏低', 'warning']
           ] },
-          { name: '口径', rows: [
+          { name: '公称口径', rows: [
             ['DN50', 3, '159 盘', '¥168–206', '偏低', 'warning'],
             ['DN65', 5, '188 盘', '¥178–228', '偏低', 'warning']
           ] },
-          { name: '长度', rows: [
+          { name: '水带长度', rows: [
             ['20 m', 4, '176 盘', '¥168–214', '偏低', 'warning'],
             ['25 m', 3, '135 盘', '¥182–220', '偏低', 'warning'],
             ['30 m', 1, '36 盘', '¥228', '需补货', 'warning']
           ] },
-          { name: '衬里', rows: [
+          { name: '衬里材质', rows: [
             ['聚氨酯', 8, '347 盘', '¥168–228', '偏低', 'warning']
           ] }
         ]
@@ -1088,16 +1207,16 @@
       haiwan: {
         skuCount: 3,
         dimensions: [
-          { name: '类型', rows: [
+          { name: '产品类型', rows: [
             ['独立式', 1, '346 只', '¥98', '正常', ''],
             ['编码型', 1, '436 只', '¥168', '正常', ''],
             ['隔爆型', 1, '144 只', '¥286', '项目预留', 'info']
           ] },
-          { name: '通讯', rows: [
+          { name: '通讯方式', rows: [
             ['独立通讯', 1, '346 只', '¥98', '正常', ''],
             ['二总线', 2, '580 只', '¥168–286', '正常', '']
           ] },
-          { name: '安装', rows: [
+          { name: '安装方式', rows: [
             ['吸顶安装', 3, '926 只', '¥98–286', '正常', '']
           ] }
         ]
@@ -1105,21 +1224,21 @@
       minhua: {
         skuCount: 4,
         dimensions: [
-          { name: '款式', rows: [
+          { name: '灯具款式', rows: [
             ['双头', 2, '42 台', '¥75–268', '含缺货规格', 'danger'],
             ['条形', 1, '18 台', '¥82', '偏低', 'warning'],
             ['圆盘', 1, '26 台', '¥136', '偏低', 'warning']
           ] },
-          { name: '安装', rows: [
+          { name: '安装方式', rows: [
             ['壁挂安装', 3, '60 台', '¥75–268', '含缺货规格', 'danger'],
             ['吸顶安装', 1, '26 台', '¥136', '偏低', 'warning']
           ] },
-          { name: '功率', rows: [
+          { name: '额定功率', rows: [
             ['3 W', 1, '18 台', '¥82', '偏低', 'warning'],
             ['5 W', 2, '68 台', '¥75–136', '偏低', 'warning'],
             ['8 W', 1, '0 台', '¥268', '缺货', 'danger']
           ] },
-          { name: '供电', rows: [
+          { name: '供电方式', rows: [
             ['自带电源', 3, '86 台', '¥75–136', '偏低', 'warning'],
             ['集中电源', 1, '0 台', '¥268', '缺货', 'danger']
           ] }
@@ -1128,7 +1247,7 @@
       dongan: {
         skuCount: 4,
         dimensions: [
-          { name: '尺码', rows: [
+          { name: '服装尺码', rows: [
             ['S', 1, '18 套', '¥1,760', '偏低', 'warning'],
             ['M', 1, '48 套', '¥1,820', '正常', ''],
             ['L', 1, '44 套', '¥1,880', '正常', ''],
