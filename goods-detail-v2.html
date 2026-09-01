@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>货物详情 V2 · 燧安库存</title>
+  <link rel="stylesheet" href="css/common.css">
+  <script src="js/admin-shell.js" defer></script>
+  <style>
+    .detail-main { max-width: 1480px; }
+
+    .content-breadcrumb {
+      min-height: 28px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .content-breadcrumb a {
+      padding: 4px 2px;
+      color: var(--ink-2);
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .content-breadcrumb a:hover { color: var(--ink); }
+    .content-breadcrumb a:focus-visible { outline: none; box-shadow: var(--focus); }
+    .content-breadcrumb svg { color: #b7b7bc; }
+
+    .page-head {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      color: var(--red-deep);
+      font-size: var(--type-base);
+      font-weight: 720;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      background: var(--red);
+      border-radius: 999px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(var(--type-title), 3vw, var(--type-display));
+      line-height: 1.08;
+      letter-spacing: -.045em;
+      font-weight: 720;
+    }
+
+    .head-copy {
+      margin: 10px 0 0;
+      color: var(--ink-2);
+      font-size: var(--type-base);
+    }
+
+    .head-status {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, .58);
+      border: 1px solid rgba(255, 255, 255, .82);
+      border-radius: 15px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .head-code span,
+    .head-code strong { display: block; }
+    .head-code span { color: var(--ink-3); font-size: var(--type-base); }
+    .head-code strong {
+      margin-top: 2px;
+      font-size: var(--type-emphasis);
+      font-weight: 680;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-badge {
+      min-height: 26px;
+      padding: 4px 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      background: var(--green-soft);
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .status-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    .module-panel {
+      margin-top: 16px;
+      padding: 22px 26px 24px;
+      background: var(--surface-solid);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .module-panel:first-of-type { margin-top: 0; }
+
+    .panel-heading {
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .panel-title-line {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .panel-heading h2 {
+      margin: 0;
+      font-size: var(--type-section);
+      line-height: 1.25;
+      letter-spacing: -.025em;
+      font-weight: 690;
+    }
+
+    .panel-heading p {
+      margin: 5px 0 0;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .panel-meta,
+    .count-badge {
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .count-badge {
+      min-height: 26px;
+      padding: 3px 8px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-weight: 630;
+    }
+
+    .spu-profile {
+      overflow: hidden;
+      background: rgba(248, 248, 250, .88);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95);
+    }
+
+    .spu-profile-head {
+      min-height: 62px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(248, 248, 250, .72));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .profile-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border: 1px solid rgba(216, 50, 41, .08);
+      border-radius: 11px;
+    }
+
+    .spu-profile-head h3 {
+      margin: 0;
+      font-size: var(--type-emphasis);
+      line-height: var(--leading-compact);
+      font-weight: 680;
+    }
+
+    .spu-profile-head p {
+      margin: 3px 0 0;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+    }
+
+    .spu-fields {
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      background: rgba(255, 255, 255, .72);
+    }
+
+    .spu-field {
+      min-width: 0;
+      min-height: 76px;
+      padding: 13px 14px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .spu-field:nth-child(4n) { border-right: 0; }
+    .spu-field:nth-last-child(-n + 4) { border-bottom: 0; }
+    .spu-field dt {
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: var(--leading-compact);
+      font-weight: 560;
+    }
+
+    .spu-field dd {
+      min-width: 0;
+      margin: 6px 0 0;
+      color: var(--ink);
+      font-size: var(--type-base);
+      line-height: var(--leading-base);
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    .spu-field .code-value {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .015em;
+    }
+
+    .sku-filter-panel { padding-bottom: 22px; }
+
+    .variant-filter {
+      overflow: hidden;
+      background: rgba(248, 248, 250, .78);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .variant-row {
+      min-height: 66px;
+      padding: 10px 13px;
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr);
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, .68);
+    }
+
+    .variant-row + .variant-row { border-top: 1px solid var(--line); }
+
+    .variant-label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink-2);
+      font-size: var(--type-base);
+      font-weight: 650;
+    }
+
+    .variant-index {
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--ink-3);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .variant-options {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .sku-option {
+      min-width: 72px;
+      min-height: 44px;
+      padding: 0 14px;
+      position: relative;
+      color: var(--ink-2);
+      background: #fff;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 620;
+      white-space: nowrap;
+      transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .sku-option:hover:not(:disabled) {
+      color: var(--ink);
+      border-color: rgba(60, 60, 67, .3);
+      box-shadow: 0 3px 10px rgba(10, 10, 15, .045);
+    }
+
+    .sku-option:active:not(:disabled) { transform: scale(.97); }
+    .sku-option:focus-visible { box-shadow: var(--focus); }
+    .sku-option[aria-pressed="true"] {
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border-color: rgba(216, 50, 41, .32);
+      box-shadow: inset 0 0 0 1px rgba(216, 50, 41, .06);
+      font-weight: 680;
+    }
+
+    .sku-option[aria-pressed="true"]::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+
+    .sku-option:disabled {
+      color: rgba(60, 60, 67, .3);
+      background: rgba(247, 247, 249, .7);
+      border-color: rgba(60, 60, 67, .08);
+      cursor: not-allowed;
+      text-decoration: line-through;
+      text-decoration-color: rgba(60, 60, 67, .24);
+    }
+
+    .selection-bar {
+      margin-top: 11px;
+      padding: 12px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: linear-gradient(90deg, rgba(216, 50, 41, .075), rgba(216, 50, 41, .018) 52%, rgba(255, 255, 255, .7));
+      border: 1px solid rgba(216, 50, 41, .12);
+      border-radius: 12px;
+    }
+
+    .selection-summary {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .selection-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--red-deep);
+      background: rgba(255, 255, 255, .82);
+      border: 1px solid rgba(216, 50, 41, .12);
+      border-radius: 10px;
+    }
+
+    .selection-copy { min-width: 0; }
+    .selection-copy strong {
+      display: block;
+      font-size: var(--type-emphasis);
+      line-height: var(--leading-compact);
+      font-weight: 680;
+    }
+
+    .selection-copy span {
+      display: block;
+      margin-top: 2px;
+      overflow: hidden;
+      color: var(--ink-3);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: var(--type-base);
+    }
+
+    .selection-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 0 0 auto;
+    }
+
+    .match-count {
+      min-height: 28px;
+      padding: 4px 9px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--red-deep);
+      background: rgba(255, 255, 255, .78);
+      border: 1px solid rgba(216, 50, 41, .13);
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 680;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .quiet-button {
+      min-height: 44px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 630;
+    }
+
+    .quiet-button:hover { color: var(--ink); background: rgba(255, 255, 255, .74); }
+    .quiet-button:active { transform: scale(.97); }
+    .quiet-button:focus-visible { box-shadow: var(--focus); }
+
+    .scope-note {
+      min-height: 32px;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 620;
+      white-space: nowrap;
+    }
+
+    .scope-note::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      background: var(--red);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(216, 50, 41, .09);
+    }
+
+    .inventory-summary {
+      width: min(100%, 820px);
+      margin-bottom: 17px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .summary-metric {
+      min-width: 0;
+      min-height: 72px;
+      padding: 11px 14px 11px 16px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      overflow: hidden;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .summary-metric::before {
+      content: "";
+      width: 3px;
+      position: absolute;
+      inset: 10px auto 10px 0;
+      background: var(--red);
+      border-radius: 0 999px 999px 0;
+    }
+
+    .summary-metric.recent::before { background: var(--amber); }
+    .summary-metric.range::before { background: var(--blue); }
+    .summary-copy { min-width: 0; }
+    .summary-label { display: block; color: var(--ink-2); font-size: var(--type-base); font-weight: 650; }
+    .summary-note { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--type-base); line-height: var(--leading-compact); }
+    .summary-value {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      color: var(--red-deep);
+      font-size: var(--type-data);
+      line-height: 1;
+      font-weight: 720;
+      letter-spacing: -.035em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-metric.recent .summary-value { color: var(--amber); }
+    .summary-metric.range .summary-value { color: var(--blue); }
+    .summary-value small { color: var(--ink-3); font-size: var(--type-base); font-weight: 560; }
+
+    .year-tabs-row {
+      min-height: 52px;
+      margin-bottom: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .year-tabs {
+      padding: 3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: #eaeaed;
+      border-radius: 13px;
+    }
+
+    .year-tab {
+      min-width: 104px;
+      min-height: 44px;
+      padding: 0 15px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+      transition: color var(--motion-fast), background-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .year-tab:hover { color: var(--ink); }
+    .year-tab:active { transform: scale(.97); }
+    .year-tab:focus-visible { box-shadow: var(--focus); }
+    .year-tab[aria-selected="true"] {
+      color: var(--ink);
+      background: #fff;
+      box-shadow: 0 1px 5px rgba(10, 10, 15, .11);
+    }
+
+    .year-overview { text-align: right; }
+    .year-overview strong {
+      display: block;
+      font-size: var(--type-emphasis);
+      line-height: var(--leading-compact);
+      font-weight: 680;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .year-overview span { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--type-base); }
+    .year-panel[hidden] { display: none; }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .month-card {
+      width: 100%;
+      min-width: 0;
+      min-height: 146px;
+      padding: 12px;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      color: var(--ink);
+      text-align: left;
+      background: linear-gradient(180deg, #fff 0%, #fbfbfc 100%);
+      border: 1px solid rgba(60, 60, 67, .14);
+      border-radius: 13px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .96), 0 1px 2px rgba(10, 10, 15, .035), 0 5px 14px rgba(10, 10, 15, .035);
+      outline: none;
+      transition: border-color var(--motion-fast), background var(--motion-fast), box-shadow var(--motion-normal), transform 120ms ease-out;
+    }
+
+    .month-card:hover {
+      border-color: rgba(60, 60, 67, .24);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .98), 0 2px 4px rgba(10, 10, 15, .04), 0 12px 28px rgba(10, 10, 15, .075);
+      transform: translateY(-2px);
+    }
+
+    .month-card:active { transform: scale(.98); }
+    .month-card:focus-visible { box-shadow: var(--focus); border-color: rgba(216, 50, 41, .42); }
+    .month-card.latest { border-color: rgba(216, 50, 41, .3); }
+    .month-card.aged {
+      background: linear-gradient(180deg, #fffefa 0%, #fffaf2 100%);
+      border-color: rgba(173, 92, 12, .24);
+    }
+
+    .month-top,
+    .month-meta,
+    .month-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .month-top {
+      min-height: 42px;
+      margin: -12px -12px 0;
+      padding: 8px 11px;
+      background: rgba(118, 118, 128, .07);
+      border-bottom: 1px solid rgba(60, 60, 67, .09);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .88);
+    }
+
+    .month-card.latest .month-top {
+      background: linear-gradient(90deg, rgba(216, 50, 41, .11), rgba(216, 50, 41, .035));
+      border-bottom-color: rgba(216, 50, 41, .11);
+    }
+
+    .month-card.aged .month-top {
+      background: linear-gradient(90deg, rgba(173, 92, 12, .12), rgba(173, 92, 12, .035));
+      border-bottom-color: rgba(173, 92, 12, .12);
+    }
+
+    .month-date {
+      min-height: 26px;
+      padding: 0 7px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      color: var(--ink-2);
+      background: rgba(255, 255, 255, .82);
+      border: 1px solid rgba(60, 60, 67, .09);
+      border-radius: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .month-date strong { font-size: var(--type-base); line-height: 1; font-weight: 680; }
+    .month-date span { color: var(--ink-3); font-size: var(--type-base); font-weight: 620; }
+    .month-card.latest .month-date { color: var(--red-deep); border-color: rgba(216, 50, 41, .12); }
+    .month-card.aged .month-date { color: var(--amber); border-color: rgba(173, 92, 12, .14); }
+
+    .month-tag {
+      min-height: 26px;
+      padding: 2px 6px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border-radius: 999px;
+      font-size: var(--type-base);
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .month-tag.aged-tag { color: var(--amber); background: var(--amber-soft); }
+
+    .month-quantity {
+      margin-top: 10px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .quantity-label {
+      margin-right: auto;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1.2;
+      font-weight: 620;
+      letter-spacing: .04em;
+    }
+
+    .month-quantity strong { font-size: var(--type-data); font-weight: 720; letter-spacing: -.035em; }
+    .month-quantity small { color: var(--ink-3); font-size: var(--type-base); font-weight: 600; }
+    .month-meta { margin-top: 6px; color: var(--ink-3); font-size: var(--type-base); }
+    .month-meta > span { white-space: nowrap; }
+
+    .month-action {
+      margin-top: 8px;
+      padding-top: 8px;
+      color: var(--ink-2);
+      font-size: var(--type-base);
+      font-weight: 650;
+      border-top: 1px solid var(--line);
+    }
+
+    .month-card:hover .month-action { color: var(--red-deep); }
+
+    .month-action-icon {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      color: var(--ink-3);
+      background: var(--surface-soft);
+      border-radius: 50%;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .month-card:hover .month-action-icon { color: #fff; background: var(--red); transform: translateX(2px); }
+
+    .inventory-note {
+      margin-top: 15px;
+      padding: 11px 13px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #74420e;
+      background: var(--amber-soft);
+      border: 1px solid rgba(173, 92, 12, .12);
+      border-radius: 12px;
+      font-size: var(--type-base);
+    }
+
+    .inventory-note svg { flex: 0 0 auto; color: var(--amber); }
+    .inventory-note strong { color: #5f3308; font-weight: 680; }
+
+    .attachment-layout {
+      display: grid;
+      grid-template-columns: minmax(250px, .7fr) minmax(0, 1.7fr);
+      gap: 12px;
+    }
+
+    .coverage-panel,
+    .files-panel {
+      min-width: 0;
+      overflow: hidden;
+      background: rgba(248, 248, 250, .78);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .subpanel-head {
+      min-height: 58px;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(248, 248, 250, .74));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .subpanel-head h3 { margin: 0; font-size: var(--type-emphasis); line-height: var(--leading-compact); font-weight: 680; }
+    .subpanel-head p { margin: 3px 0 0; color: var(--ink-3); font-size: var(--type-base); }
+
+    .coverage-score {
+      min-width: 54px;
+      text-align: right;
+      color: var(--green);
+      font-size: var(--type-emphasis);
+      font-weight: 720;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .coverage-score small { display: block; color: var(--ink-3); font-size: 12px; font-weight: 560; }
+
+    .coverage-meter {
+      height: 5px;
+      margin: 13px 13px 8px;
+      overflow: hidden;
+      background: rgba(118, 118, 128, .14);
+      border-radius: 999px;
+    }
+
+    .coverage-meter span {
+      width: 0;
+      height: 100%;
+      display: block;
+      background: linear-gradient(90deg, #31a76b, var(--green));
+      border-radius: inherit;
+      transition: width var(--motion-normal) var(--ease-spring);
+    }
+
+    .coverage-list {
+      max-height: 374px;
+      padding: 2px 8px 9px;
+      overflow-y: auto;
+      scrollbar-color: rgba(60, 60, 67, .2) transparent;
+      scrollbar-width: thin;
+    }
+
+    .coverage-row {
+      min-height: 43px;
+      padding: 7px 5px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .coverage-row:last-child { border-bottom: 0; }
+    .coverage-copy { min-width: 0; }
+    .coverage-copy strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: var(--type-base);
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .coverage-copy span {
+      display: block;
+      margin-top: 1px;
+      overflow: hidden;
+      color: var(--ink-3);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .archive-state {
+      min-height: 24px;
+      padding: 3px 7px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--green);
+      background: var(--green-soft);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 660;
+      white-space: nowrap;
+    }
+
+    .archive-state.missing { color: var(--amber); background: var(--amber-soft); }
+    .archive-state::before { content: ""; width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
+
+    .upload-area {
+      margin: 12px;
+      padding: 13px;
+      display: grid;
+      grid-template-columns: minmax(210px, .8fr) minmax(260px, 1.2fr);
+      align-items: stretch;
+      gap: 10px;
+      background: rgba(255, 255, 255, .72);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .target-field { min-width: 0; }
+    .field-label { display: block; margin: 0 0 7px; color: var(--ink-2); font-size: var(--type-base); font-weight: 650; }
+    .sku-select {
+      width: 100%;
+      height: 44px;
+      padding: 0 34px 0 11px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 620;
+      text-overflow: ellipsis;
+    }
+
+    .sku-select:focus-visible { box-shadow: var(--focus); border-color: rgba(216, 50, 41, .32); }
+    .sku-select:disabled { color: var(--ink-2); background: var(--surface-soft); opacity: 1; cursor: default; }
+    .field-help { margin: 6px 0 0; color: var(--ink-3); font-size: 12px; line-height: var(--leading-compact); }
+
+    .drop-zone {
+      min-height: 82px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 1px dashed rgba(60, 60, 67, .24);
+      border-radius: 11px;
+      outline: none;
+      text-align: left;
+      transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    .drop-zone:hover,
+    .drop-zone.is-dragging { background: var(--red-soft); border-color: rgba(216, 50, 41, .36); }
+    .drop-zone:focus-visible { box-shadow: var(--focus); }
+    .drop-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--red-deep);
+      background: #fff;
+      border: 1px solid rgba(216, 50, 41, .1);
+      border-radius: 11px;
+    }
+
+    .drop-copy strong { display: block; color: var(--ink); font-size: var(--type-base); font-weight: 660; }
+    .drop-copy span { display: block; margin-top: 2px; color: var(--ink-3); font-size: 12px; }
+
+    .upload-button {
+      min-height: 44px;
+      padding: 0 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      color: #fff;
+      background: var(--red);
+      border: 0;
+      border-radius: 11px;
+      box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .34), 0 3px 8px rgba(173, 30, 24, .16);
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 660;
+      transition: filter var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .upload-button:hover { filter: brightness(.96); }
+    .upload-button:active { filter: brightness(.91); transform: scale(.965); }
+    .upload-button:focus-visible { box-shadow: var(--focus), 0 3px 8px rgba(173, 30, 24, .16); }
+
+    .file-section-head {
+      padding: 0 13px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .file-section-head strong { font-size: var(--type-base); font-weight: 670; }
+    .file-section-head span { color: var(--ink-3); font-size: 12px; }
+
+    .attachment-list {
+      max-height: 266px;
+      padding: 0 12px 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      overflow-y: auto;
+      scrollbar-color: rgba(60, 60, 67, .2) transparent;
+      scrollbar-width: thin;
+    }
+
+    .attachment-card {
+      min-width: 0;
+      min-height: 92px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 9px;
+      background: rgba(255, 255, 255, .86);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .94);
+      transition: border-color var(--motion-fast), box-shadow var(--motion-fast), transform 120ms ease-out, opacity var(--motion-fast);
+    }
+
+    .attachment-card:hover { border-color: rgba(60, 60, 67, .18); box-shadow: 0 5px 14px rgba(10, 10, 15, .045); }
+    .attachment-card.is-removing { opacity: 0; transform: translateX(8px); }
+
+    .file-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border: 1px solid rgba(216, 50, 41, .08);
+      border-radius: 10px;
+    }
+
+    .file-icon.image { color: var(--blue); background: var(--blue-soft); border-color: rgba(38, 117, 216, .08); }
+    .file-copy { min-width: 0; }
+    .file-name {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: var(--type-base);
+      line-height: var(--leading-compact);
+      font-weight: 650;
+    }
+
+    .file-sku {
+      max-width: 100%;
+      margin-top: 4px;
+      padding: 2px 6px;
+      display: inline-flex;
+      overflow: hidden;
+      color: var(--red-deep);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background: var(--red-soft);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .file-meta {
+      margin-top: 4px;
+      overflow: hidden;
+      color: var(--ink-3);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .file-actions { display: flex; align-items: center; }
+    .icon-button {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      outline: none;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .icon-button:hover { color: var(--ink); background: var(--surface-soft); }
+    .icon-button.delete:hover { color: var(--red-deep); background: var(--red-soft); }
+    .icon-button:active { transform: scale(.93); }
+    .icon-button:focus-visible { box-shadow: var(--focus); }
+
+    .attachment-empty {
+      margin: 0 12px 12px;
+      padding: 30px 16px;
+      color: var(--ink-3);
+      text-align: center;
+      background: rgba(255, 255, 255, .68);
+      border: 1px dashed var(--line-strong);
+      border-radius: 12px;
+      font-size: var(--type-base);
+    }
+
+    .attachment-empty strong { display: block; margin-bottom: 3px; color: var(--ink-2); font-size: var(--type-emphasis); font-weight: 650; }
+
+    .dialog {
+      width: min(760px, calc(100% - 32px));
+      max-width: none;
+      max-height: calc(100dvh - 32px);
+      padding: 0;
+      overflow: visible;
+      color: var(--ink);
+      background: transparent;
+      border: 0;
+      opacity: 0;
+      transform: translateY(10px) scale(.97);
+      transition: opacity 170ms ease-out, transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .dialog[open] { display: block; }
+    .dialog.is-open { opacity: 1; transform: translateY(0) scale(1); }
+    .dialog::backdrop {
+      background: rgba(15, 15, 18, 0);
+      backdrop-filter: blur(0);
+      -webkit-backdrop-filter: blur(0);
+      transition: background-color 210ms ease-out, backdrop-filter 260ms ease-out;
+    }
+
+    .dialog.is-open::backdrop {
+      background: rgba(15, 15, 18, .38);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .dialog-shell {
+      max-height: calc(100dvh - 32px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .96);
+      border: 1px solid rgba(255, 255, 255, .9);
+      border-radius: 22px;
+      box-shadow: var(--shadow-dialog);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+    }
+
+    .dialog-head {
+      min-height: 74px;
+      padding: 15px 16px 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialog-head h2 { margin: 0; font-size: var(--type-section); line-height: 1.25; letter-spacing: -.025em; font-weight: 690; }
+    .dialog-head p { margin: 4px 0 0; color: var(--ink-3); font-size: var(--type-base); }
+    .dialog-body { min-height: 0; padding: 18px 20px 20px; overflow: auto; background: #f2f2f5; }
+
+    .breakdown-table {
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+    }
+
+    .breakdown-row {
+      min-height: 54px;
+      padding: 9px 12px;
+      display: grid;
+      grid-template-columns: minmax(150px, .85fr) minmax(220px, 1.35fr) 90px;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .breakdown-row:last-child { border-bottom: 0; }
+    .breakdown-row.head { min-height: 42px; color: var(--ink-3); background: var(--surface-soft); font-size: 12px; font-weight: 650; }
+    .breakdown-code { font-size: var(--type-base); font-weight: 670; font-variant-numeric: tabular-nums; }
+    .breakdown-spec { color: var(--ink-2); font-size: var(--type-base); }
+    .breakdown-quantity { text-align: right; font-size: var(--type-emphasis); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .certificate-preview { width: min(580px, 100%); margin: 0 auto; padding: 38px; position: relative; background: #fff; border: 1px solid rgba(60, 60, 67, .1); box-shadow: 0 14px 40px rgba(10, 10, 15, .1); }
+    .certificate-preview::before { content: ""; position: absolute; inset: 16px; pointer-events: none; border: 2px solid rgba(185, 39, 32, .68); outline: 1px solid rgba(185, 39, 32, .18); outline-offset: 4px; }
+    .certificate-brand { position: relative; color: var(--red-deep); text-align: center; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+    .certificate-preview h3 { position: relative; margin: 18px 0 28px; text-align: center; font-size: 27px; letter-spacing: .14em; font-weight: 720; }
+    .certificate-fields { position: relative; border-top: 1px solid var(--line-strong); }
+    .certificate-field { min-height: 47px; display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 14px; border-bottom: 1px solid var(--line); }
+    .certificate-field span { color: var(--ink-3); font-size: var(--type-base); }
+    .certificate-field strong { font-size: var(--type-base); font-weight: 650; }
+    .certificate-result { position: relative; margin-top: 26px; color: var(--green); text-align: center; font-size: 20px; font-weight: 720; }
+    .certificate-foot { position: relative; margin-top: 32px; color: var(--ink-3); text-align: right; font-size: 12px; line-height: 1.7; }
+
+    .confirm-dialog { width: min(430px, calc(100% - 32px)); }
+    .confirm-body { padding: 22px; background: #fff; }
+    .confirm-body p { margin: 0; color: var(--ink-2); font-size: var(--type-base); line-height: 1.65; }
+    .confirm-file { margin-top: 12px; padding: 10px 12px; overflow: hidden; color: var(--ink); text-overflow: ellipsis; white-space: nowrap; background: var(--surface-soft); border-radius: 10px; font-size: var(--type-base); font-weight: 650; }
+    .confirm-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 8px; }
+    .secondary-button,
+    .danger-button { min-height: 44px; padding: 0 15px; border-radius: 10px; outline: none; font-size: var(--type-base); font-weight: 650; }
+    .secondary-button { color: var(--ink); background: var(--surface-soft); border: 1px solid var(--line); }
+    .danger-button { color: #fff; background: var(--red); border: 1px solid var(--red); }
+    .secondary-button:hover { background: #ededf0; }
+    .danger-button:hover { filter: brightness(.96); }
+    .secondary-button:focus-visible,
+    .danger-button:focus-visible { box-shadow: var(--focus); }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 110;
+      min-height: 46px;
+      max-width: min(420px, calc(100% - 28px));
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #fff;
+      background: rgba(30, 30, 33, .94);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 12px;
+      box-shadow: 0 12px 34px rgba(10, 10, 15, .2);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px) scale(.98);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      font-size: var(--type-base);
+      font-weight: 620;
+      transition: opacity 160ms ease-out, transform 220ms var(--ease-spring), visibility 0s linear 220ms;
+    }
+
+    .toast.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition-delay: 0s; }
+    .toast.warning { background: rgba(116, 66, 14, .96); }
+
+    @media (max-width: 1320px) {
+      .month-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .attachment-list { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (max-width: 1080px) {
+      .spu-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .spu-field:nth-child(4n) { border-right: 1px solid var(--line); }
+      .spu-field:nth-child(2n) { border-right: 0; }
+      .spu-field:nth-last-child(-n + 4) { border-bottom: 1px solid var(--line); }
+      .spu-field:nth-last-child(-n + 2) { border-bottom: 0; }
+      .attachment-layout { grid-template-columns: minmax(220px, .65fr) minmax(0, 1.35fr); }
+      .upload-area { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (max-width: 880px) {
+      .page-head { align-items: flex-start; flex-direction: column; gap: 14px; }
+      .head-status { width: 100%; justify-content: space-between; }
+      .panel-heading { align-items: flex-start; flex-direction: column; gap: 9px; }
+      .variant-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+      .selection-bar { align-items: flex-start; flex-direction: column; }
+      .selection-actions { width: 100%; justify-content: space-between; }
+      .inventory-summary { grid-template-columns: minmax(0, 1fr); }
+      .year-tabs-row { align-items: flex-start; flex-direction: column; }
+      .year-overview { text-align: left; }
+      .month-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .attachment-layout { grid-template-columns: minmax(0, 1fr); }
+      .coverage-list { max-height: 260px; }
+    }
+
+    @media (max-width: 620px) {
+      .module-panel { padding: 19px 16px 20px; border-radius: 15px; }
+      .spu-fields { grid-template-columns: minmax(0, 1fr); }
+      .spu-field,
+      .spu-field:nth-child(2n),
+      .spu-field:nth-child(4n) { border-right: 0; border-bottom: 1px solid var(--line); }
+      .spu-field:last-child { border-bottom: 0; }
+      .selection-copy span { white-space: normal; }
+      .selection-actions { align-items: flex-start; flex-direction: column; }
+      .quiet-button { padding-left: 0; }
+      .scope-note { max-width: 100%; white-space: normal; }
+      .year-tabs { width: 100%; }
+      .year-tab { min-width: 0; flex: 1; }
+      .month-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .attachment-card { grid-template-columns: auto minmax(0, 1fr); }
+      .coverage-list,
+      .attachment-list { max-height: none; overflow: visible; }
+      .file-actions { grid-column: 1 / -1; justify-content: flex-end; border-top: 1px solid var(--line); }
+      .breakdown-row { grid-template-columns: minmax(0, 1fr) 72px; gap: 7px; }
+      .breakdown-row .breakdown-spec { grid-column: 1 / -1; grid-row: 2; font-size: 12px; }
+      .breakdown-row.head .breakdown-spec { display: none; }
+      .certificate-preview { padding: 32px 26px; }
+      .certificate-field { grid-template-columns: 86px minmax(0, 1fr); gap: 8px; }
+      .toast { right: 14px; bottom: 14px; left: 14px; max-width: none; }
+    }
+
+    @media (max-width: 390px) {
+      .month-grid { grid-template-columns: minmax(0, 1fr); }
+      .head-status { align-items: flex-start; flex-direction: column; gap: 9px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .month-card:hover { transform: none; }
+      .dialog,
+      .attachment-card.is-removing { transform: none !important; }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .dialog-shell,
+      .toast { backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
+    }
+
+    @media (prefers-contrast: more) {
+      .module-panel,
+      .spu-profile,
+      .variant-filter,
+      .coverage-panel,
+      .files-panel,
+      .month-card { border-color: var(--line-strong); }
+    }
+  </style>
+</head>
+<body class="admin-shell">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <admin-sidebar active="goods-detail"></admin-sidebar>
+  <admin-topbar trail="库存管理|货物列表|货物详情 V2"></admin-topbar>
+
+  <main class="detail-main" id="main-content" tabindex="-1">
+    <nav class="content-breadcrumb" aria-label="面包屑导航">
+      <a href="goods-list-v2.html">货物列表 V2</a>
+      <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+      <span aria-current="page">货物详情 V2</span>
+    </nav>
+
+    <header class="page-head">
+      <div>
+        <p class="eyebrow">SPU goods profile</p>
+        <h1>沱雨 · 有衬里消防水带</h1>
+        <p class="head-copy">消防水带 · 4 个规格维度 · 8 个 SKU</p>
+      </div>
+      <div class="head-status" aria-label="SPU 状态">
+        <div class="head-code"><span>SPU 编码</span><strong>HD-TY-PU</strong></div>
+        <span class="status-badge">正常在售</span>
+      </div>
+    </header>
+
+    <section class="module-panel" aria-labelledby="goods-info-title">
+      <div class="panel-heading">
+        <div>
+          <h2 id="goods-info-title">货物信息</h2>
+          <p>展示品牌与类目聚合后的 SPU 基础档案，不包含具体规格与库存数据。</p>
+        </div>
+        <time class="panel-meta" datetime="2026-08-22T17:35">档案更新于 2026-08-22 17:35</time>
+      </div>
+
+      <div class="spu-profile">
+        <div class="spu-profile-head">
+          <span class="profile-icon" aria-hidden="true">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg>
+          </span>
+          <div><h3>SPU 基础档案</h3><p>用于统一维护同品牌、同类目货物的公共属性</p></div>
+        </div>
+        <dl class="spu-fields">
+          <div class="spu-field"><dt>SPU 编码</dt><dd class="code-value">HD-TY-PU</dd></div>
+          <div class="spu-field"><dt>货物类目</dt><dd>消防水带</dd></div>
+          <div class="spu-field"><dt>品牌</dt><dd>沱雨</dd></div>
+          <div class="spu-field"><dt>计量单位</dt><dd>盘</dd></div>
+          <div class="spu-field"><dt>货物名称</dt><dd>有衬里消防水带</dd></div>
+          <div class="spu-field"><dt>执行标准</dt><dd>GB 6246-2011</dd></div>
+          <div class="spu-field"><dt>生产企业</dt><dd>泰州市三江消防器材有限公司</dd></div>
+          <div class="spu-field"><dt>保管要求</dt><dd>阴凉干燥 · 避免折压与暴晒</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="module-panel sku-filter-panel" aria-labelledby="sku-filter-title">
+      <div class="panel-heading">
+        <div>
+          <div class="panel-title-line">
+            <h2 id="sku-filter-title">SKU 筛选</h2>
+            <span class="count-badge" id="sku-count-badge" aria-live="polite">8 个 SKU</span>
+          </div>
+          <p>每行对应一个规格维度；选择“全部”可保留该维度下的所有 SKU 值。</p>
+        </div>
+        <span class="panel-meta">全部规格值已展开</span>
+      </div>
+
+      <div class="variant-filter" id="variant-filter" aria-label="SKU 规格筛选">
+        <div class="variant-row" data-dimension="pressure">
+          <div class="variant-label"><span class="variant-index" aria-hidden="true">01</span><span>额定工作压力</span></div>
+          <div class="variant-options">
+            <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
+            <button class="sku-option" type="button" data-value="0.8 MPa" aria-pressed="false">0.8 MPa</button>
+            <button class="sku-option" type="button" data-value="1.0 MPa" aria-pressed="false">1.0 MPa</button>
+          </div>
+        </div>
+        <div class="variant-row" data-dimension="diameter">
+          <div class="variant-label"><span class="variant-index" aria-hidden="true">02</span><span>公称口径</span></div>
+          <div class="variant-options">
+            <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
+            <button class="sku-option" type="button" data-value="DN50" aria-pressed="false">DN50</button>
+            <button class="sku-option" type="button" data-value="DN65" aria-pressed="false">DN65</button>
+          </div>
+        </div>
+        <div class="variant-row" data-dimension="length">
+          <div class="variant-label"><span class="variant-index" aria-hidden="true">03</span><span>水带长度</span></div>
+          <div class="variant-options">
+            <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
+            <button class="sku-option" type="button" data-value="20 m" aria-pressed="false">20 m</button>
+            <button class="sku-option" type="button" data-value="25 m" aria-pressed="false">25 m</button>
+            <button class="sku-option" type="button" data-value="30 m" aria-pressed="false">30 m</button>
+          </div>
+        </div>
+        <div class="variant-row" data-dimension="lining">
+          <div class="variant-label"><span class="variant-index" aria-hidden="true">04</span><span>衬里材质</span></div>
+          <div class="variant-options">
+            <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
+            <button class="sku-option" type="button" data-value="聚氨酯" aria-pressed="false">聚氨酯</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="selection-bar" aria-live="polite">
+        <div class="selection-summary">
+          <span class="selection-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>
+          </span>
+          <span class="selection-copy">
+            <strong id="selection-title">全规格汇总</strong>
+            <span id="selection-description">当前未限定 SKU 维度，库存与附件按全部 8 个 SKU 汇总。</span>
+          </span>
+        </div>
+        <div class="selection-actions">
+          <span class="match-count" id="match-count">匹配 8 个 SKU</span>
+          <button class="quiet-button" id="reset-sku-filter" type="button">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
+            重置规格
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="module-panel inventory-panel" aria-labelledby="inventory-title">
+      <div class="panel-heading">
+        <div>
+          <h2 id="inventory-title">库存信息</h2>
+          <p>按生产年月汇总当前 SKU 范围；点击月份卡片可查看 SKU 构成。</p>
+        </div>
+        <span class="scope-note" id="inventory-scope">统计范围：全部 8 个 SKU</span>
+      </div>
+
+      <div class="inventory-summary" aria-label="库存汇总">
+        <div class="summary-metric">
+          <span class="summary-copy"><span class="summary-label">总库存数</span><span class="summary-note">全部生产年月汇总</span></span>
+          <span class="summary-value"><span id="inventory-total">347</span><small>盘</small></span>
+        </div>
+        <div class="summary-metric recent">
+          <span class="summary-copy"><span class="summary-label">近三月库存</span><span class="summary-note">当前年最近 3 个生产月</span></span>
+          <span class="summary-value"><span id="recent-total">152</span><small>盘</small></span>
+        </div>
+        <div class="summary-metric range">
+          <span class="summary-copy"><span class="summary-label">匹配 SKU</span><span class="summary-note">随上方规格筛选联动</span></span>
+          <span class="summary-value"><span id="inventory-sku-count">8</span><small>个</small></span>
+        </div>
+      </div>
+
+      <div class="year-tabs-row">
+        <div class="year-tabs" role="tablist" aria-label="按生产年份查看库存">
+          <button class="year-tab" id="year-tab-2026" type="button" role="tab" aria-selected="true" aria-controls="year-panel-2026" tabindex="0" data-year="2026">2026 年</button>
+          <button class="year-tab" id="year-tab-2025" type="button" role="tab" aria-selected="false" aria-controls="year-panel-2025" tabindex="-1" data-year="2025">2025 年</button>
+        </div>
+        <div class="year-overview" aria-live="polite">
+          <strong id="year-total">2026 年 · 286 盘</strong>
+          <span id="year-meta">8 个生产月份 · 35 批</span>
+        </div>
+      </div>
+
+      <div class="year-panel" id="year-panel-2026" role="tabpanel" aria-labelledby="year-tab-2026"></div>
+      <div class="year-panel" id="year-panel-2025" role="tabpanel" aria-labelledby="year-tab-2025" hidden></div>
+
+      <div class="inventory-note" id="inventory-note" role="note">
+        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16.5h.01"></path></svg>
+        <span><strong>库龄提示：</strong>2025 年生产的 61 盘库存已单独标记，建议后续出库时按生产月份优先安排。</span>
+      </div>
+    </section>
+
+    <section class="module-panel attachment-panel" aria-labelledby="attachment-title">
+      <div class="panel-heading">
+        <div>
+          <div class="panel-title-line">
+            <h2 id="attachment-title">附件资料</h2>
+            <span class="count-badge" id="attachment-count" aria-live="polite">5 个文件</span>
+          </div>
+          <p>按具体 SKU 归档产品合格证，上传前需确认文件归属，便于验收与后续追溯。</p>
+        </div>
+        <span class="scope-note" id="attachment-scope">当前范围：全部 8 个 SKU</span>
+      </div>
+
+      <div class="attachment-layout">
+        <aside class="coverage-panel" aria-labelledby="coverage-title">
+          <div class="subpanel-head">
+            <div><h3 id="coverage-title">合格证覆盖</h3><p>当前 SKU 范围归档状态</p></div>
+            <div class="coverage-score"><span id="coverage-score">63%</span><small id="coverage-fraction">5 / 8</small></div>
+          </div>
+          <div class="coverage-meter" aria-hidden="true"><span id="coverage-meter"></span></div>
+          <div class="coverage-list" id="coverage-list"></div>
+        </aside>
+
+        <div class="files-panel">
+          <div class="subpanel-head">
+            <div><h3>产品合格证</h3><p>PDF、JPG、PNG · 单个文件不超过 10 MB</p></div>
+            <button class="upload-button" id="browse-button" type="button">
+              <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
+              选择文件
+            </button>
+          </div>
+
+          <div class="upload-area">
+            <div class="target-field">
+              <label class="field-label" for="upload-sku">合格证归属 SKU</label>
+              <select class="sku-select" id="upload-sku"></select>
+              <p class="field-help" id="upload-help">请先确认归属 SKU，再选择或拖入合格证文件。</p>
+            </div>
+            <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="拖放或选择产品合格证文件">
+              <span class="drop-icon" aria-hidden="true">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
+              </span>
+              <span class="drop-copy"><strong>拖放合格证到这里</strong><span>也可点击此区域选择文件</span></span>
+            </div>
+            <input id="certificate-upload" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" multiple hidden>
+          </div>
+
+          <div class="file-section-head">
+            <strong>已归档文件</strong>
+            <span id="file-scope-copy">显示当前全部 SKU 的合格证</span>
+          </div>
+          <div class="attachment-list" id="attachment-list" aria-label="产品合格证列表"></div>
+          <div class="attachment-empty" id="attachment-empty" hidden>
+            <strong>当前范围暂无合格证</strong>
+            <span>选择归属 SKU 并上传产品合格证，完成资料归档。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="dialog" id="month-dialog" aria-labelledby="month-dialog-title">
+    <div class="dialog-shell">
+      <header class="dialog-head">
+        <div><h2 id="month-dialog-title">SKU 库存构成</h2><p id="month-dialog-copy">当前筛选范围</p></div>
+        <button class="icon-button" type="button" data-close-dialog="month-dialog" aria-label="关闭库存构成弹窗">
+          <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+      <div class="dialog-body"><div class="breakdown-table" id="breakdown-table"></div></div>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="preview-dialog" aria-labelledby="preview-title">
+    <div class="dialog-shell">
+      <header class="dialog-head">
+        <div><h2 id="preview-title">产品合格证预览</h2><p id="preview-copy">文件信息</p></div>
+        <button class="icon-button" type="button" data-close-dialog="preview-dialog" aria-label="关闭合格证预览">
+          <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+      <div class="dialog-body" id="preview-body"></div>
+    </div>
+  </dialog>
+
+  <dialog class="dialog confirm-dialog" id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description">
+    <div class="dialog-shell">
+      <header class="dialog-head">
+        <div><h2 id="delete-title">删除这份合格证？</h2><p>删除后将影响对应 SKU 的资料完整度。</p></div>
+        <button class="icon-button" type="button" data-close-dialog="delete-dialog" aria-label="关闭删除确认">
+          <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+      <div class="confirm-body">
+        <p id="delete-description">此操作只影响当前展示数据，不会连接真实业务系统。</p>
+        <div class="confirm-file" id="delete-file-name"></div>
+        <div class="confirm-actions">
+          <button class="secondary-button" type="button" data-close-dialog="delete-dialog">取消</button>
+          <button class="danger-button" id="confirm-delete" type="button">确认删除</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></svg>
+    <span id="toast-text">操作成功</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var numberFormat = new Intl.NumberFormat('zh-CN');
+      var dimensions = ['pressure', 'diameter', 'length', 'lining'];
+      var dimensionLabels = { pressure: '压力', diameter: '口径', length: '长度', lining: '衬里' };
+      var filterState = { pressure: '', diameter: '', length: '', lining: '' };
+      var activeYear = '2026';
+      var activeDialogTrigger = null;
+      var dialogCloseTimer = 0;
+      var pendingDeleteId = '';
+      var toastTimer = 0;
+
+      var skus = [
+        { id: 'HD-TY-08-50-20-PU', code: 'TY-08-50-20-PU', pressure: '0.8 MPa', diameter: 'DN50', length: '20 m', lining: '聚氨酯', weight: 58, bias: -.18 },
+        { id: 'HD-TY-08-50-25-PU', code: 'TY-08-50-25-PU', pressure: '0.8 MPa', diameter: 'DN50', length: '25 m', lining: '聚氨酯', weight: 42, bias: .12 },
+        { id: 'HD-TY-08-50-30-PU', code: 'TY-08-50-30-PU', pressure: '0.8 MPa', diameter: 'DN50', length: '30 m', lining: '聚氨酯', weight: 36, bias: .24 },
+        { id: 'HD-TY-08-65-20-PU', code: 'TY-08-65-20-PU', pressure: '0.8 MPa', diameter: 'DN65', length: '20 m', lining: '聚氨酯', weight: 74, bias: -.08 },
+        { id: 'HD-TY-10-50-20-PU', code: 'TY-10-50-20-PU', pressure: '1.0 MPa', diameter: 'DN50', length: '20 m', lining: '聚氨酯', weight: 31, bias: .18 },
+        { id: 'HD-TY-10-65-20-PU', code: 'TY-10-65-20-PU', pressure: '1.0 MPa', diameter: 'DN65', length: '20 m', lining: '聚氨酯', weight: 62, bias: -.13 },
+        { id: 'HD-TY-10-65-25-PU', code: 'TY-10-65-25-PU', pressure: '1.0 MPa', diameter: 'DN65', length: '25 m', lining: '聚氨酯', weight: 21, bias: .08 },
+        { id: 'HD-TY-10-65-30-PU', code: 'TY-10-65-30-PU', pressure: '1.0 MPa', diameter: 'DN65', length: '30 m', lining: '聚氨酯', weight: 23, bias: -.2 }
+      ];
+
+      var inventory = {
+        '2026': [
+          { month: '08', total: 56, batches: 6, latest: true },
+          { month: '07', total: 51, batches: 6 },
+          { month: '06', total: 45, batches: 5 },
+          { month: '05', total: 39, batches: 5 },
+          { month: '04', total: 34, batches: 4 },
+          { month: '03', total: 27, batches: 4 },
+          { month: '02', total: 20, batches: 3 },
+          { month: '01', total: 14, batches: 2 }
+        ],
+        '2025': [
+          { month: '12', total: 14, batches: 2, aged: true, priority: true },
+          { month: '11', total: 10, batches: 2, aged: true, priority: true },
+          { month: '10', total: 9, batches: 2, aged: true },
+          { month: '09', total: 8, batches: 2, aged: true },
+          { month: '08', total: 6, batches: 1, aged: true },
+          { month: '07', total: 5, batches: 1, aged: true },
+          { month: '06', total: 4, batches: 1, aged: true },
+          { month: '05', total: 3, batches: 1, aged: true },
+          { month: '04', total: 2, batches: 1, aged: true }
+        ]
+      };
+
+      var attachments = [
+        { id: 'cert-001', skuId: 'HD-TY-08-50-20-PU', name: '沱雨_0.8MPa_DN50_20m_产品合格证.pdf', kind: 'pdf', size: '2.4 MB', date: '2026-08-18' },
+        { id: 'cert-002', skuId: 'HD-TY-08-50-25-PU', name: 'TY_DN50_25m_出厂合格证.jpg', kind: 'image', size: '1.8 MB', date: '2026-08-16' },
+        { id: 'cert-003', skuId: 'HD-TY-08-65-20-PU', name: 'TY_0.8_DN65_20m_产品合格证.pdf', kind: 'pdf', size: '2.1 MB', date: '2026-08-15' },
+        { id: 'cert-004', skuId: 'HD-TY-10-50-20-PU', name: '沱雨_1.0MPa_DN50_检验合格证.pdf', kind: 'pdf', size: '3.0 MB', date: '2026-08-12' },
+        { id: 'cert-005', skuId: 'HD-TY-10-65-25-PU', name: 'TY_1.0_DN65_25m_合格证.png', kind: 'image', size: '1.3 MB', date: '2026-08-09' }
+      ];
+
+      var icons = {
+        file: '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h8l4 4V21H6z"></path><path d="M14 2.5v4h4"></path><path d="M8.5 13h7M8.5 16.5h5"></path></svg>',
+        image: '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="m4 17 4.5-4 3.5 3 3-2.5 5 4.5"></path></svg>',
+        preview: '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>',
+        delete: '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>',
+        arrow: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>'
+      };
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function skuSpec(sku) {
+        return sku.pressure + ' · ' + sku.diameter + ' · ' + sku.length + ' · ' + sku.lining;
+      }
+
+      function getMatchedSkus(exceptDimension) {
+        return skus.filter(function (sku) {
+          return dimensions.every(function (dimension) {
+            if (dimension === exceptDimension || !filterState[dimension]) return true;
+            return sku[dimension] === filterState[dimension];
+          });
+        });
+      }
+
+      function exactMatchedSkus() {
+        return getMatchedSkus('');
+      }
+
+      function updateOptionAvailability() {
+        document.querySelectorAll('.variant-row').forEach(function (row) {
+          var dimension = row.dataset.dimension;
+          var candidates = getMatchedSkus(dimension);
+          row.querySelectorAll('.sku-option').forEach(function (button) {
+            var value = button.dataset.value;
+            button.disabled = Boolean(value) && !candidates.some(function (sku) { return sku[dimension] === value; });
+          });
+        });
+      }
+
+      function scopeLabel(matched, prefix) {
+        if (matched.length === 1) return prefix + '：' + matched[0].code;
+        return prefix + '：' + (matched.length === skus.length ? '全部 8 个 SKU' : '已匹配 ' + matched.length + ' 个 SKU');
+      }
+
+      function getWeightedShare(month, index, selectedSkus) {
+        if (selectedSkus.length === skus.length) return 1;
+        var oscillation = (index % 3) - 1;
+        var denominator = skus.reduce(function (sum, sku) {
+          return sum + sku.weight * (1 + sku.bias * oscillation);
+        }, 0);
+        var numerator = selectedSkus.reduce(function (sum, sku) {
+          return sum + sku.weight * (1 + sku.bias * oscillation);
+        }, 0);
+        return denominator ? numerator / denominator : 0;
+      }
+
+      function monthQuantity(month, index, selectedSkus) {
+        return Math.max(0, Math.round(month.total * getWeightedShare(month, index, selectedSkus)));
+      }
+
+      function getYearData(year, selectedSkus) {
+        return inventory[year].map(function (month, index) {
+          var quantity = monthQuantity(month, index, selectedSkus);
+          var ratio = month.total ? quantity / month.total : 0;
+          return Object.assign({}, month, {
+            quantity: quantity,
+            selectedBatches: quantity ? Math.max(1, Math.round(month.batches * ratio)) : 0
+          });
+        });
+      }
+
+      function renderMonthCard(year, month, yearTotal) {
+        var classes = 'month-card' + (month.latest ? ' latest' : '') + (month.aged ? ' aged' : '');
+        var tag = month.latest
+          ? '<span class="month-tag">最新</span>'
+          : month.priority
+            ? '<span class="month-tag aged-tag">优先</span>'
+            : '';
+        var ratio = yearTotal ? (month.quantity / yearTotal * 100).toFixed(1) : '0.0';
+        var secondary = month.aged ? '库龄 ' + (20 - Number(month.month)) + ' 个月' : '占比 ' + ratio + '%';
+        return '<button class="' + classes + '" type="button" data-year="' + year + '" data-month="' + month.month + '" aria-haspopup="dialog" aria-label="查看 ' + year + ' 年 ' + month.month + ' 月的 SKU 库存构成">' +
+          '<span class="month-top"><time class="month-date" datetime="' + year + '-' + month.month + '"><strong>' + month.month + '</strong><span>月</span></time>' + tag + '</span>' +
+          '<span class="month-quantity"><span class="quantity-label">库存</span><strong>' + numberFormat.format(month.quantity) + '</strong><small>盘</small></span>' +
+          '<span class="month-meta"><span>' + month.selectedBatches + ' 批</span><span>' + secondary + '</span></span>' +
+          '<span class="month-action"><span>查看 SKU 构成</span><span class="month-action-icon" aria-hidden="true">' + icons.arrow + '</span></span>' +
+          '</button>';
+      }
+
+      function renderInventory(matched) {
+        var totalsByYear = {};
+        Object.keys(inventory).forEach(function (year) {
+          var yearData = getYearData(year, matched);
+          var visibleMonths = yearData.filter(function (month) { return month.quantity > 0; });
+          var yearTotal = yearData.reduce(function (sum, month) { return sum + month.quantity; }, 0);
+          var batchTotal = yearData.reduce(function (sum, month) { return sum + month.selectedBatches; }, 0);
+          totalsByYear[year] = { total: yearTotal, batches: batchTotal, months: visibleMonths.length };
+          document.getElementById('year-panel-' + year).innerHTML =
+            '<div class="month-grid" aria-label="' + year + ' 年各生产月份库存">' +
+            visibleMonths.map(function (month) { return renderMonthCard(year, month, yearTotal); }).join('') +
+            '</div>';
+        });
+
+        var grandTotal = Object.keys(totalsByYear).reduce(function (sum, year) { return sum + totalsByYear[year].total; }, 0);
+        var recentTotal = getYearData('2026', matched).slice(0, 3).reduce(function (sum, month) { return sum + month.quantity; }, 0);
+        document.getElementById('inventory-total').textContent = numberFormat.format(grandTotal);
+        document.getElementById('recent-total').textContent = numberFormat.format(recentTotal);
+        document.getElementById('inventory-sku-count').textContent = matched.length;
+        document.getElementById('inventory-scope').textContent = scopeLabel(matched, '统计范围');
+
+        var agedTotal = totalsByYear['2025'].total;
+        document.getElementById('inventory-note').innerHTML =
+          '<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5"></path><path d="M12 16.5h.01"></path></svg>' +
+          '<span><strong>库龄提示：</strong>2025 年生产的 ' + numberFormat.format(agedTotal) + ' 盘库存已单独标记，建议后续出库时按生产月份优先安排。</span>';
+        updateYearOverview(totalsByYear);
+      }
+
+      function updateYearOverview(existingTotals) {
+        var matched = exactMatchedSkus();
+        var totals = existingTotals || {};
+        if (!totals[activeYear]) {
+          var yearData = getYearData(activeYear, matched);
+          totals[activeYear] = {
+            total: yearData.reduce(function (sum, month) { return sum + month.quantity; }, 0),
+            batches: yearData.reduce(function (sum, month) { return sum + month.selectedBatches; }, 0),
+            months: yearData.filter(function (month) { return month.quantity > 0; }).length
+          };
+        }
+        var current = totals[activeYear];
+        document.getElementById('year-total').textContent = activeYear + ' 年 · ' + numberFormat.format(current.total) + ' 盘';
+        document.getElementById('year-meta').textContent = current.months + ' 个生产月份 · ' + current.batches + ' 批';
+      }
+
+      function selectYear(year, moveFocus) {
+        activeYear = year;
+        document.querySelectorAll('.year-tab').forEach(function (tab) {
+          var selected = tab.dataset.year === year;
+          tab.setAttribute('aria-selected', String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+          document.getElementById(tab.getAttribute('aria-controls')).hidden = !selected;
+          if (selected && moveFocus) tab.focus();
+        });
+        updateYearOverview();
+      }
+
+      function allocateMonth(year, monthNumber, matched) {
+        var monthIndex = inventory[year].findIndex(function (entry) { return entry.month === monthNumber; });
+        var month = inventory[year][monthIndex];
+        var total = monthQuantity(month, monthIndex, matched);
+        var oscillation = (monthIndex % 3) - 1;
+        var weights = matched.map(function (sku) { return sku.weight * (1 + sku.bias * oscillation); });
+        var sumWeights = weights.reduce(function (sum, value) { return sum + value; }, 0);
+        var rows = matched.map(function (sku, index) {
+          return { sku: sku, quantity: sumWeights ? Math.round(total * weights[index] / sumWeights) : 0 };
+        });
+        var allocated = rows.reduce(function (sum, row) { return sum + row.quantity; }, 0);
+        if (rows.length) rows[rows.length - 1].quantity += total - allocated;
+        return { total: total, rows: rows };
+      }
+
+      function openMonthDialog(card) {
+        var year = card.dataset.year;
+        var month = card.dataset.month;
+        var matched = exactMatchedSkus();
+        var allocation = allocateMonth(year, month, matched);
+        document.getElementById('month-dialog-title').textContent = year + ' 年 ' + month + ' 月 · SKU 库存构成';
+        document.getElementById('month-dialog-copy').textContent = scopeLabel(matched, '当前范围') + ' · 合计 ' + allocation.total + ' 盘';
+        var rows = allocation.rows.map(function (row) {
+          return '<div class="breakdown-row">' +
+            '<span class="breakdown-code">' + escapeHtml(row.sku.code) + '</span>' +
+            '<span class="breakdown-spec">' + escapeHtml(skuSpec(row.sku)) + '</span>' +
+            '<span class="breakdown-quantity">' + numberFormat.format(row.quantity) + ' 盘</span>' +
+            '</div>';
+        }).join('');
+        document.getElementById('breakdown-table').innerHTML =
+          '<div class="breakdown-row head"><span>SKU 编码</span><span class="breakdown-spec">规格组合</span><span style="text-align:right">库存</span></div>' + rows;
+        openDialog(document.getElementById('month-dialog'), card);
+      }
+
+      function hasCertificate(skuId) {
+        return attachments.some(function (file) { return file.skuId === skuId; });
+      }
+
+      function renderUploadSkuOptions(matched) {
+        var select = document.getElementById('upload-sku');
+        var currentValue = select.value;
+        select.innerHTML = matched.map(function (sku) {
+          return '<option value="' + sku.id + '">' + escapeHtml(sku.code + ' · ' + sku.pressure + ' / ' + sku.diameter + ' / ' + sku.length) + '</option>';
+        }).join('');
+        if (matched.some(function (sku) { return sku.id === currentValue; })) select.value = currentValue;
+        select.disabled = matched.length === 1;
+        document.getElementById('upload-help').textContent = matched.length === 1
+          ? '已锁定当前唯一 SKU，上传文件将直接归入该货号。'
+          : '请先确认归属 SKU，再选择或拖入合格证文件。';
+      }
+
+      function renderCoverage(matched) {
+        var covered = matched.filter(function (sku) { return hasCertificate(sku.id); }).length;
+        var percentage = matched.length ? Math.round(covered / matched.length * 100) : 0;
+        document.getElementById('coverage-score').textContent = percentage + '%';
+        document.getElementById('coverage-fraction').textContent = covered + ' / ' + matched.length;
+        document.getElementById('coverage-meter').style.width = percentage + '%';
+        document.getElementById('coverage-list').innerHTML = matched.map(function (sku) {
+          var ready = hasCertificate(sku.id);
+          return '<div class="coverage-row">' +
+            '<span class="coverage-copy"><strong>' + escapeHtml(sku.code) + '</strong><span>' + escapeHtml(sku.pressure + ' · ' + sku.diameter + ' · ' + sku.length) + '</span></span>' +
+            '<span class="archive-state' + (ready ? '' : ' missing') + '">' + (ready ? '已归档' : '待补充') + '</span>' +
+            '</div>';
+        }).join('');
+      }
+
+      function renderAttachments(matched) {
+        var matchedIds = new Set(matched.map(function (sku) { return sku.id; }));
+        var visibleFiles = attachments.filter(function (file) { return matchedIds.has(file.skuId); });
+        document.getElementById('attachment-count').textContent = visibleFiles.length + ' 个文件';
+        document.getElementById('attachment-scope').textContent = scopeLabel(matched, '当前范围');
+        document.getElementById('file-scope-copy').textContent = matched.length === 1
+          ? '仅显示 ' + matched[0].code + ' 的合格证'
+          : '显示当前 ' + matched.length + ' 个 SKU 的合格证';
+        var list = document.getElementById('attachment-list');
+        var empty = document.getElementById('attachment-empty');
+        list.hidden = visibleFiles.length === 0;
+        empty.hidden = visibleFiles.length !== 0;
+        list.innerHTML = visibleFiles.map(function (file) {
+          var sku = skus.find(function (item) { return item.id === file.skuId; });
+          return '<article class="attachment-card" data-file-id="' + file.id + '">' +
+            '<span class="file-icon' + (file.kind === 'image' ? ' image' : '') + '" aria-hidden="true">' + (file.kind === 'image' ? icons.image : icons.file) + '</span>' +
+            '<span class="file-copy"><strong class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</strong><span class="file-sku">' + escapeHtml(sku.code) + '</span><span class="file-meta">' + (file.kind === 'image' ? '图片' : 'PDF') + ' · ' + escapeHtml(file.size) + ' · ' + escapeHtml(file.date) + '</span></span>' +
+            '<span class="file-actions">' +
+              '<button class="icon-button" type="button" data-file-action="preview" aria-label="预览 ' + escapeHtml(file.name) + '" title="预览">' + icons.preview + '</button>' +
+              '<button class="icon-button delete" type="button" data-file-action="delete" aria-label="删除 ' + escapeHtml(file.name) + '" title="删除">' + icons.delete + '</button>' +
+            '</span>' +
+          '</article>';
+        }).join('');
+        renderCoverage(matched);
+        renderUploadSkuOptions(matched);
+      }
+
+      function updateSelection() {
+        var matched = exactMatchedSkus();
+        var chosen = dimensions.filter(function (dimension) { return filterState[dimension]; });
+        var title = matched.length === 1 ? matched[0].code : chosen.length ? '已限定 ' + chosen.length + ' 个规格维度' : '全规格汇总';
+        var description = chosen.length
+          ? chosen.map(function (dimension) { return dimensionLabels[dimension] + '：' + filterState[dimension]; }).join(' · ')
+          : '当前未限定 SKU 维度，库存与附件按全部 8 个 SKU 汇总。';
+        document.getElementById('selection-title').textContent = title;
+        document.getElementById('selection-description').textContent = description;
+        document.getElementById('match-count').textContent = '匹配 ' + matched.length + ' 个 SKU';
+        document.getElementById('sku-count-badge').textContent = matched.length + ' 个 SKU';
+        updateOptionAvailability();
+        renderInventory(matched);
+        renderAttachments(matched);
+      }
+
+      function openPreview(file, trigger) {
+        var sku = skus.find(function (item) { return item.id === file.skuId; });
+        document.getElementById('preview-title').textContent = file.name;
+        document.getElementById('preview-copy').textContent = sku.code + ' · ' + file.size + ' · 归档于 ' + file.date;
+        document.getElementById('preview-body').innerHTML =
+          '<article class="certificate-preview" aria-label="产品合格证预览内容">' +
+            '<div class="certificate-brand">泰州市三江消防器材有限公司</div>' +
+            '<h3>产品合格证</h3>' +
+            '<div class="certificate-fields">' +
+              '<div class="certificate-field"><span>产品名称</span><strong>有衬里消防水带</strong></div>' +
+              '<div class="certificate-field"><span>SKU 编码</span><strong>' + escapeHtml(sku.code) + '</strong></div>' +
+              '<div class="certificate-field"><span>工作压力</span><strong>' + escapeHtml(sku.pressure) + '</strong></div>' +
+              '<div class="certificate-field"><span>规格参数</span><strong>' + escapeHtml(sku.diameter + ' · ' + sku.length + ' · ' + sku.lining) + '</strong></div>' +
+              '<div class="certificate-field"><span>执行标准</span><strong>GB 6246-2011</strong></div>' +
+              '<div class="certificate-field"><span>检验日期</span><strong>' + escapeHtml(file.date) + '</strong></div>' +
+            '</div>' +
+            '<div class="certificate-result">检验合格</div>' +
+            '<div class="certificate-foot">检验员：SJ-028<br>质量检验专用章</div>' +
+          '</article>';
+        openDialog(document.getElementById('preview-dialog'), trigger);
+      }
+
+      function openDelete(file, trigger) {
+        pendingDeleteId = file.id;
+        document.getElementById('delete-file-name').textContent = file.name;
+        openDialog(document.getElementById('delete-dialog'), trigger);
+      }
+
+      function openDialog(dialog, trigger) {
+        if (dialogCloseTimer) {
+          window.clearTimeout(dialogCloseTimer);
+          dialogCloseTimer = 0;
+        }
+        activeDialogTrigger = trigger || document.activeElement;
+        if (!dialog.open) dialog.showModal();
+        requestAnimationFrame(function () {
+          dialog.classList.add('is-open');
+          var focusTarget = dialog.querySelector('[data-close-dialog], button');
+          if (focusTarget) focusTarget.focus();
+        });
+      }
+
+      function closeDialog(dialog) {
+        if (!dialog.open) return;
+        dialog.classList.remove('is-open');
+        var finish = function () {
+          if (dialog.open) dialog.close();
+          dialogCloseTimer = 0;
+          if (activeDialogTrigger && document.contains(activeDialogTrigger)) activeDialogTrigger.focus();
+        };
+        if (prefersReducedMotion) finish();
+        else dialogCloseTimer = window.setTimeout(finish, 220);
+      }
+
+      function showToast(message, warning) {
+        var toast = document.getElementById('toast');
+        if (toastTimer) window.clearTimeout(toastTimer);
+        document.getElementById('toast-text').textContent = message;
+        toast.classList.toggle('warning', Boolean(warning));
+        toast.classList.add('show');
+        toastTimer = window.setTimeout(function () {
+          toast.classList.remove('show');
+          toastTimer = 0;
+        }, 2600);
+      }
+
+      function formatSize(bytes) {
+        if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+
+      function handleFiles(fileList) {
+        var files = Array.from(fileList);
+        if (!files.length) return;
+        var skuId = document.getElementById('upload-sku').value;
+        var allowed = ['application/pdf', 'image/jpeg', 'image/png'];
+        var accepted = files.filter(function (file) {
+          return allowed.includes(file.type) && file.size <= 10 * 1024 * 1024;
+        });
+        if (!accepted.length) {
+          showToast('请选择 10 MB 以内的 PDF、JPG 或 PNG 文件', true);
+          return;
+        }
+        accepted.forEach(function (file, index) {
+          attachments.unshift({
+            id: 'upload-' + Date.now() + '-' + index,
+            skuId: skuId,
+            name: file.name,
+            kind: file.type === 'application/pdf' ? 'pdf' : 'image',
+            size: formatSize(file.size),
+            date: '2026-09-02',
+            objectUrl: URL.createObjectURL(file)
+          });
+        });
+        renderAttachments(exactMatchedSkus());
+        showToast('已将 ' + accepted.length + ' 个文件归档至所选 SKU');
+        if (accepted.length !== files.length) showToast('部分文件因格式或大小不符合要求未上传', true);
+        document.getElementById('certificate-upload').value = '';
+      }
+
+      document.getElementById('variant-filter').addEventListener('click', function (event) {
+        var button = event.target.closest('.sku-option');
+        if (!button || button.disabled) return;
+        var row = button.closest('.variant-row');
+        var dimension = row.dataset.dimension;
+        filterState[dimension] = button.dataset.value;
+        row.querySelectorAll('.sku-option').forEach(function (option) {
+          option.setAttribute('aria-pressed', String(option === button));
+        });
+        updateSelection();
+      });
+
+      document.getElementById('reset-sku-filter').addEventListener('click', function () {
+        dimensions.forEach(function (dimension) { filterState[dimension] = ''; });
+        document.querySelectorAll('.variant-row').forEach(function (row) {
+          row.querySelectorAll('.sku-option').forEach(function (button) {
+            button.setAttribute('aria-pressed', String(button.dataset.value === ''));
+          });
+        });
+        updateSelection();
+        showToast('SKU 筛选已重置');
+      });
+
+      var yearTabs = Array.from(document.querySelectorAll('.year-tab'));
+      yearTabs.forEach(function (tab, index) {
+        tab.addEventListener('click', function () { selectYear(tab.dataset.year); });
+        tab.addEventListener('keydown', function (event) {
+          var nextIndex = null;
+          if (event.key === 'ArrowRight') nextIndex = (index + 1) % yearTabs.length;
+          else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + yearTabs.length) % yearTabs.length;
+          else if (event.key === 'Home') nextIndex = 0;
+          else if (event.key === 'End') nextIndex = yearTabs.length - 1;
+          if (nextIndex === null) return;
+          event.preventDefault();
+          selectYear(yearTabs[nextIndex].dataset.year, true);
+        });
+      });
+
+      document.querySelector('.inventory-panel').addEventListener('click', function (event) {
+        var card = event.target.closest('.month-card');
+        if (card) openMonthDialog(card);
+      });
+
+      var uploadInput = document.getElementById('certificate-upload');
+      var browseButton = document.getElementById('browse-button');
+      var dropZone = document.getElementById('drop-zone');
+      browseButton.addEventListener('click', function () { uploadInput.click(); });
+      dropZone.addEventListener('click', function () { uploadInput.click(); });
+      dropZone.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          uploadInput.click();
+        }
+      });
+      ['dragenter', 'dragover'].forEach(function (eventName) {
+        dropZone.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          dropZone.classList.add('is-dragging');
+        });
+      });
+      ['dragleave', 'drop'].forEach(function (eventName) {
+        dropZone.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          dropZone.classList.remove('is-dragging');
+        });
+      });
+      dropZone.addEventListener('drop', function (event) { handleFiles(event.dataTransfer.files); });
+      uploadInput.addEventListener('change', function () { handleFiles(uploadInput.files); });
+
+      document.getElementById('attachment-list').addEventListener('click', function (event) {
+        var action = event.target.closest('[data-file-action]');
+        if (!action) return;
+        var card = action.closest('.attachment-card');
+        var file = attachments.find(function (item) { return item.id === card.dataset.fileId; });
+        if (!file) return;
+        if (action.dataset.fileAction === 'preview') openPreview(file, action);
+        if (action.dataset.fileAction === 'delete') openDelete(file, action);
+      });
+
+      document.getElementById('confirm-delete').addEventListener('click', function () {
+        var index = attachments.findIndex(function (file) { return file.id === pendingDeleteId; });
+        if (index < 0) return;
+        var file = attachments[index];
+        if (file.objectUrl) URL.revokeObjectURL(file.objectUrl);
+        attachments.splice(index, 1);
+        closeDialog(document.getElementById('delete-dialog'));
+        pendingDeleteId = '';
+        window.setTimeout(function () {
+          renderAttachments(exactMatchedSkus());
+          showToast('合格证已从当前展示中删除');
+        }, prefersReducedMotion ? 0 : 220);
+      });
+
+      document.querySelectorAll('[data-close-dialog]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          closeDialog(document.getElementById(button.dataset.closeDialog));
+        });
+      });
+
+      document.querySelectorAll('dialog').forEach(function (dialog) {
+        dialog.addEventListener('click', function (event) {
+          if (event.target === dialog) closeDialog(dialog);
+        });
+        dialog.addEventListener('cancel', function (event) {
+          event.preventDefault();
+          closeDialog(dialog);
+        });
+      });
+
+      updateSelection();
+    }());
+  </script>
+</body>
+</html>
