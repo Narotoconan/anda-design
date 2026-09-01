@@ -9,115 +9,6 @@
   <link rel="stylesheet" href="css/common.css">
   <script src="js/admin-shell.js" defer></script>
   <style>
-    .detail-main { max-width: 1480px; }
-
-    .content-breadcrumb {
-      min-height: 28px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--ink-3);
-      font-size: var(--type-base);
-    }
-
-    .content-breadcrumb a {
-      padding: 4px 2px;
-      color: var(--ink-2);
-      text-decoration: none;
-      border-radius: 5px;
-    }
-
-    .content-breadcrumb a:hover { color: var(--ink); }
-    .content-breadcrumb a:focus-visible { outline: none; box-shadow: var(--focus); }
-    .content-breadcrumb svg { color: #b7b7bc; }
-
-    .page-head {
-      margin-bottom: 18px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 28px;
-    }
-
-    .eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0 0 8px;
-      color: var(--red-deep);
-      font-size: var(--type-base);
-      font-weight: 720;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 18px;
-      height: 2px;
-      background: var(--red);
-      border-radius: 999px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(var(--type-title), 3vw, var(--type-display));
-      line-height: 1.08;
-      letter-spacing: -.045em;
-      font-weight: 720;
-    }
-
-    .head-copy {
-      margin: 10px 0 0;
-      color: var(--ink-2);
-      font-size: var(--type-base);
-    }
-
-    .head-status {
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex: 0 0 auto;
-      background: rgba(255, 255, 255, .58);
-      border: 1px solid rgba(255, 255, 255, .82);
-      border-radius: 15px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .head-code span,
-    .head-code strong { display: block; }
-    .head-code span { color: var(--ink-3); font-size: var(--type-base); }
-    .head-code strong {
-      margin-top: 2px;
-      font-size: var(--type-emphasis);
-      font-weight: 680;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .status-badge {
-      min-height: 26px;
-      padding: 4px 9px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--green);
-      background: var(--green-soft);
-      border-radius: 999px;
-      font-size: var(--type-base);
-      font-weight: 680;
-      white-space: nowrap;
-    }
-
-    .status-badge::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      background: currentColor;
-      border-radius: 50%;
-    }
-
     .module-panel {
       margin-top: 16px;
       padding: 22px 26px 24px;
@@ -177,89 +68,122 @@
       font-weight: 630;
     }
 
-    .spu-profile {
+    .goods-info-panel {
+      padding: 0;
+      position: relative;
       overflow: hidden;
-      background: rgba(248, 248, 250, .88);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95);
     }
 
-    .spu-profile-head {
-      min-height: 62px;
-      padding: 10px 14px;
+    .goods-info-panel::before {
+      content: "";
+      height: 2px;
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 1;
+      background: linear-gradient(90deg, var(--red-dark), rgba(216, 50, 41, .58) 44%, rgba(216, 50, 41, .12));
+    }
+
+    .goods-profile-head {
+      padding: 25px 30px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(248, 248, 250, .72));
-      border-bottom: 1px solid var(--line);
+      justify-content: space-between;
+      gap: 32px;
     }
 
-    .profile-icon {
-      width: 38px;
-      height: 38px;
-      display: grid;
-      place-items: center;
+    .goods-title-block { min-width: 0; }
+
+    .goods-title-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .goods-title-line h2 {
+      margin: 0;
+      font-size: clamp(22px, 2vw, 25px);
+      line-height: 1.2;
+      letter-spacing: -.035em;
+      font-weight: 710;
+    }
+
+    .goods-identity {
+      min-width: 188px;
       flex: 0 0 auto;
-      color: var(--red-deep);
-      background: var(--red-soft);
-      border: 1px solid rgba(216, 50, 41, .08);
-      border-radius: 11px;
+      text-align: right;
     }
 
-    .spu-profile-head h3 {
-      margin: 0;
-      font-size: var(--type-emphasis);
-      line-height: var(--leading-compact);
-      font-weight: 680;
-    }
-
-    .spu-profile-head p {
-      margin: 3px 0 0;
+    .goods-identity-label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
       color: var(--ink-3);
-      font-size: var(--type-base);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: .05em;
     }
 
-    .spu-fields {
-      margin: 0;
+    .goods-identity-label svg,
+    .goods-field dt svg {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+      color: rgba(60, 60, 67, .42);
+    }
+
+    .goods-identity strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--ink);
+      font-size: 25px;
+      line-height: 1.05;
+      letter-spacing: -.025em;
+      font-weight: 730;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .goods-identity time {
+      display: block;
+      margin-top: 8px;
+      color: var(--ink-3);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .goods-fields {
+      margin: 0 30px;
+      padding: 22px 0 27px;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      background: rgba(255, 255, 255, .72);
+      column-gap: clamp(24px, 4vw, 58px);
+      row-gap: 25px;
+      border-top: 1px solid var(--line);
     }
 
-    .spu-field {
-      min-width: 0;
-      min-height: 76px;
-      padding: 13px 14px;
+    .goods-field { min-width: 0; }
+
+    .goods-field dt {
       display: flex;
-      justify-content: center;
-      flex-direction: column;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .spu-field:nth-child(4n) { border-right: 0; }
-    .spu-field:nth-last-child(-n + 4) { border-bottom: 0; }
-    .spu-field dt {
+      align-items: center;
+      gap: 6px;
       color: var(--ink-3);
-      font-size: var(--type-base);
+      font-size: 12px;
       line-height: var(--leading-compact);
-      font-weight: 560;
+      font-weight: 650;
+      letter-spacing: .045em;
     }
 
-    .spu-field dd {
+    .goods-field dd {
       min-width: 0;
-      margin: 6px 0 0;
+      margin: 7px 0 0;
       color: var(--ink);
       font-size: var(--type-base);
-      line-height: var(--leading-base);
+      line-height: 1.45;
       font-weight: 650;
       overflow-wrap: anywhere;
-    }
-
-    .spu-field .code-value {
-      font-variant-numeric: tabular-nums;
-      letter-spacing: .015em;
     }
 
     .sku-filter-panel { padding-bottom: 22px; }
@@ -1217,19 +1141,16 @@
     }
 
     @media (max-width: 1080px) {
-      .spu-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .spu-field:nth-child(4n) { border-right: 1px solid var(--line); }
-      .spu-field:nth-child(2n) { border-right: 0; }
-      .spu-field:nth-last-child(-n + 4) { border-bottom: 1px solid var(--line); }
-      .spu-field:nth-last-child(-n + 2) { border-bottom: 0; }
+      .goods-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 38px; }
       .attachment-layout { grid-template-columns: minmax(220px, .65fr) minmax(0, 1.35fr); }
       .upload-area { grid-template-columns: minmax(0, 1fr); }
     }
 
     @media (max-width: 880px) {
-      .page-head { align-items: flex-start; flex-direction: column; gap: 14px; }
-      .head-status { width: 100%; justify-content: space-between; }
       .panel-heading { align-items: flex-start; flex-direction: column; gap: 9px; }
+      .goods-profile-head { align-items: flex-start; flex-direction: column; gap: 16px; }
+      .goods-identity { min-width: 0; text-align: left; }
+      .goods-identity-label { justify-content: flex-start; }
       .variant-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
       .selection-bar { align-items: flex-start; flex-direction: column; }
       .selection-actions { width: 100%; justify-content: space-between; }
@@ -1243,11 +1164,9 @@
 
     @media (max-width: 620px) {
       .module-panel { padding: 19px 16px 20px; border-radius: 15px; }
-      .spu-fields { grid-template-columns: minmax(0, 1fr); }
-      .spu-field,
-      .spu-field:nth-child(2n),
-      .spu-field:nth-child(4n) { border-right: 0; border-bottom: 1px solid var(--line); }
-      .spu-field:last-child { border-bottom: 0; }
+      .module-panel.goods-info-panel { padding: 0; }
+      .goods-profile-head { padding: 24px 16px 20px; }
+      .goods-fields { margin: 0 16px; padding: 20px 0 23px; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; row-gap: 22px; }
       .selection-copy span { white-space: normal; }
       .selection-actions { align-items: flex-start; flex-direction: column; }
       .quiet-button { padding-left: 0; }
@@ -1269,7 +1188,6 @@
 
     @media (max-width: 390px) {
       .month-grid { grid-template-columns: minmax(0, 1fr); }
-      .head-status { align-items: flex-start; flex-direction: column; gap: 9px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1286,7 +1204,6 @@
 
     @media (prefers-contrast: more) {
       .module-panel,
-      .spu-profile,
       .variant-filter,
       .coverage-panel,
       .files-panel,
@@ -1300,51 +1217,57 @@
   <admin-topbar trail="库存管理|货物列表|货物详情 V2"></admin-topbar>
 
   <main class="detail-main" id="main-content" tabindex="-1">
-    <nav class="content-breadcrumb" aria-label="面包屑导航">
-      <a href="goods-list-v2.html">货物列表 V2</a>
-      <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
-      <span aria-current="page">货物详情 V2</span>
-    </nav>
-
-    <header class="page-head">
-      <div>
-        <p class="eyebrow">SPU goods profile</p>
-        <h1>沱雨 · 有衬里消防水带</h1>
-        <p class="head-copy">消防水带 · 4 个规格维度 · 8 个 SKU</p>
-      </div>
-      <div class="head-status" aria-label="SPU 状态">
-        <div class="head-code"><span>SPU 编码</span><strong>HD-TY-PU</strong></div>
-        <span class="status-badge">正常在售</span>
-      </div>
-    </header>
-
-    <section class="module-panel" aria-labelledby="goods-info-title">
-      <div class="panel-heading">
-        <div>
-          <h2 id="goods-info-title">货物信息</h2>
-          <p>展示品牌与类目聚合后的 SPU 基础档案，不包含具体规格与库存数据。</p>
+    <section class="module-panel goods-info-panel" aria-labelledby="goods-info-title">
+      <div class="goods-profile-head">
+        <div class="goods-title-block">
+          <div class="goods-title-line">
+            <h2 id="goods-info-title">沱雨 · 有衬里消防水带</h2>
+          </div>
         </div>
-        <time class="panel-meta" datetime="2026-08-22T17:35">档案更新于 2026-08-22 17:35</time>
-      </div>
-
-      <div class="spu-profile">
-        <div class="spu-profile-head">
-          <span class="profile-icon" aria-hidden="true">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg>
+        <div class="goods-identity">
+          <span class="goods-identity-label">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 17h16M8 4 6 20M18 4l-2 16"></path></svg>
+            SPU 编码
           </span>
-          <div><h3>SPU 基础档案</h3><p>用于统一维护同品牌、同类目货物的公共属性</p></div>
+          <strong>HD-TY-PU</strong>
+          <time datetime="2026-08-22T17:35">更新于 2026-08-22 17:35</time>
         </div>
-        <dl class="spu-fields">
-          <div class="spu-field"><dt>SPU 编码</dt><dd class="code-value">HD-TY-PU</dd></div>
-          <div class="spu-field"><dt>货物类目</dt><dd>消防水带</dd></div>
-          <div class="spu-field"><dt>品牌</dt><dd>沱雨</dd></div>
-          <div class="spu-field"><dt>计量单位</dt><dd>盘</dd></div>
-          <div class="spu-field"><dt>货物名称</dt><dd>有衬里消防水带</dd></div>
-          <div class="spu-field"><dt>执行标准</dt><dd>GB 6246-2011</dd></div>
-          <div class="spu-field"><dt>生产企业</dt><dd>泰州市三江消防器材有限公司</dd></div>
-          <div class="spu-field"><dt>保管要求</dt><dd>阴凉干燥 · 避免折压与暴晒</dd></div>
-        </dl>
       </div>
+
+      <dl class="goods-fields">
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"></path><path d="m4 7.5 8 4.5 8-4.5"></path></svg>货物类目</dt>
+          <dd>消防水带</dd>
+        </div>
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v6c0 4.2 3.1 7 8 8 4.9-1 8-3.8 8-8V7z"></path><path d="m9 12 2 2 4-4"></path></svg>品牌</dt>
+          <dd>沱雨</dd>
+        </div>
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14v12H5z"></path><path d="M8 9h8M8 12h5"></path></svg>计量单位</dt>
+          <dd>盘</dd>
+        </div>
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"></path><path d="M15 3v4h4M9 12h6M9 16h4"></path></svg>执行标准</dt>
+          <dd>GB 6246-2011</dd>
+        </div>
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l5-3v16M9 10l6-3v14M15 12l5-2v11"></path><path d="M7 11h.01M7 15h.01M12 12h.01M12 16h.01M18 14h.01M18 17h.01"></path></svg>生产企业</dt>
+          <dd>泰州市三江消防器材有限公司</dd>
+        </div>
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v11H4z"></path><path d="M8 8V5h8v3M8 13h8"></path></svg>保管要求</dt>
+          <dd>阴凉干燥 · 避免折压与暴晒</dd>
+        </div>
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>建档日期</dt>
+          <dd>2024-03-12</dd>
+        </div>
+        <div class="goods-field">
+          <dt><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>货物名称</dt>
+          <dd>有衬里消防水带</dd>
+        </div>
+      </dl>
     </section>
 
     <section class="module-panel sku-filter-panel" aria-labelledby="sku-filter-title">
