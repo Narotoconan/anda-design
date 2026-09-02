@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="css/common.css">
   <script src="js/admin-shell.js" defer></script>
   <style>
+    #main-content > * {
+      width: 100%;
+      max-width: 1440px;
+      margin-inline: auto;
+    }
+
     .module-panel {
       margin-top: 16px;
       padding: 22px 26px 24px;
@@ -280,6 +286,9 @@
       padding: 0 16px 0 6px;
       display: flex;
       align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+      text-align: right;
       color: var(--ink);
       font-size: 14px;
       font-weight: 700;
@@ -291,7 +300,8 @@
       content: "";
       width: 1px;
       height: 18px;
-      margin-left: auto;
+      margin-left: 0;
+      flex: 0 0 auto;
       background: rgba(60, 60, 67, .12);
     }
 
@@ -1241,7 +1251,7 @@
       .sku-filter-tools { gap: 3px; }
       .variant-filter { padding: 2px 14px 6px; }
       .variant-row { grid-template-columns: 104px minmax(0, 1fr); }
-      .variant-label { padding: 0 10px 0 0; font-size: 13px; }
+      .variant-label { padding: 0 10px 0 0; gap: 10px; font-size: 13px; }
       .variant-options { max-width: calc(100% - 10px); margin: 6px 0 6px 10px; gap: 4px; }
       .sku-option { min-width: 40px; padding-inline: 6px; font-size: 12px; }
       .scope-note { max-width: 100%; white-space: normal; }
