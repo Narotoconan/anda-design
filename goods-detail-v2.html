@@ -186,98 +186,163 @@
       overflow-wrap: anywhere;
     }
 
-    .sku-filter-panel { padding-bottom: 22px; }
-
-    .variant-filter {
+    .sku-filter-panel {
+      padding: 0;
       overflow: hidden;
-      background: rgba(248, 248, 250, .78);
-      border: 1px solid var(--line);
-      border-radius: 14px;
     }
 
-    .variant-row {
-      min-height: 66px;
-      padding: 10px 13px;
-      display: grid;
-      grid-template-columns: 140px minmax(0, 1fr);
+    .sku-filter-heading {
+      min-height: 48px;
+      padding: 0 18px;
+      display: flex;
       align-items: center;
-      gap: 16px;
-      background: rgba(255, 255, 255, .68);
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
     }
 
-    .variant-row + .variant-row { border-top: 1px solid var(--line); }
-
-    .variant-label {
+    .sku-filter-title {
+      min-width: 0;
       display: flex;
       align-items: center;
       gap: 9px;
-      color: var(--ink-2);
-      font-size: var(--type-base);
-      font-weight: 650;
     }
 
-    .variant-index {
-      width: 25px;
-      height: 25px;
-      display: grid;
-      place-items: center;
+    .sku-filter-title svg {
+      width: 16px;
+      height: 16px;
       flex: 0 0 auto;
+      color: var(--red);
+    }
+
+    .sku-filter-title h2 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+      font-weight: 690;
+    }
+
+    .sku-filter-tools {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex: 0 0 auto;
+    }
+
+    .filter-result {
       color: var(--ink-3);
-      background: var(--surface-soft);
-      border: 1px solid var(--line);
-      border-radius: 8px;
       font-size: 12px;
+      font-weight: 590;
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .filter-reset {
+      min-height: 34px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 7px;
+      outline: none;
+      font-size: 12px;
+      font-weight: 620;
+      transition: color var(--motion-fast), background-color var(--motion-fast), opacity var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .filter-reset:hover:not(:disabled) { color: var(--ink); background: var(--surface-soft); }
+    .filter-reset:active:not(:disabled) { transform: scale(.96); }
+    .filter-reset:focus-visible { box-shadow: var(--focus); }
+    .filter-reset:disabled { opacity: .34; cursor: default; }
+
+    .variant-filter {
+      padding: 2px 20px 6px;
+      background: #fff;
+    }
+
+    .variant-row {
+      min-height: 46px;
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      align-items: center;
+      background: #fff;
+    }
+
+    .variant-row + .variant-row { border-top: 1px solid rgba(60, 60, 67, .085); }
+
+    .variant-label {
+      min-width: 0;
+      padding: 0 16px 0 6px;
+      display: flex;
+      align-items: center;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+
+    .variant-label::after {
+      content: "";
+      width: 1px;
+      height: 18px;
+      margin-left: auto;
+      background: rgba(60, 60, 67, .12);
     }
 
     .variant-options {
+      width: max-content;
+      max-width: calc(100% - 14px);
+      margin: 6px 0 6px 14px;
+      align-self: center;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 7px;
+      gap: 6px;
     }
 
     .sku-option {
-      min-width: 72px;
-      min-height: 44px;
-      padding: 0 14px;
-      position: relative;
+      min-width: 54px;
+      min-height: 32px;
+      padding: 0 11px;
       color: var(--ink-2);
       background: #fff;
-      border: 1px solid var(--line-strong);
-      border-radius: 10px;
+      border: 1px solid rgba(60, 60, 67, .14);
+      border-radius: 6px;
       outline: none;
-      font-size: var(--type-base);
-      font-weight: 620;
+      cursor: pointer;
+      touch-action: manipulation;
+      font-size: 13px;
+      font-weight: 590;
       white-space: nowrap;
       transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
     }
 
     .sku-option:hover:not(:disabled) {
       color: var(--ink);
-      border-color: rgba(60, 60, 67, .3);
-      box-shadow: 0 3px 10px rgba(10, 10, 15, .045);
+      background: var(--surface-soft);
+      border-color: rgba(60, 60, 67, .24);
     }
 
     .sku-option:active:not(:disabled) { transform: scale(.97); }
     .sku-option:focus-visible { box-shadow: var(--focus); }
     .sku-option[aria-pressed="true"] {
       color: var(--red-deep);
-      background: var(--red-soft);
-      border-color: rgba(216, 50, 41, .32);
-      box-shadow: inset 0 0 0 1px rgba(216, 50, 41, .06);
-      font-weight: 680;
+      background: rgba(216, 50, 41, .065);
+      border-color: rgba(216, 50, 41, .42);
+      box-shadow: inset 0 0 0 1px rgba(216, 50, 41, .035);
+      font-weight: 660;
     }
 
-    .sku-option[aria-pressed="true"]::after {
-      content: "";
-      width: 6px;
-      height: 6px;
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: var(--red);
-      border-radius: 50%;
+    .sku-option[aria-pressed="true"]:hover:not(:disabled) {
+      color: var(--red-deep);
+      background: rgba(216, 50, 41, .085);
+      border-color: rgba(216, 50, 41, .5);
     }
 
     .sku-option:disabled {
@@ -288,97 +353,6 @@
       text-decoration: line-through;
       text-decoration-color: rgba(60, 60, 67, .24);
     }
-
-    .selection-bar {
-      margin-top: 11px;
-      padding: 12px 13px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      background: linear-gradient(90deg, rgba(216, 50, 41, .075), rgba(216, 50, 41, .018) 52%, rgba(255, 255, 255, .7));
-      border: 1px solid rgba(216, 50, 41, .12);
-      border-radius: 12px;
-    }
-
-    .selection-summary {
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .selection-mark {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      color: var(--red-deep);
-      background: rgba(255, 255, 255, .82);
-      border: 1px solid rgba(216, 50, 41, .12);
-      border-radius: 10px;
-    }
-
-    .selection-copy { min-width: 0; }
-    .selection-copy strong {
-      display: block;
-      font-size: var(--type-emphasis);
-      line-height: var(--leading-compact);
-      font-weight: 680;
-    }
-
-    .selection-copy span {
-      display: block;
-      margin-top: 2px;
-      overflow: hidden;
-      color: var(--ink-3);
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: var(--type-base);
-    }
-
-    .selection-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 0 0 auto;
-    }
-
-    .match-count {
-      min-height: 28px;
-      padding: 4px 9px;
-      display: inline-flex;
-      align-items: center;
-      color: var(--red-deep);
-      background: rgba(255, 255, 255, .78);
-      border: 1px solid rgba(216, 50, 41, .13);
-      border-radius: 999px;
-      font-size: var(--type-base);
-      font-weight: 680;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-    }
-
-    .quiet-button {
-      min-height: 44px;
-      padding: 0 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      color: var(--ink-2);
-      background: transparent;
-      border: 0;
-      border-radius: 10px;
-      outline: none;
-      font-size: var(--type-base);
-      font-weight: 630;
-    }
-
-    .quiet-button:hover { color: var(--ink); background: rgba(255, 255, 255, .74); }
-    .quiet-button:active { transform: scale(.97); }
-    .quiet-button:focus-visible { box-shadow: var(--focus); }
 
     .scope-note {
       min-height: 32px;
@@ -1058,28 +1032,123 @@
     .dialog-head p { margin: 4px 0 0; color: var(--ink-3); font-size: var(--type-base); }
     .dialog-body { min-height: 0; padding: 18px 20px 20px; overflow: auto; background: #f2f2f5; }
 
-    .breakdown-table {
-      overflow: hidden;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 13px;
+    .flow-dialog { width: min(980px, calc(100% - 32px)); }
+    .flow-dialog .dialog-shell { max-height: calc(100dvh - 40px); }
+    .flow-dialog .dialog-head { min-height: 0; padding: 21px 20px 18px 24px; align-items: flex-start; }
+    .flow-dialog .dialog-head .icon-button { background: var(--surface-soft); border-radius: 50%; }
+    .flow-dialog .dialog-head .icon-button:hover { background: #ececef; }
+
+    .flow-dialog .dialog-kicker {
+      margin: 0 0 5px;
+      color: var(--red-deep);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
     }
 
-    .breakdown-row {
-      min-height: 54px;
-      padding: 9px 12px;
-      display: grid;
-      grid-template-columns: minmax(150px, .85fr) minmax(220px, 1.35fr) 90px;
+    .flow-toolbar {
+      padding: 13px 24px;
+      display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: space-between;
+      gap: 18px;
+      background: rgba(247, 247, 249, .72);
       border-bottom: 1px solid var(--line);
     }
 
-    .breakdown-row:last-child { border-bottom: 0; }
-    .breakdown-row.head { min-height: 42px; color: var(--ink-3); background: var(--surface-soft); font-size: 12px; font-weight: 650; }
-    .breakdown-code { font-size: var(--type-base); font-weight: 670; font-variant-numeric: tabular-nums; }
-    .breakdown-spec { color: var(--ink-2); font-size: var(--type-base); }
-    .breakdown-quantity { text-align: right; font-size: var(--type-emphasis); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .flow-filters {
+      padding: 3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: #eaeaed;
+      border-radius: 12px;
+    }
+
+    .flow-filter-button {
+      min-width: 82px;
+      min-height: 40px;
+      padding: 0 11px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 9px;
+      outline: none;
+      font-size: var(--type-base);
+      font-weight: 620;
+      transition: color var(--motion-fast), background-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .flow-filter-button:hover { color: var(--ink); }
+    .flow-filter-button:active { transform: scale(.96); }
+    .flow-filter-button:focus-visible { box-shadow: var(--focus); }
+    .flow-filter-button[aria-pressed="true"] { color: var(--ink); background: #fff; box-shadow: 0 1px 4px rgba(10, 10, 15, .1); }
+
+    .flow-summary { display: flex; align-items: center; gap: 18px; }
+    .flow-summary-item { text-align: right; }
+    .flow-summary-item span { display: block; color: var(--ink-3); font-size: 12px; }
+    .flow-summary-item strong { display: block; margin-top: 1px; font-size: var(--type-emphasis); font-weight: 680; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .flow-summary-item.in strong { color: var(--green); }
+    .flow-summary-item.out strong { color: var(--red-deep); }
+
+    .flow-table-scroll {
+      min-height: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: #fff;
+    }
+
+    .flow-table-scroll:focus-visible { outline: 2px solid rgba(216, 50, 41, .55); outline-offset: -2px; }
+
+    .flow-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .flow-table thead { position: sticky; top: 0; z-index: 2; background: rgba(255, 255, 255, .95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .flow-table th { padding: 11px 13px; color: var(--ink-3); text-align: left; font-size: 12px; font-weight: 680; letter-spacing: .025em; border-bottom: 1px solid var(--line); }
+    .flow-table td { padding: 13px; color: var(--ink-2); font-size: var(--type-base); line-height: var(--leading-base); border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+    .flow-table tbody tr:last-child td { border-bottom: 0; }
+    .flow-table tbody tr { transition: background-color var(--motion-fast); }
+    .flow-table tbody tr:hover { background: #fafafd; }
+    .flow-table .primary-cell { color: var(--ink); font-weight: 620; }
+
+    .flow-type {
+      min-height: 24px;
+      padding: 3px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .flow-type::before { content: ""; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }
+    .flow-type.in { color: var(--green); background: var(--green-soft); }
+    .flow-type.out { color: var(--red-deep); background: var(--red-soft); }
+    .quantity-in { color: var(--green) !important; font-weight: 680; }
+    .quantity-out { color: var(--red-deep) !important; font-weight: 680; }
+
+    .empty-flow { padding: 54px 20px; color: var(--ink-3); text-align: center; font-size: var(--type-base); }
+
+    .flow-dialog-foot {
+      min-height: 52px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--ink-3);
+      background: rgba(247, 247, 249, .8);
+      border-top: 1px solid var(--line);
+      font-size: var(--type-base);
+    }
+
+    .flow-dialog-foot strong { color: var(--ink-2); font-weight: 650; }
 
     .certificate-preview { width: min(580px, 100%); margin: 0 auto; padding: 38px; position: relative; background: #fff; border: 1px solid rgba(60, 60, 67, .1); box-shadow: 0 14px 40px rgba(10, 10, 15, .1); }
     .certificate-preview::before { content: ""; position: absolute; inset: 16px; pointer-events: none; border: 2px solid rgba(185, 39, 32, .68); outline: 1px solid rgba(185, 39, 32, .18); outline-offset: 4px; }
@@ -1151,13 +1220,13 @@
       .goods-profile-head { align-items: flex-start; flex-direction: column; gap: 16px; }
       .goods-identity { min-width: 0; text-align: left; }
       .goods-identity-label { justify-content: flex-start; }
-      .variant-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-      .selection-bar { align-items: flex-start; flex-direction: column; }
-      .selection-actions { width: 100%; justify-content: space-between; }
       .inventory-summary { grid-template-columns: minmax(0, 1fr); }
       .year-tabs-row { align-items: flex-start; flex-direction: column; }
       .year-overview { text-align: left; }
       .month-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .flow-toolbar { align-items: flex-start; flex-direction: column; }
+      .flow-summary { width: 100%; justify-content: flex-start; }
+      .flow-summary-item { text-align: left; }
       .attachment-layout { grid-template-columns: minmax(0, 1fr); }
       .coverage-list { max-height: 260px; }
     }
@@ -1165,11 +1234,16 @@
     @media (max-width: 620px) {
       .module-panel { padding: 19px 16px 20px; border-radius: 15px; }
       .module-panel.goods-info-panel { padding: 0; }
+      .module-panel.sku-filter-panel { padding: 0; }
       .goods-profile-head { padding: 24px 16px 20px; }
       .goods-fields { margin: 0 16px; padding: 20px 0 23px; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; row-gap: 22px; }
-      .selection-copy span { white-space: normal; }
-      .selection-actions { align-items: flex-start; flex-direction: column; }
-      .quiet-button { padding-left: 0; }
+      .sku-filter-heading { min-height: 48px; padding: 0 14px; gap: 10px; }
+      .sku-filter-tools { gap: 3px; }
+      .variant-filter { padding: 2px 14px 6px; }
+      .variant-row { grid-template-columns: 104px minmax(0, 1fr); }
+      .variant-label { padding: 0 10px 0 0; font-size: 13px; }
+      .variant-options { max-width: calc(100% - 10px); margin: 6px 0 6px 10px; gap: 4px; }
+      .sku-option { min-width: 40px; padding-inline: 6px; font-size: 12px; }
       .scope-note { max-width: 100%; white-space: normal; }
       .year-tabs { width: 100%; }
       .year-tab { min-width: 0; flex: 1; }
@@ -1178,9 +1252,14 @@
       .coverage-list,
       .attachment-list { max-height: none; overflow: visible; }
       .file-actions { grid-column: 1 / -1; justify-content: flex-end; border-top: 1px solid var(--line); }
-      .breakdown-row { grid-template-columns: minmax(0, 1fr) 72px; gap: 7px; }
-      .breakdown-row .breakdown-spec { grid-column: 1 / -1; grid-row: 2; font-size: 12px; }
-      .breakdown-row.head .breakdown-spec { display: none; }
+      .flow-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
+      .flow-dialog .dialog-shell { max-height: calc(100dvh - 20px); border-radius: 20px; }
+      .flow-dialog .dialog-head { padding: 18px 14px 15px 18px; }
+      .flow-dialog .dialog-head h2 { font-size: 20px; }
+      .flow-toolbar { padding: 12px 14px; gap: 12px; }
+      .flow-filters { width: 100%; }
+      .flow-filter-button { min-width: 0; flex: 1; padding-inline: 7px; }
+      .flow-dialog-foot { min-height: 58px; padding: 9px 16px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 1px; }
       .certificate-preview { padding: 32px 26px; }
       .certificate-field { grid-template-columns: 86px minmax(0, 1fr); gap: 8px; }
       .toast { right: 14px; bottom: 14px; left: 14px; max-width: none; }
@@ -1188,6 +1267,12 @@
 
     @media (max-width: 390px) {
       .month-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    @media (pointer: coarse) {
+      .sku-option,
+      .filter-reset,
+      .flow-filter-button { min-height: 44px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1198,13 +1283,13 @@
 
     @media (prefers-reduced-transparency: reduce) {
       .dialog-shell,
+      .flow-table thead,
       .toast { backdrop-filter: none; -webkit-backdrop-filter: none; }
       .dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
     }
 
     @media (prefers-contrast: more) {
       .module-panel,
-      .variant-filter,
       .coverage-panel,
       .files-panel,
       .month-card { border-color: var(--line-strong); }
@@ -1271,36 +1356,42 @@
     </section>
 
     <section class="module-panel sku-filter-panel" aria-labelledby="sku-filter-title">
-      <div class="panel-heading">
-        <div>
-          <div class="panel-title-line">
-            <h2 id="sku-filter-title">SKU 筛选</h2>
-            <span class="count-badge" id="sku-count-badge" aria-live="polite">8 个 SKU</span>
-          </div>
-          <p>每行对应一个规格维度；选择“全部”可保留该维度下的所有 SKU 值。</p>
+      <div class="sku-filter-heading">
+        <div class="sku-filter-title">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path>
+            <circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle>
+          </svg>
+          <h2 id="sku-filter-title">SKU 筛选</h2>
         </div>
-        <span class="panel-meta">全部规格值已展开</span>
+        <div class="sku-filter-tools">
+          <span class="filter-result" id="match-count" aria-live="polite">匹配 8 个 SKU</span>
+          <button class="filter-reset" id="reset-sku-filter" type="button" disabled>
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
+            重置
+          </button>
+        </div>
       </div>
 
       <div class="variant-filter" id="variant-filter" aria-label="SKU 规格筛选">
-        <div class="variant-row" data-dimension="pressure">
-          <div class="variant-label"><span class="variant-index" aria-hidden="true">01</span><span>额定工作压力</span></div>
+        <div class="variant-row" data-dimension="pressure" role="group" aria-labelledby="pressure-label">
+          <div class="variant-label" id="pressure-label">额定工作压力</div>
           <div class="variant-options">
             <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
             <button class="sku-option" type="button" data-value="0.8 MPa" aria-pressed="false">0.8 MPa</button>
             <button class="sku-option" type="button" data-value="1.0 MPa" aria-pressed="false">1.0 MPa</button>
           </div>
         </div>
-        <div class="variant-row" data-dimension="diameter">
-          <div class="variant-label"><span class="variant-index" aria-hidden="true">02</span><span>公称口径</span></div>
+        <div class="variant-row" data-dimension="diameter" role="group" aria-labelledby="diameter-label">
+          <div class="variant-label" id="diameter-label">公称口径</div>
           <div class="variant-options">
             <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
             <button class="sku-option" type="button" data-value="DN50" aria-pressed="false">DN50</button>
             <button class="sku-option" type="button" data-value="DN65" aria-pressed="false">DN65</button>
           </div>
         </div>
-        <div class="variant-row" data-dimension="length">
-          <div class="variant-label"><span class="variant-index" aria-hidden="true">03</span><span>水带长度</span></div>
+        <div class="variant-row" data-dimension="length" role="group" aria-labelledby="length-label">
+          <div class="variant-label" id="length-label">水带长度</div>
           <div class="variant-options">
             <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
             <button class="sku-option" type="button" data-value="20 m" aria-pressed="false">20 m</button>
@@ -1308,31 +1399,12 @@
             <button class="sku-option" type="button" data-value="30 m" aria-pressed="false">30 m</button>
           </div>
         </div>
-        <div class="variant-row" data-dimension="lining">
-          <div class="variant-label"><span class="variant-index" aria-hidden="true">04</span><span>衬里材质</span></div>
+        <div class="variant-row" data-dimension="lining" role="group" aria-labelledby="lining-label">
+          <div class="variant-label" id="lining-label">衬里材质</div>
           <div class="variant-options">
             <button class="sku-option" type="button" data-value="" aria-pressed="true">全部</button>
             <button class="sku-option" type="button" data-value="聚氨酯" aria-pressed="false">聚氨酯</button>
           </div>
-        </div>
-      </div>
-
-      <div class="selection-bar" aria-live="polite">
-        <div class="selection-summary">
-          <span class="selection-mark" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"></path><path d="m4 7.5 8 4.5 8-4.5M12 12v9"></path></svg>
-          </span>
-          <span class="selection-copy">
-            <strong id="selection-title">全规格汇总</strong>
-            <span id="selection-description">当前未限定 SKU 维度，库存与附件按全部 8 个 SKU 汇总。</span>
-          </span>
-        </div>
-        <div class="selection-actions">
-          <span class="match-count" id="match-count">匹配 8 个 SKU</span>
-          <button class="quiet-button" id="reset-sku-filter" type="button">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
-            重置规格
-          </button>
         </div>
       </div>
     </section>
@@ -1341,7 +1413,7 @@
       <div class="panel-heading">
         <div>
           <h2 id="inventory-title">库存信息</h2>
-          <p>按生产年月汇总当前 SKU 范围；点击月份卡片可查看 SKU 构成。</p>
+          <p>按生产年月汇总当前 SKU 范围；点击月份卡片可查看对应进出货流水。</p>
         </div>
         <span class="scope-note" id="inventory-scope">统计范围：全部 8 个 SKU</span>
       </div>
@@ -1441,15 +1513,48 @@
     </section>
   </main>
 
-  <dialog class="dialog" id="month-dialog" aria-labelledby="month-dialog-title">
+  <dialog class="dialog flow-dialog" id="month-dialog" aria-labelledby="month-dialog-title" aria-describedby="month-dialog-copy">
     <div class="dialog-shell">
       <header class="dialog-head">
-        <div><h2 id="month-dialog-title">SKU 库存构成</h2><p id="month-dialog-copy">当前筛选范围</p></div>
-        <button class="icon-button" type="button" data-close-dialog="month-dialog" aria-label="关闭库存构成弹窗">
+        <div>
+          <p class="dialog-kicker">INVENTORY FLOW</p>
+          <h2 id="month-dialog-title">2026 年 08 月进出货流水</h2>
+          <p id="month-dialog-copy">沱雨 · 有衬里消防水带 · 当前 SKU 范围</p>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog="month-dialog" aria-label="关闭进出货流水弹窗">
           <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
         </button>
       </header>
-      <div class="dialog-body"><div class="breakdown-table" id="breakdown-table"></div></div>
+
+      <div class="flow-toolbar">
+        <div class="flow-filters" role="group" aria-label="流水类型快速筛选">
+          <button class="flow-filter-button" type="button" data-flow-filter="all" aria-pressed="true">全部 6</button>
+          <button class="flow-filter-button" type="button" data-flow-filter="in" aria-pressed="false">进货 3</button>
+          <button class="flow-filter-button" type="button" data-flow-filter="out" aria-pressed="false">出货 3</button>
+        </div>
+        <div class="flow-summary" aria-label="本组流水汇总">
+          <div class="flow-summary-item in"><span>累计进货</span><strong id="flow-total-in">+0 盘</strong></div>
+          <div class="flow-summary-item out"><span>累计出货</span><strong id="flow-total-out">-0 盘</strong></div>
+          <div class="flow-summary-item"><span>当前结存</span><strong id="flow-current-stock">0 盘</strong></div>
+        </div>
+      </div>
+
+      <div class="flow-table-scroll" tabindex="0" aria-label="流水明细表格，可横向滚动">
+        <table class="flow-table">
+          <caption class="visually-hidden" id="flow-table-caption">2026 年 08 月生产货物进出货流水</caption>
+          <colgroup><col style="width:16%"><col style="width:17%"><col style="width:10%"><col style="width:15%"><col style="width:14%"><col style="width:10%"><col style="width:9%"><col style="width:9%"></colgroup>
+          <thead>
+            <tr><th scope="col">发生时间</th><th scope="col">流水号</th><th scope="col">类型</th><th scope="col">业务来源</th><th scope="col">来源单据</th><th scope="col">经办人</th><th scope="col">数量</th><th scope="col">结存</th></tr>
+          </thead>
+          <tbody id="flow-table-body"></tbody>
+        </table>
+        <div class="empty-flow" id="empty-flow" hidden>当前筛选条件下没有流水记录。</div>
+      </div>
+
+      <footer class="flow-dialog-foot">
+        <span id="flow-count" aria-live="polite"><strong>6</strong> 条流水记录</span>
+        <span>数量单位：盘 · 按发生时间倒序</span>
+      </footer>
     </div>
   </dialog>
 
@@ -1496,13 +1601,15 @@
       var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var numberFormat = new Intl.NumberFormat('zh-CN');
       var dimensions = ['pressure', 'diameter', 'length', 'lining'];
-      var dimensionLabels = { pressure: '压力', diameter: '口径', length: '长度', lining: '衬里' };
       var filterState = { pressure: '', diameter: '', length: '', lining: '' };
       var activeYear = '2026';
       var activeDialogTrigger = null;
       var dialogCloseTimer = 0;
       var pendingDeleteId = '';
       var toastTimer = 0;
+      var activeFlowRows = [];
+      var activeFlowFilter = 'all';
+      var flowHandlers = ['陈晓宁', '周明远', '林嘉怡', '许文博', '罗静', '张予安'];
 
       var skus = [
         { id: 'HD-TY-08-50-20-PU', code: 'TY-08-50-20-PU', pressure: '0.8 MPa', diameter: 'DN50', length: '20 m', lining: '聚氨酯', weight: 58, bias: -.18 },
@@ -1562,10 +1669,6 @@
           .replaceAll('>', '&gt;')
           .replaceAll('"', '&quot;')
           .replaceAll("'", '&#039;');
-      }
-
-      function skuSpec(sku) {
-        return sku.pressure + ' · ' + sku.diameter + ' · ' + sku.length + ' · ' + sku.lining;
       }
 
       function getMatchedSkus(exceptDimension) {
@@ -1633,11 +1736,11 @@
             : '';
         var ratio = yearTotal ? (month.quantity / yearTotal * 100).toFixed(1) : '0.0';
         var secondary = month.aged ? '库龄 ' + (20 - Number(month.month)) + ' 个月' : '占比 ' + ratio + '%';
-        return '<button class="' + classes + '" type="button" data-year="' + year + '" data-month="' + month.month + '" aria-haspopup="dialog" aria-label="查看 ' + year + ' 年 ' + month.month + ' 月的 SKU 库存构成">' +
+        return '<button class="' + classes + '" type="button" data-year="' + year + '" data-month="' + month.month + '" data-stock="' + month.quantity + '" aria-haspopup="dialog" aria-label="查看 ' + year + ' 年 ' + month.month + ' 月生产货物的进出货流水">' +
           '<span class="month-top"><time class="month-date" datetime="' + year + '-' + month.month + '"><strong>' + month.month + '</strong><span>月</span></time>' + tag + '</span>' +
           '<span class="month-quantity"><span class="quantity-label">库存</span><strong>' + numberFormat.format(month.quantity) + '</strong><small>盘</small></span>' +
           '<span class="month-meta"><span>' + month.selectedBatches + ' 批</span><span>' + secondary + '</span></span>' +
-          '<span class="month-action"><span>查看 SKU 构成</span><span class="month-action-icon" aria-hidden="true">' + icons.arrow + '</span></span>' +
+          '<span class="month-action"><span>查看流水</span><span class="month-action-icon" aria-hidden="true">' + icons.arrow + '</span></span>' +
           '</button>';
       }
 
@@ -1697,37 +1800,86 @@
         updateYearOverview();
       }
 
-      function allocateMonth(year, monthNumber, matched) {
-        var monthIndex = inventory[year].findIndex(function (entry) { return entry.month === monthNumber; });
-        var month = inventory[year][monthIndex];
-        var total = monthQuantity(month, monthIndex, matched);
-        var oscillation = (monthIndex % 3) - 1;
-        var weights = matched.map(function (sku) { return sku.weight * (1 + sku.bias * oscillation); });
-        var sumWeights = weights.reduce(function (sum, value) { return sum + value; }, 0);
-        var rows = matched.map(function (sku, index) {
-          return { sku: sku, quantity: sumWeights ? Math.round(total * weights[index] / sumWeights) : 0 };
+      function createFlowRows(year, monthNumber, stock) {
+        var seed = Number(monthNumber) + Number(year.slice(-2));
+        var inFirst = Math.round(stock * .72) + 52;
+        var outFirst = Math.round(stock * .20) + 8;
+        var inSecond = Math.round(stock * .48) + 34;
+        var outSecond = Math.round(stock * .16) + 7;
+        var inThird = Math.round(stock * .26) + 16;
+        var outThird = inFirst - outFirst + inSecond - outSecond + inThird - stock;
+        var events = [
+          { day: '02', time: '09:18', type: 'in', source: '采购到货', prefix: 'CG', quantity: inFirst },
+          { day: '06', time: '14:36', type: 'out', source: '销售出库', prefix: 'XS', quantity: outFirst },
+          { day: '11', time: '10:05', type: 'in', source: '采购到货', prefix: 'CG', quantity: inSecond },
+          { day: '16', time: '16:22', type: 'out', source: '项目领用', prefix: 'XM', quantity: outSecond },
+          { day: '21', time: '11:47', type: 'in', source: '退货入库', prefix: 'TH', quantity: inThird },
+          { day: '26', time: '15:20', type: 'out', source: '销售出库', prefix: 'XS', quantity: outThird }
+        ];
+        var balance = 0;
+        return events.map(function (event, index) {
+          balance += event.type === 'in' ? event.quantity : -event.quantity;
+          return Object.assign({}, event, {
+            date: year + '-' + monthNumber + '-' + event.day + ' ' + event.time,
+            flowNo: 'LS' + year.slice(-2) + monthNumber + event.day + String(seed + index).padStart(2, '0'),
+            documentNo: event.prefix + '-' + year.slice(-2) + monthNumber + '-' + String(seed * 7 + index * 13).padStart(4, '0'),
+            handler: flowHandlers[(seed + index) % flowHandlers.length],
+            balance: balance
+          });
+        }).reverse();
+      }
+
+      function renderFlowRows() {
+        var rows = activeFlowFilter === 'all'
+          ? activeFlowRows
+          : activeFlowRows.filter(function (row) { return row.type === activeFlowFilter; });
+        document.getElementById('flow-table-body').innerHTML = rows.map(function (row) {
+          var isIn = row.type === 'in';
+          return '<tr>' +
+            '<td>' + escapeHtml(row.date) + '</td>' +
+            '<td class="primary-cell">' + escapeHtml(row.flowNo) + '</td>' +
+            '<td><span class="flow-type ' + row.type + '">' + (isIn ? '进货' : '出货') + '</span></td>' +
+            '<td>' + escapeHtml(row.source) + '</td>' +
+            '<td>' + escapeHtml(row.documentNo) + '</td>' +
+            '<td>' + escapeHtml(row.handler) + '</td>' +
+            '<td class="' + (isIn ? 'quantity-in' : 'quantity-out') + '">' + (isIn ? '+' : '-') + numberFormat.format(row.quantity) + '</td>' +
+            '<td class="primary-cell">' + numberFormat.format(row.balance) + '</td>' +
+            '</tr>';
+        }).join('');
+        document.getElementById('empty-flow').hidden = rows.length !== 0;
+        document.getElementById('flow-count').innerHTML = '<strong>' + rows.length + '</strong> 条流水记录';
+      }
+
+      function setFlowFilter(filter) {
+        activeFlowFilter = filter;
+        document.querySelectorAll('[data-flow-filter]').forEach(function (button) {
+          button.setAttribute('aria-pressed', String(button.dataset.flowFilter === filter));
         });
-        var allocated = rows.reduce(function (sum, row) { return sum + row.quantity; }, 0);
-        if (rows.length) rows[rows.length - 1].quantity += total - allocated;
-        return { total: total, rows: rows };
+        renderFlowRows();
       }
 
       function openMonthDialog(card) {
         var year = card.dataset.year;
         var month = card.dataset.month;
+        var stock = Number(card.dataset.stock);
         var matched = exactMatchedSkus();
-        var allocation = allocateMonth(year, month, matched);
-        document.getElementById('month-dialog-title').textContent = year + ' 年 ' + month + ' 月 · SKU 库存构成';
-        document.getElementById('month-dialog-copy').textContent = scopeLabel(matched, '当前范围') + ' · 合计 ' + allocation.total + ' 盘';
-        var rows = allocation.rows.map(function (row) {
-          return '<div class="breakdown-row">' +
-            '<span class="breakdown-code">' + escapeHtml(row.sku.code) + '</span>' +
-            '<span class="breakdown-spec">' + escapeHtml(skuSpec(row.sku)) + '</span>' +
-            '<span class="breakdown-quantity">' + numberFormat.format(row.quantity) + ' 盘</span>' +
-            '</div>';
-        }).join('');
-        document.getElementById('breakdown-table').innerHTML =
-          '<div class="breakdown-row head"><span>SKU 编码</span><span class="breakdown-spec">规格组合</span><span style="text-align:right">库存</span></div>' + rows;
+        activeFlowRows = createFlowRows(year, month, stock);
+        activeFlowFilter = 'all';
+        document.getElementById('month-dialog-title').textContent = year + ' 年 ' + month + ' 月进出货流水';
+        document.getElementById('month-dialog-copy').textContent = '沱雨 · 有衬里消防水带 · ' + scopeLabel(matched, '当前范围');
+        document.getElementById('flow-table-caption').textContent = year + ' 年 ' + month + ' 月生产货物进出货流水';
+        var totalIn = activeFlowRows.filter(function (row) { return row.type === 'in'; }).reduce(function (sum, row) { return sum + row.quantity; }, 0);
+        var totalOut = activeFlowRows.filter(function (row) { return row.type === 'out'; }).reduce(function (sum, row) { return sum + row.quantity; }, 0);
+        document.getElementById('flow-total-in').textContent = '+' + numberFormat.format(totalIn) + ' 盘';
+        document.getElementById('flow-total-out').textContent = '-' + numberFormat.format(totalOut) + ' 盘';
+        document.getElementById('flow-current-stock').textContent = numberFormat.format(stock) + ' 盘';
+        document.querySelectorAll('[data-flow-filter]').forEach(function (button) {
+          var filter = button.dataset.flowFilter;
+          var count = filter === 'all' ? activeFlowRows.length : activeFlowRows.filter(function (row) { return row.type === filter; }).length;
+          button.textContent = (filter === 'all' ? '全部' : filter === 'in' ? '进货' : '出货') + ' ' + count;
+          button.setAttribute('aria-pressed', String(filter === 'all'));
+        });
+        renderFlowRows();
         openDialog(document.getElementById('month-dialog'), card);
       }
 
@@ -1793,14 +1945,8 @@
       function updateSelection() {
         var matched = exactMatchedSkus();
         var chosen = dimensions.filter(function (dimension) { return filterState[dimension]; });
-        var title = matched.length === 1 ? matched[0].code : chosen.length ? '已限定 ' + chosen.length + ' 个规格维度' : '全规格汇总';
-        var description = chosen.length
-          ? chosen.map(function (dimension) { return dimensionLabels[dimension] + '：' + filterState[dimension]; }).join(' · ')
-          : '当前未限定 SKU 维度，库存与附件按全部 8 个 SKU 汇总。';
-        document.getElementById('selection-title').textContent = title;
-        document.getElementById('selection-description').textContent = description;
         document.getElementById('match-count').textContent = '匹配 ' + matched.length + ' 个 SKU';
-        document.getElementById('sku-count-badge').textContent = matched.length + ' 个 SKU';
+        document.getElementById('reset-sku-filter').disabled = chosen.length === 0;
         updateOptionAvailability();
         renderInventory(matched);
         renderAttachments(matched);
@@ -1947,6 +2093,11 @@
       document.querySelector('.inventory-panel').addEventListener('click', function (event) {
         var card = event.target.closest('.month-card');
         if (card) openMonthDialog(card);
+      });
+
+      document.querySelector('.flow-filters').addEventListener('click', function (event) {
+        var button = event.target.closest('[data-flow-filter]');
+        if (button) setFlowFilter(button.dataset.flowFilter);
       });
 
       var uploadInput = document.getElementById('certificate-upload');
