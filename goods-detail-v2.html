@@ -259,28 +259,29 @@
     .filter-reset:disabled { opacity: .34; cursor: default; }
 
     .manage-dimensions-button {
-      min-height: 34px;
-      padding: 0 10px;
+      min-height: 36px;
+      padding: 0 12px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      color: var(--ink-2);
-      background: var(--surface-soft);
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      color: #fff;
+      background: var(--red);
+      border: 1px solid transparent;
+      border-radius: 9px;
       outline: none;
       cursor: pointer;
       touch-action: manipulation;
       font-size: 12px;
-      font-weight: 650;
+      font-weight: 670;
       white-space: nowrap;
-      transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+      box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .34), 0 3px 8px rgba(173, 30, 24, .16);
+      transition: filter var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
     }
 
-    .manage-dimensions-button:hover { color: var(--red-deep); background: var(--red-soft); border-color: rgba(216, 50, 41, .24); }
-    .manage-dimensions-button:active { transform: scale(.97); }
-    .manage-dimensions-button:focus-visible { box-shadow: var(--focus); }
+    .manage-dimensions-button:hover { filter: brightness(.96); }
+    .manage-dimensions-button:active { filter: brightness(.91); transform: scale(.97); }
+    .manage-dimensions-button:focus-visible { box-shadow: var(--focus), 0 3px 8px rgba(173, 30, 24, .16); }
     .manage-label-compact { display: none; }
 
     .variant-filter {
@@ -1111,188 +1112,24 @@
     .inventory-note svg { flex: 0 0 auto; color: var(--amber); }
     .inventory-note strong { color: #5f3308; font-weight: 680; }
 
-    .attachment-layout {
-      display: grid;
-      grid-template-columns: minmax(250px, .7fr) minmax(0, 1.7fr);
-      gap: 12px;
-    }
-
-    .coverage-panel,
-    .files-panel {
+    .attachment-board {
       min-width: 0;
       overflow: hidden;
-      background: rgba(248, 248, 250, .78);
+      background: rgba(255, 255, 255, .82);
       border: 1px solid var(--line);
       border-radius: 14px;
+      box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .96);
     }
 
-    .subpanel-head {
-      min-height: 58px;
-      padding: 10px 13px;
+    .attachment-heading-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(248, 248, 250, .74));
-      border-bottom: 1px solid var(--line);
+      justify-content: flex-end;
+      gap: 9px;
     }
-
-    .subpanel-head h3 { margin: 0; font-size: var(--type-emphasis); line-height: var(--leading-compact); font-weight: 680; }
-    .subpanel-head p { margin: 3px 0 0; color: var(--ink-3); font-size: var(--type-base); }
-
-    .coverage-score {
-      min-width: 54px;
-      text-align: right;
-      color: var(--green);
-      font-size: var(--type-emphasis);
-      font-weight: 720;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .coverage-score small { display: block; color: var(--ink-3); font-size: 12px; font-weight: 560; }
-
-    .coverage-meter {
-      height: 5px;
-      margin: 13px 13px 8px;
-      overflow: hidden;
-      background: rgba(118, 118, 128, .14);
-      border-radius: 999px;
-    }
-
-    .coverage-meter span {
-      width: 0;
-      height: 100%;
-      display: block;
-      background: linear-gradient(90deg, #31a76b, var(--green));
-      border-radius: inherit;
-      transition: width var(--motion-normal) var(--ease-spring);
-    }
-
-    .coverage-list {
-      max-height: 374px;
-      padding: 2px 8px 9px;
-      overflow-y: auto;
-      scrollbar-color: rgba(60, 60, 67, .2) transparent;
-      scrollbar-width: thin;
-    }
-
-    .coverage-row {
-      min-height: 43px;
-      padding: 7px 5px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .coverage-row:last-child { border-bottom: 0; }
-    .coverage-copy { min-width: 0; }
-    .coverage-copy strong {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: var(--type-base);
-      font-weight: 650;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .coverage-copy span {
-      display: block;
-      margin-top: 1px;
-      overflow: hidden;
-      color: var(--ink-3);
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 12px;
-    }
-
-    .archive-state {
-      min-height: 24px;
-      padding: 3px 7px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      color: var(--green);
-      background: var(--green-soft);
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 660;
-      white-space: nowrap;
-    }
-
-    .archive-state.missing { color: var(--amber); background: var(--amber-soft); }
-    .archive-state::before { content: ""; width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
-
-    .upload-area {
-      margin: 12px;
-      padding: 13px;
-      display: grid;
-      grid-template-columns: minmax(210px, .8fr) minmax(260px, 1.2fr);
-      align-items: stretch;
-      gap: 10px;
-      background: rgba(255, 255, 255, .72);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-    }
-
-    .target-field { min-width: 0; }
-    .field-label { display: block; margin: 0 0 7px; color: var(--ink-2); font-size: var(--type-base); font-weight: 650; }
-    .sku-select {
-      width: 100%;
-      height: 44px;
-      padding: 0 34px 0 11px;
-      color: var(--ink);
-      background: #fff;
-      border: 1px solid var(--line-strong);
-      border-radius: 10px;
-      outline: none;
-      font-size: var(--type-base);
-      font-weight: 620;
-      text-overflow: ellipsis;
-    }
-
-    .sku-select:focus-visible { box-shadow: var(--focus); border-color: rgba(216, 50, 41, .32); }
-    .sku-select:disabled { color: var(--ink-2); background: var(--surface-soft); opacity: 1; cursor: default; }
-    .field-help { margin: 6px 0 0; color: var(--ink-3); font-size: 12px; line-height: var(--leading-compact); }
-
-    .drop-zone {
-      min-height: 82px;
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: var(--ink-2);
-      background: var(--surface-soft);
-      border: 1px dashed rgba(60, 60, 67, .24);
-      border-radius: 11px;
-      outline: none;
-      text-align: left;
-      transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
-    }
-
-    .drop-zone:hover,
-    .drop-zone.is-dragging { background: var(--red-soft); border-color: rgba(216, 50, 41, .36); }
-    .drop-zone:focus-visible { box-shadow: var(--focus); }
-    .drop-icon {
-      width: 38px;
-      height: 38px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      color: var(--red-deep);
-      background: #fff;
-      border: 1px solid rgba(216, 50, 41, .1);
-      border-radius: 11px;
-    }
-
-    .drop-copy strong { display: block; color: var(--ink); font-size: var(--type-base); font-weight: 660; }
-    .drop-copy span { display: block; margin-top: 2px; color: var(--ink-3); font-size: 12px; }
 
     .upload-button {
-      min-height: 44px;
+      min-height: 42px;
       padding: 0 15px;
       display: inline-flex;
       align-items: center;
@@ -1313,24 +1150,185 @@
     .upload-button:hover { filter: brightness(.96); }
     .upload-button:active { filter: brightness(.91); transform: scale(.965); }
     .upload-button:focus-visible { box-shadow: var(--focus), 0 3px 8px rgba(173, 30, 24, .16); }
+    .upload-button:disabled { filter: none; opacity: .46; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    .file-section-head {
-      padding: 0 13px 10px;
+    .attachment-form-dialog { width: min(720px, calc(100% - 32px)); }
+    .attachment-form { min-height: 0; display: flex; flex-direction: column; background: #fff; }
+    .attachment-form-body { padding: 20px; display: grid; gap: 18px; }
+    .attachment-form-field { min-width: 0; }
+    .field-label { display: block; margin: 0 0 7px; color: var(--ink-2); font-size: var(--type-base); font-weight: 660; }
+    .field-required { margin-left: 3px; color: var(--red-deep); }
+    .field-help { margin: 6px 0 0; color: var(--ink-3); font-size: 12px; line-height: 1.5; }
+
+    .attachment-sku-section {
+      overflow: hidden;
+      background: rgba(247, 247, 249, .72);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .9);
+    }
+
+    .attachment-sku-heading {
+      min-height: 45px;
+      padding: 0 13px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      background: rgba(255, 255, 255, .68);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .attachment-sku-heading .field-label { margin: 0; }
+    .attachment-sku-heading span:last-child { color: var(--ink-3); font-size: 12px; }
+    .attachment-sku-dimensions { padding: 0 13px; }
+
+    .attachment-dimension-row {
+      min-width: 0;
+      margin: 0;
+      padding: 11px 0;
+      display: grid;
+      grid-template-columns: 124px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      border-bottom: 1px solid rgba(60, 60, 67, .09);
+    }
+
+    .attachment-dimension-row:last-child { border-bottom: 0; }
+    .attachment-dimension-label {
+      min-width: 0;
+      padding: 0;
+      color: var(--ink-2);
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 660;
+    }
+
+    .attachment-dimension-options { min-width: 0; display: flex; flex-wrap: wrap; gap: 7px; }
+    .attachment-dimension-option {
+      min-height: 36px;
+      padding: 0 12px;
+      color: var(--ink-2);
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      outline: none;
+      font-size: 13px;
+      font-weight: 620;
+      white-space: nowrap;
+      box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .9);
+      transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .attachment-dimension-option:hover:not(:disabled) { color: var(--ink); border-color: rgba(60, 60, 67, .28); }
+    .attachment-dimension-option[aria-pressed="true"] {
+      color: var(--red-deep);
+      background: rgba(216, 50, 41, .09);
+      border-color: rgba(216, 50, 41, .3);
+      box-shadow: inset 0 0 0 .5px rgba(216, 50, 41, .06);
+    }
+    .attachment-dimension-option:disabled { color: rgba(60, 60, 67, .38); background: rgba(255, 255, 255, .48); cursor: not-allowed; }
+    .attachment-dimension-option:active:not(:disabled) { transform: scale(.97); }
+    .attachment-dimension-option:focus-visible { box-shadow: var(--focus); }
+
+    .attachment-sku-status {
+      min-height: 42px;
+      padding: 9px 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-3);
+      background: rgba(255, 255, 255, .58);
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .attachment-sku-status::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      background: #aeaeb2;
+      border-radius: 999px;
+    }
+
+    .attachment-sku-status.is-resolved { color: #346a45; }
+    .attachment-sku-status.is-resolved::before { background: #34a853; box-shadow: 0 0 0 3px rgba(52, 168, 83, .1); }
+
+    .attachment-file-picker {
+      min-height: 66px;
+      padding: 10px 11px;
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+    }
+
+    .attachment-picker-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      color: var(--ink-2);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .attachment-picker-copy { min-width: 0; }
+    .attachment-picker-copy strong,
+    .attachment-picker-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .attachment-picker-copy strong { color: var(--ink); font-size: var(--type-base); font-weight: 650; }
+    .attachment-picker-copy span { margin-top: 4px; color: var(--ink-3); font-size: 12px; }
+
+    .attachment-file-button {
+      min-height: 36px;
+      padding: 0 11px;
+      color: var(--ink-2);
+      background: #fff;
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      outline: none;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .attachment-file-button:hover { color: var(--ink); background: #fafafd; }
+    .attachment-file-button:focus-visible { box-shadow: var(--focus); }
+
+    .attachment-form-actions {
+      min-height: 64px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      background: rgba(247, 247, 249, .78);
+      border-top: 1px solid var(--line);
+    }
+
+    .file-section-head {
+      min-height: 46px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255, 255, 255, .7);
+      border-bottom: 1px solid var(--line);
     }
 
     .file-section-head strong { font-size: var(--type-base); font-weight: 670; }
     .file-section-head span { color: var(--ink-3); font-size: 12px; }
 
     .attachment-list {
-      max-height: 266px;
-      padding: 0 12px 12px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      max-height: 420px;
       overflow-y: auto;
       scrollbar-color: rgba(60, 60, 67, .2) transparent;
       scrollbar-width: thin;
@@ -1338,20 +1336,19 @@
 
     .attachment-card {
       min-width: 0;
-      min-height: 92px;
-      padding: 10px;
+      min-height: 72px;
+      padding: 9px 12px;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-columns: 38px minmax(210px, 1fr) minmax(250px, .72fr) auto;
       align-items: center;
-      gap: 9px;
-      background: rgba(255, 255, 255, .86);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .94);
-      transition: border-color var(--motion-fast), box-shadow var(--motion-fast), transform 120ms ease-out, opacity var(--motion-fast);
+      gap: 11px;
+      background: rgba(255, 255, 255, .74);
+      border-bottom: 1px solid var(--line);
+      transition: background-color var(--motion-fast), transform 120ms ease-out, opacity var(--motion-fast);
     }
 
-    .attachment-card:hover { border-color: rgba(60, 60, 67, .18); box-shadow: 0 5px 14px rgba(10, 10, 15, .045); }
+    .attachment-card:last-child { border-bottom: 0; }
+    .attachment-card:hover { background: rgba(247, 247, 249, .96); }
     .attachment-card.is-removing { opacity: 0; transform: translateX(8px); }
 
     .file-icon {
@@ -1360,13 +1357,12 @@
       display: grid;
       place-items: center;
       flex: 0 0 auto;
-      color: var(--red-deep);
-      background: var(--red-soft);
-      border: 1px solid rgba(216, 50, 41, .08);
+      color: var(--ink-2);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
       border-radius: 10px;
     }
 
-    .file-icon.image { color: var(--blue); background: var(--blue-soft); border-color: rgba(38, 117, 216, .08); }
     .file-copy { min-width: 0; }
     .file-name {
       display: block;
@@ -1379,24 +1375,8 @@
       font-weight: 650;
     }
 
-    .file-sku {
-      max-width: 100%;
-      margin-top: 4px;
-      padding: 2px 6px;
-      display: inline-flex;
-      overflow: hidden;
-      color: var(--red-deep);
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      background: var(--red-soft);
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 650;
-      font-variant-numeric: tabular-nums;
-    }
-
     .file-meta {
-      margin-top: 4px;
+      margin-top: 5px;
       overflow: hidden;
       color: var(--ink-3);
       text-overflow: ellipsis;
@@ -1405,7 +1385,49 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .file-actions { display: flex; align-items: center; }
+    .file-spec-tags { min-width: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+    .file-spec-tag {
+      min-height: 25px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--ink-2);
+      background: rgba(118, 118, 128, .08);
+      border: 1px solid rgba(60, 60, 67, .09);
+      border-radius: 7px;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 630;
+      white-space: nowrap;
+    }
+
+    .file-actions { display: grid; grid-template-columns: repeat(4, 64px); align-items: center; gap: 6px; }
+
+    .attachment-action-button {
+      width: 64px;
+      min-height: 36px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: none;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+      transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast), transform 100ms ease-out;
+    }
+
+    .attachment-action-button svg { flex: 0 0 auto; }
+    .attachment-action-button:hover { color: var(--ink); background: var(--surface-soft); border-color: var(--line-strong); }
+    .attachment-action-button.delete:hover { color: var(--red-deep); background: var(--red-soft); border-color: rgba(216, 50, 41, .14); }
+    .attachment-action-button:active { transform: scale(.96); }
+    .attachment-action-button:focus-visible { box-shadow: var(--focus); }
+
     .icon-button {
       width: 44px;
       height: 44px;
@@ -1426,13 +1448,10 @@
     .icon-button:focus-visible { box-shadow: var(--focus); }
 
     .attachment-empty {
-      margin: 0 12px 12px;
-      padding: 30px 16px;
+      padding: 34px 16px 38px;
       color: var(--ink-3);
       text-align: center;
-      background: rgba(255, 255, 255, .68);
-      border: 1px dashed var(--line-strong);
-      border-radius: 12px;
+      background: rgba(255, 255, 255, .74);
       font-size: var(--type-base);
     }
 
@@ -1612,16 +1631,57 @@
 
     .flow-dialog-foot strong { color: var(--ink-2); font-weight: 650; }
 
-    .certificate-preview { width: min(580px, 100%); margin: 0 auto; padding: 38px; position: relative; background: #fff; border: 1px solid rgba(60, 60, 67, .1); box-shadow: 0 14px 40px rgba(10, 10, 15, .1); }
-    .certificate-preview::before { content: ""; position: absolute; inset: 16px; pointer-events: none; border: 2px solid rgba(185, 39, 32, .68); outline: 1px solid rgba(185, 39, 32, .18); outline-offset: 4px; }
-    .certificate-brand { position: relative; color: var(--red-deep); text-align: center; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
-    .certificate-preview h3 { position: relative; margin: 18px 0 28px; text-align: center; font-size: 27px; letter-spacing: .14em; font-weight: 720; }
-    .certificate-fields { position: relative; border-top: 1px solid var(--line-strong); }
-    .certificate-field { min-height: 47px; display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 14px; border-bottom: 1px solid var(--line); }
-    .certificate-field span { color: var(--ink-3); font-size: var(--type-base); }
-    .certificate-field strong { font-size: var(--type-base); font-weight: 650; }
-    .certificate-result { position: relative; margin-top: 26px; color: var(--green); text-align: center; font-size: 20px; font-weight: 720; }
-    .certificate-foot { position: relative; margin-top: 32px; color: var(--ink-3); text-align: right; font-size: 12px; line-height: 1.7; }
+    .attachment-detail {
+      width: min(600px, 100%);
+      margin: 0 auto;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .attachment-detail-file {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .attachment-detail-icon {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--red-deep);
+      background: var(--red-soft);
+      border: 1px solid rgba(216, 50, 41, .1);
+      border-radius: 12px;
+    }
+
+    .attachment-detail-copy { min-width: 0; }
+    .attachment-detail-copy strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: var(--type-emphasis);
+      line-height: 1.4;
+      font-weight: 680;
+    }
+
+    .attachment-detail-copy span { display: block; margin-top: 4px; color: var(--ink-3); font-size: var(--type-base); }
+
+    .attachment-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attachment-detail-item { min-width: 0; padding: 15px 20px; border-bottom: 1px solid var(--line); }
+    .attachment-detail-item:nth-child(odd) { border-right: 1px solid var(--line); }
+    .attachment-detail-item dt { margin: 0 0 5px; color: var(--ink-3); font-size: 12px; }
+    .attachment-detail-item dd { margin: 0; overflow-wrap: anywhere; color: var(--ink); font-size: var(--type-base); line-height: 1.45; font-weight: 640; }
+    .attachment-detail-note { margin: 0; padding: 12px 20px; color: var(--ink-3); background: var(--surface-soft); font-size: 12px; line-height: 1.5; }
 
     .confirm-dialog { width: min(430px, calc(100% - 32px)); }
     .confirm-body { padding: 22px; background: #fff; }
@@ -1668,13 +1728,10 @@
 
     @media (max-width: 1320px) {
       .month-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-      .attachment-list { grid-template-columns: minmax(0, 1fr); }
     }
 
     @media (max-width: 1080px) {
       .goods-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 38px; }
-      .attachment-layout { grid-template-columns: minmax(220px, .65fr) minmax(0, 1.35fr); }
-      .upload-area { grid-template-columns: minmax(0, 1fr); }
     }
 
     @media (max-width: 880px) {
@@ -1689,8 +1746,9 @@
       .flow-toolbar { align-items: flex-start; flex-direction: column; }
       .flow-summary { width: 100%; justify-content: flex-start; }
       .flow-summary-item { text-align: left; }
-      .attachment-layout { grid-template-columns: minmax(0, 1fr); }
-      .coverage-list { max-height: 260px; }
+      .attachment-heading-actions { width: 100%; justify-content: space-between; }
+      .attachment-card { grid-template-columns: 38px minmax(0, 1fr) minmax(230px, .7fr); }
+      .file-actions { grid-column: 2 / 4; justify-content: end; }
     }
 
     @media (max-width: 620px) {
@@ -1713,10 +1771,25 @@
       .year-tabs { width: 100%; }
       .year-tab { min-width: 0; flex: 1; }
       .month-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .attachment-card { grid-template-columns: auto minmax(0, 1fr); }
-      .coverage-list,
       .attachment-list { max-height: none; overflow: visible; }
-      .file-actions { grid-column: 1 / -1; justify-content: flex-end; border-top: 1px solid var(--line); }
+      .file-section-head { min-height: 54px; padding-block: 8px; align-items: flex-start; flex-direction: column; justify-content: center; gap: 2px; }
+      .attachment-card { grid-template-columns: 38px minmax(0, 1fr); align-items: start; padding-block: 12px; }
+      .file-icon { grid-column: 1; grid-row: 1; }
+      .file-copy { grid-column: 2; grid-row: 1; }
+      .file-spec-tags { grid-column: 2; grid-row: 2; margin-top: 3px; }
+      .file-actions { grid-column: 1 / -1; grid-row: 3; grid-template-columns: repeat(4, minmax(0, 1fr)); justify-content: stretch; margin-top: 4px; }
+      .attachment-action-button { width: 100%; padding-inline: 4px; }
+      .attachment-form-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
+      .attachment-form-dialog .dialog-shell { max-height: calc(100dvh - 20px); border-radius: 20px; }
+      .attachment-form-body { padding: 16px 14px; }
+      .attachment-file-picker { grid-template-columns: 38px minmax(0, 1fr); }
+      .attachment-picker-copy span { white-space: normal; line-height: 1.4; }
+      .attachment-file-button { grid-column: 1 / -1; min-height: 42px; }
+      .attachment-sku-heading { align-items: flex-start; padding-block: 10px; flex-direction: column; gap: 3px; }
+      .attachment-dimension-row { grid-template-columns: minmax(0, 1fr); gap: 7px; }
+      .attachment-dimension-option { min-height: 44px; }
+      .attachment-form-actions { padding-inline: 14px; }
+      .attachment-form-actions > button { min-width: 0; flex: 1; }
       .flow-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
       .flow-dialog .dialog-shell { max-height: calc(100dvh - 20px); border-radius: 20px; }
       .flow-dialog .dialog-head { padding: 18px 14px 15px 18px; }
@@ -1725,8 +1798,8 @@
       .flow-filters { width: 100%; }
       .flow-filter-button { min-width: 0; flex: 1; padding-inline: 7px; }
       .flow-dialog-foot { min-height: 58px; padding: 9px 16px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 1px; }
-      .certificate-preview { padding: 32px 26px; }
-      .certificate-field { grid-template-columns: 86px minmax(0, 1fr); gap: 8px; }
+      .attachment-detail-grid { grid-template-columns: minmax(0, 1fr); }
+      .attachment-detail-item:nth-child(odd) { border-right: 0; }
       .toast { right: 14px; bottom: 14px; left: 14px; max-width: none; }
       .dimension-manager-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
       .dimension-manager-dialog .dialog-shell { height: calc(100dvh - 20px); max-height: calc(100dvh - 20px); border-radius: 20px; }
@@ -1765,13 +1838,19 @@
     @media (pointer: coarse) {
       .sku-option,
       .filter-reset,
-      .flow-filter-button { min-height: 44px; }
+      .flow-filter-button,
+      .upload-button,
+      .manage-dimensions-button,
+      .attachment-dimension-option,
+      .attachment-action-button,
+      .attachment-file-button { min-height: 44px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .month-card:hover { transform: none; }
       .dialog,
-      .attachment-card.is-removing { transform: none !important; }
+      .attachment-card.is-removing,
+      .attachment-dimension-option:active { transform: none !important; }
     }
 
     @media (prefers-reduced-transparency: reduce) {
@@ -1783,8 +1862,7 @@
 
     @media (prefers-contrast: more) {
       .module-panel,
-      .coverage-panel,
-      .files-panel,
+      .attachment-board,
       .month-card { border-color: var(--line-strong); }
     }
   </style>
@@ -1957,56 +2035,28 @@
         <div>
           <div class="panel-title-line">
             <h2 id="attachment-title">附件资料</h2>
-            <span class="count-badge" id="attachment-count" aria-live="polite">5 个文件</span>
+            <span class="count-badge" id="attachment-count" aria-live="polite">5 个附件</span>
           </div>
-          <p>按具体 SKU 归档产品合格证，上传前需确认文件归属，便于验收与后续追溯。</p>
+          <p>附件列表随上方 SKU 筛选同步，新增或编辑时可设置关联 SKU。</p>
         </div>
-        <span class="scope-note" id="attachment-scope">当前范围：全部 8 个 SKU</span>
+        <div class="attachment-heading-actions">
+          <span class="scope-note" id="attachment-scope">当前范围：全部 8 个 SKU</span>
+          <button class="upload-button" id="open-attachment-form" type="button">
+            <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+            新增附件
+          </button>
+        </div>
       </div>
 
-      <div class="attachment-layout">
-        <aside class="coverage-panel" aria-labelledby="coverage-title">
-          <div class="subpanel-head">
-            <div><h3 id="coverage-title">合格证覆盖</h3><p>当前 SKU 范围归档状态</p></div>
-            <div class="coverage-score"><span id="coverage-score">63%</span><small id="coverage-fraction">5 / 8</small></div>
-          </div>
-          <div class="coverage-meter" aria-hidden="true"><span id="coverage-meter"></span></div>
-          <div class="coverage-list" id="coverage-list"></div>
-        </aside>
-
-        <div class="files-panel">
-          <div class="subpanel-head">
-            <div><h3>产品合格证</h3><p>PDF、JPG、PNG · 单个文件不超过 10 MB</p></div>
-            <button class="upload-button" id="browse-button" type="button">
-              <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
-              选择文件
-            </button>
-          </div>
-
-          <div class="upload-area">
-            <div class="target-field">
-              <label class="field-label" for="upload-sku">合格证归属 SKU</label>
-              <select class="sku-select" id="upload-sku"></select>
-              <p class="field-help" id="upload-help">请先确认归属 SKU，再选择或拖入合格证文件。</p>
-            </div>
-            <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="拖放或选择产品合格证文件">
-              <span class="drop-icon" aria-hidden="true">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
-              </span>
-              <span class="drop-copy"><strong>拖放合格证到这里</strong><span>也可点击此区域选择文件</span></span>
-            </div>
-            <input id="certificate-upload" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" multiple hidden>
-          </div>
-
-          <div class="file-section-head">
-            <strong>已归档文件</strong>
-            <span id="file-scope-copy">显示当前全部 SKU 的合格证</span>
-          </div>
-          <div class="attachment-list" id="attachment-list" aria-label="产品合格证列表"></div>
-          <div class="attachment-empty" id="attachment-empty" hidden>
-            <strong>当前范围暂无合格证</strong>
-            <span>选择归属 SKU 并上传产品合格证，完成资料归档。</span>
-          </div>
+      <div class="attachment-board">
+        <div class="file-section-head">
+          <strong>附件列表</strong>
+          <span id="file-scope-copy">随上方 SKU 筛选显示</span>
+        </div>
+        <div class="attachment-list" id="attachment-list" aria-label="附件资料列表"></div>
+        <div class="attachment-empty" id="attachment-empty" hidden>
+          <strong>当前范围暂无附件</strong>
+          <span>点击“新增附件”，为当前 SKU 范围添加资料。</span>
         </div>
       </div>
     </section>
@@ -2106,11 +2156,50 @@
     </div>
   </dialog>
 
-  <dialog class="dialog" id="preview-dialog" aria-labelledby="preview-title">
+  <dialog class="dialog attachment-form-dialog" id="attachment-form-dialog" aria-labelledby="attachment-form-title" aria-describedby="attachment-form-copy">
     <div class="dialog-shell">
       <header class="dialog-head">
-        <div><h2 id="preview-title">产品合格证预览</h2><p id="preview-copy">文件信息</p></div>
-        <button class="icon-button" type="button" data-close-dialog="preview-dialog" aria-label="关闭合格证预览">
+        <div><h2 id="attachment-form-title">新增附件</h2><p id="attachment-form-copy">选择文件，并按规格关联到具体 SKU。</p></div>
+        <button class="icon-button" type="button" data-close-dialog="attachment-form-dialog" aria-label="关闭附件表单">
+          <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+      <form class="attachment-form" id="attachment-form">
+        <div class="attachment-form-body">
+          <div class="attachment-form-field">
+            <span class="field-label">附件文件<span class="field-required" aria-hidden="true">*</span></span>
+            <div class="attachment-file-picker">
+              <span class="attachment-picker-icon" id="attachment-picker-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h8l4 4V21H6z"></path><path d="M14 2.5v4h4"></path><path d="M8.5 13h7M8.5 16.5h5"></path></svg>
+              </span>
+              <span class="attachment-picker-copy"><strong id="attachment-file-name">尚未选择文件</strong><span id="attachment-file-meta">支持 PDF、图片及 Office 文件，单个不超过 10 MB</span></span>
+              <button class="attachment-file-button" id="choose-attachment-file" type="button">选择文件</button>
+            </div>
+            <input id="attachment-upload" type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,application/pdf,image/jpeg,image/png" hidden>
+          </div>
+
+          <div class="attachment-form-field attachment-sku-section" aria-labelledby="attachment-sku-label">
+            <div class="attachment-sku-heading">
+              <span class="field-label" id="attachment-sku-label">关联 SKU<span class="field-required" aria-hidden="true">*</span></span>
+              <span>按规格逐项选择</span>
+            </div>
+            <div class="attachment-sku-dimensions" id="attachment-sku-dimensions"></div>
+            <div class="attachment-sku-status" id="attachment-sku-status" aria-live="polite">请选择完整规格</div>
+          </div>
+        </div>
+        <footer class="attachment-form-actions">
+          <button class="secondary-button" type="button" data-close-dialog="attachment-form-dialog">取消</button>
+          <button class="upload-button" id="save-attachment" type="submit" disabled>新增附件</button>
+        </footer>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="preview-dialog" aria-labelledby="preview-title" aria-describedby="preview-copy">
+    <div class="dialog-shell">
+      <header class="dialog-head">
+        <div><h2 id="preview-title">附件详情</h2><p id="preview-copy">文件信息</p></div>
+        <button class="icon-button" type="button" data-close-dialog="preview-dialog" aria-label="关闭附件详情">
           <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
         </button>
       </header>
@@ -2121,7 +2210,7 @@
   <dialog class="dialog confirm-dialog" id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description">
     <div class="dialog-shell">
       <header class="dialog-head">
-        <div><h2 id="delete-title">删除这份合格证？</h2><p>删除后将影响对应 SKU 的资料完整度。</p></div>
+        <div><h2 id="delete-title">删除这个附件？</h2><p>删除后将从对应 SKU 的附件资料中移除。</p></div>
         <button class="icon-button" type="button" data-close-dialog="delete-dialog" aria-label="关闭删除确认">
           <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
         </button>
@@ -2160,6 +2249,10 @@
       var activeDialogTrigger = null;
       var dialogCloseTimer = 0;
       var pendingDeleteId = '';
+      var editingAttachmentId = '';
+      var pendingAttachmentFile = null;
+      var attachmentSkuCandidates = [];
+      var attachmentSkuDraft = {};
       var toastTimer = 0;
       var activeFlowRows = [];
       var activeFlowFilter = 'all';
@@ -2206,18 +2299,20 @@
       };
 
       var attachments = [
-        { id: 'cert-001', skuId: 'HD-TY-08-50-20-PU', name: '沱雨_0.8MPa_DN50_20m_产品合格证.pdf', kind: 'pdf', size: '2.4 MB', date: '2026-08-18' },
-        { id: 'cert-002', skuId: 'HD-TY-08-50-25-PU', name: 'TY_DN50_25m_出厂合格证.jpg', kind: 'image', size: '1.8 MB', date: '2026-08-16' },
-        { id: 'cert-003', skuId: 'HD-TY-08-65-20-PU', name: 'TY_0.8_DN65_20m_产品合格证.pdf', kind: 'pdf', size: '2.1 MB', date: '2026-08-15' },
-        { id: 'cert-004', skuId: 'HD-TY-10-50-20-PU', name: '沱雨_1.0MPa_DN50_检验合格证.pdf', kind: 'pdf', size: '3.0 MB', date: '2026-08-12' },
-        { id: 'cert-005', skuId: 'HD-TY-10-65-25-PU', name: 'TY_1.0_DN65_25m_合格证.png', kind: 'image', size: '1.3 MB', date: '2026-08-09' }
+        { id: 'file-001', skuId: 'HD-TY-08-50-20-PU', name: '沱雨_0.8MPa_DN50_20m_技术参数表.pdf', kind: 'pdf', size: '2.4 MB', date: '2026-08-18' },
+        { id: 'file-002', skuId: 'HD-TY-08-50-25-PU', name: 'TY_DN50_25m_包装照片.jpg', kind: 'image', size: '1.8 MB', date: '2026-08-16' },
+        { id: 'file-003', skuId: 'HD-TY-08-65-20-PU', name: 'TY_0.8_DN65_20m_检测报告.pdf', kind: 'pdf', size: '2.1 MB', date: '2026-08-15' },
+        { id: 'file-004', skuId: 'HD-TY-10-50-20-PU', name: '沱雨_1.0MPa_DN50_随货清单.xlsx', kind: 'spreadsheet', size: '3.0 MB', date: '2026-08-12' },
+        { id: 'file-005', skuId: 'HD-TY-10-65-25-PU', name: 'TY_1.0_DN65_25m_产品说明.docx', kind: 'document', size: '1.3 MB', date: '2026-08-09' }
       ];
 
       var icons = {
         file: '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5h8l4 4V21H6z"></path><path d="M14 2.5v4h4"></path><path d="M8.5 13h7M8.5 16.5h5"></path></svg>',
         image: '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="m4 17 4.5-4 3.5 3 3-2.5 5 4.5"></path></svg>',
-        preview: '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>',
-        delete: '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>',
+        view: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>',
+        download: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"></path><path d="m8 10 4 4 4-4"></path><path d="M5 18v2h14v-2"></path></svg>',
+        edit: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5 17.5 10.5"></path><path d="m4 20 4.2-1 10.6-10.6a2 2 0 0 0-2.8-2.8L5.4 16.2 4 20Z"></path></svg>',
+        delete: '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>',
         arrow: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>'
       };
 
@@ -2654,63 +2749,145 @@
         openDialog(document.getElementById('month-dialog'), card);
       }
 
-      function hasCertificate(skuId) {
-        return attachments.some(function (file) { return file.skuId === skuId; });
+      function createAttachmentSkuDraft(candidates, file) {
+        var draft = {};
+        var currentSku = file && skus.find(function (sku) { return sku.id === file.skuId; });
+        dimensionConfigs.forEach(function (dimension) {
+          var values = Array.from(new Set(candidates.map(function (sku) { return sku[dimension.key]; }).filter(Boolean)));
+          if (currentSku && values.includes(currentSku[dimension.key])) draft[dimension.key] = currentSku[dimension.key];
+          else if (filterState[dimension.key] && values.includes(filterState[dimension.key])) draft[dimension.key] = filterState[dimension.key];
+          else draft[dimension.key] = values.length === 1 ? values[0] : '';
+        });
+        return draft;
       }
 
-      function renderUploadSkuOptions(matched) {
-        var select = document.getElementById('upload-sku');
-        var currentValue = select.value;
-        select.innerHTML = matched.map(function (sku) {
-          return '<option value="' + sku.id + '">' + escapeHtml(sku.code + ' · ' + sku.pressure + ' / ' + sku.diameter + ' / ' + sku.length) + '</option>';
-        }).join('');
-        if (matched.some(function (sku) { return sku.id === currentValue; })) select.value = currentValue;
-        select.disabled = matched.length === 1;
-        document.getElementById('upload-help').textContent = matched.length === 1
-          ? '已锁定当前唯一 SKU，上传文件将直接归入该货号。'
-          : '请先确认归属 SKU，再选择或拖入合格证文件。';
+      function attachmentSkuMatches(sku, ignoredDimension) {
+        return dimensionConfigs.every(function (dimension) {
+          var selected = attachmentSkuDraft[dimension.key];
+          return dimension.key === ignoredDimension || !selected || sku[dimension.key] === selected;
+        });
       }
 
-      function renderCoverage(matched) {
-        var covered = matched.filter(function (sku) { return hasCertificate(sku.id); }).length;
-        var percentage = matched.length ? Math.round(covered / matched.length * 100) : 0;
-        document.getElementById('coverage-score').textContent = percentage + '%';
-        document.getElementById('coverage-fraction').textContent = covered + ' / ' + matched.length;
-        document.getElementById('coverage-meter').style.width = percentage + '%';
-        document.getElementById('coverage-list').innerHTML = matched.map(function (sku) {
-          var ready = hasCertificate(sku.id);
-          return '<div class="coverage-row">' +
-            '<span class="coverage-copy"><strong>' + escapeHtml(sku.code) + '</strong><span>' + escapeHtml(sku.pressure + ' · ' + sku.diameter + ' · ' + sku.length) + '</span></span>' +
-            '<span class="archive-state' + (ready ? '' : ' missing') + '">' + (ready ? '已归档' : '待补充') + '</span>' +
-            '</div>';
+      function resolvedAttachmentSku() {
+        var complete = dimensionConfigs.every(function (dimension) { return Boolean(attachmentSkuDraft[dimension.key]); });
+        if (!complete) return null;
+        var matches = attachmentSkuCandidates.filter(function (sku) { return attachmentSkuMatches(sku); });
+        return matches.length === 1 ? matches[0] : null;
+      }
+
+      function updateAttachmentSaveState() {
+        var fileReady = Boolean(editingAttachmentId || pendingAttachmentFile);
+        document.getElementById('save-attachment').disabled = !(fileReady && resolvedAttachmentSku());
+      }
+
+      function renderAttachmentSkuSelector() {
+        var host = document.getElementById('attachment-sku-dimensions');
+        host.innerHTML = dimensionConfigs.map(function (dimension) {
+          var values = Array.from(new Set(attachmentSkuCandidates.map(function (sku) { return sku[dimension.key]; }).filter(Boolean)));
+          return '<div class="attachment-dimension-row" role="group" aria-labelledby="attachment-dimension-label-' + escapeHtml(dimension.key) + '" data-attachment-dimension-row="' + escapeHtml(dimension.key) + '">' +
+            '<span class="attachment-dimension-label" id="attachment-dimension-label-' + escapeHtml(dimension.key) + '">' + escapeHtml(dimension.name) + '</span>' +
+            '<div class="attachment-dimension-options">' +
+              values.map(function (value) {
+                var available = attachmentSkuCandidates.some(function (sku) {
+                  return sku[dimension.key] === value && attachmentSkuMatches(sku, dimension.key);
+                });
+                var selected = attachmentSkuDraft[dimension.key] === value;
+                return '<button class="attachment-dimension-option" type="button" data-attachment-dimension="' + escapeHtml(dimension.key) + '" data-attachment-value="' + escapeHtml(value) + '" aria-pressed="' + selected + '"' + (available || selected ? '' : ' disabled') + '>' + escapeHtml(value) + '</button>';
+              }).join('') +
+            '</div>' +
+          '</div>';
         }).join('');
+
+        var selectedCount = dimensionConfigs.filter(function (dimension) { return Boolean(attachmentSkuDraft[dimension.key]); }).length;
+        var resolved = resolvedAttachmentSku();
+        var status = document.getElementById('attachment-sku-status');
+        status.classList.toggle('is-resolved', Boolean(resolved));
+        status.textContent = resolved
+          ? '已定位唯一 SKU：' + resolved.code
+          : '已选择 ' + selectedCount + ' / ' + dimensionConfigs.length + ' 项规格，请继续选择';
+        updateAttachmentSaveState();
+      }
+
+      function fileTypeLabel(file) {
+        if (file.kind === 'image') return '图片';
+        if (file.kind === 'spreadsheet') return 'Excel';
+        if (file.kind === 'document') return 'Word';
+        return 'PDF';
       }
 
       function renderAttachments(matched) {
         var matchedIds = new Set(matched.map(function (sku) { return sku.id; }));
         var visibleFiles = attachments.filter(function (file) { return matchedIds.has(file.skuId); });
-        document.getElementById('attachment-count').textContent = visibleFiles.length + ' 个文件';
+        document.getElementById('attachment-count').textContent = visibleFiles.length + ' 个附件';
         document.getElementById('attachment-scope').textContent = scopeLabel(matched, '当前范围');
         document.getElementById('file-scope-copy').textContent = matched.length === 1
-          ? '仅显示 ' + matched[0].code + ' 的合格证'
-          : '显示当前 ' + matched.length + ' 个 SKU 的合格证';
+          ? '随上方筛选 · ' + matched[0].code
+          : '随上方筛选 · ' + matched.length + ' 个 SKU';
         var list = document.getElementById('attachment-list');
         var empty = document.getElementById('attachment-empty');
         list.hidden = visibleFiles.length === 0;
         empty.hidden = visibleFiles.length !== 0;
         list.innerHTML = visibleFiles.map(function (file) {
           var sku = skus.find(function (item) { return item.id === file.skuId; });
+          var specTags = dimensionConfigs.map(function (dimension) {
+            var value = sku[dimension.key] || '—';
+            return '<span class="file-spec-tag" title="' + escapeHtml(dimension.name) + '" aria-label="' + escapeHtml(dimension.name + '：' + value) + '">' + escapeHtml(value) + '</span>';
+          }).join('');
           return '<article class="attachment-card" data-file-id="' + file.id + '">' +
             '<span class="file-icon' + (file.kind === 'image' ? ' image' : '') + '" aria-hidden="true">' + (file.kind === 'image' ? icons.image : icons.file) + '</span>' +
-            '<span class="file-copy"><strong class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</strong><span class="file-sku">' + escapeHtml(sku.code) + '</span><span class="file-meta">' + (file.kind === 'image' ? '图片' : 'PDF') + ' · ' + escapeHtml(file.size) + ' · ' + escapeHtml(file.date) + '</span></span>' +
+            '<span class="file-copy"><strong class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</strong><span class="file-meta">' + fileTypeLabel(file) + ' · ' + escapeHtml(file.size) + ' · 上传于 ' + escapeHtml(file.date) + '</span></span>' +
+            '<span class="file-spec-tags" aria-label="关联规格">' + specTags + '</span>' +
             '<span class="file-actions">' +
-              '<button class="icon-button" type="button" data-file-action="preview" aria-label="预览 ' + escapeHtml(file.name) + '" title="预览">' + icons.preview + '</button>' +
-              '<button class="icon-button delete" type="button" data-file-action="delete" aria-label="删除 ' + escapeHtml(file.name) + '" title="删除">' + icons.delete + '</button>' +
+              '<button class="attachment-action-button" type="button" data-file-action="preview" aria-label="查看 ' + escapeHtml(file.name) + '">' + icons.view + '<span>查看</span></button>' +
+              '<button class="attachment-action-button" type="button" data-file-action="download" aria-label="下载 ' + escapeHtml(file.name) + '">' + icons.download + '<span>下载</span></button>' +
+              '<button class="attachment-action-button" type="button" data-file-action="edit" aria-label="编辑 ' + escapeHtml(file.name) + '">' + icons.edit + '<span>编辑</span></button>' +
+              '<button class="attachment-action-button delete" type="button" data-file-action="delete" aria-label="删除 ' + escapeHtml(file.name) + '">' + icons.delete + '<span>删除</span></button>' +
             '</span>' +
           '</article>';
         }).join('');
-        renderCoverage(matched);
-        renderUploadSkuOptions(matched);
+      }
+
+      function openAttachmentForm(file, trigger) {
+        var matched = exactMatchedSkus();
+        editingAttachmentId = file ? file.id : '';
+        pendingAttachmentFile = null;
+        document.getElementById('attachment-form').reset();
+        document.getElementById('attachment-upload').value = '';
+        document.getElementById('attachment-form-title').textContent = file ? '编辑附件' : '新增附件';
+        document.getElementById('attachment-form-copy').textContent = file
+          ? '可替换原文件，并按规格调整关联 SKU。'
+          : '选择文件，并按规格关联到具体 SKU。';
+        document.getElementById('attachment-file-name').textContent = file ? file.name : '尚未选择文件';
+        document.getElementById('attachment-file-meta').textContent = file
+          ? fileTypeLabel(file) + ' · ' + file.size + ' · 可选择新文件替换'
+          : '支持 PDF、图片及 Office 文件，单个不超过 10 MB';
+        document.getElementById('attachment-picker-icon').innerHTML = file && file.kind === 'image' ? icons.image : icons.file;
+        document.getElementById('choose-attachment-file').textContent = file ? '替换文件' : '选择文件';
+        attachmentSkuCandidates = matched.slice();
+        attachmentSkuDraft = createAttachmentSkuDraft(attachmentSkuCandidates, file);
+        var saveButton = document.getElementById('save-attachment');
+        saveButton.textContent = file ? '保存修改' : '新增附件';
+        renderAttachmentSkuSelector();
+        openDialog(document.getElementById('attachment-form-dialog'), trigger);
+      }
+
+      function downloadAttachment(file) {
+        var sku = skus.find(function (item) { return item.id === file.skuId; });
+        var downloadUrl = file.objectUrl;
+        var shouldRevoke = false;
+        if (!downloadUrl) {
+          var demoContent = '附件资料（静态演示）\n文件：' + file.name + '\n关联 SKU：' + sku.code;
+          downloadUrl = URL.createObjectURL(new Blob([demoContent], { type: 'text/plain;charset=utf-8' }));
+          shouldRevoke = true;
+        }
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        if (shouldRevoke) window.setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 1000);
+        showToast('已开始下载：' + file.name);
       }
 
       function updateSelection() {
@@ -2724,22 +2901,21 @@
 
       function openPreview(file, trigger) {
         var sku = skus.find(function (item) { return item.id === file.skuId; });
-        document.getElementById('preview-title').textContent = file.name;
-        document.getElementById('preview-copy').textContent = sku.code + ' · ' + file.size + ' · 归档于 ' + file.date;
+        document.getElementById('preview-title').textContent = '附件详情';
+        document.getElementById('preview-copy').textContent = '查看文件及其关联 SKU 信息';
         document.getElementById('preview-body').innerHTML =
-          '<article class="certificate-preview" aria-label="产品合格证预览内容">' +
-            '<div class="certificate-brand">泰州市三江消防器材有限公司</div>' +
-            '<h3>产品合格证</h3>' +
-            '<div class="certificate-fields">' +
-              '<div class="certificate-field"><span>产品名称</span><strong>有衬里消防水带</strong></div>' +
-              '<div class="certificate-field"><span>SKU 编码</span><strong>' + escapeHtml(sku.code) + '</strong></div>' +
-              '<div class="certificate-field"><span>工作压力</span><strong>' + escapeHtml(sku.pressure) + '</strong></div>' +
-              '<div class="certificate-field"><span>规格参数</span><strong>' + escapeHtml(sku.diameter + ' · ' + sku.length + ' · ' + sku.lining) + '</strong></div>' +
-              '<div class="certificate-field"><span>执行标准</span><strong>GB 6246-2011</strong></div>' +
-              '<div class="certificate-field"><span>检验日期</span><strong>' + escapeHtml(file.date) + '</strong></div>' +
+          '<article class="attachment-detail" aria-label="附件信息">' +
+            '<div class="attachment-detail-file">' +
+              '<span class="attachment-detail-icon" aria-hidden="true">' + (file.kind === 'image' ? icons.image : icons.file) + '</span>' +
+              '<span class="attachment-detail-copy"><strong>' + escapeHtml(file.name) + '</strong><span>' + fileTypeLabel(file) + ' · ' + escapeHtml(file.size) + '</span></span>' +
             '</div>' +
-            '<div class="certificate-result">检验合格</div>' +
-            '<div class="certificate-foot">检验员：SJ-028<br>质量检验专用章</div>' +
+            '<dl class="attachment-detail-grid">' +
+              '<div class="attachment-detail-item"><dt>关联 SKU</dt><dd>' + escapeHtml(sku.code) + '</dd></div>' +
+              '<div class="attachment-detail-item"><dt>SKU 规格</dt><dd>' + escapeHtml(sku.pressure + ' · ' + sku.diameter + ' · ' + sku.length + ' · ' + sku.lining) + '</dd></div>' +
+              '<div class="attachment-detail-item"><dt>文件类型</dt><dd>' + fileTypeLabel(file) + '</dd></div>' +
+              '<div class="attachment-detail-item"><dt>上传时间</dt><dd>' + escapeHtml(file.date) + '</dd></div>' +
+            '</dl>' +
+            '<p class="attachment-detail-note">该附件已关联至以上 SKU。</p>' +
           '</article>';
         openDialog(document.getElementById('preview-dialog'), trigger);
       }
@@ -2793,33 +2969,75 @@
         return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
       }
 
-      function handleFiles(fileList) {
-        var files = Array.from(fileList);
-        if (!files.length) return;
-        var skuId = document.getElementById('upload-sku').value;
-        var allowed = ['application/pdf', 'image/jpeg', 'image/png'];
-        var accepted = files.filter(function (file) {
-          return allowed.includes(file.type) && file.size <= 10 * 1024 * 1024;
-        });
-        if (!accepted.length) {
-          showToast('请选择 10 MB 以内的 PDF、JPG 或 PNG 文件', true);
+      function attachmentKindFromName(name) {
+        var extension = name.split('.').pop().toLowerCase();
+        if (['jpg', 'jpeg', 'png'].includes(extension)) return 'image';
+        if (['xls', 'xlsx'].includes(extension)) return 'spreadsheet';
+        if (['doc', 'docx'].includes(extension)) return 'document';
+        return 'pdf';
+      }
+
+      function handleAttachmentFile(fileList) {
+        var file = Array.from(fileList)[0];
+        if (!file) return;
+        var allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'xls', 'xlsx'];
+        var extension = file.name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(extension) || file.size > 10 * 1024 * 1024) {
+          showToast('请选择 10 MB 以内的 PDF、图片或 Office 文件', true);
+          document.getElementById('attachment-upload').value = '';
           return;
         }
-        accepted.forEach(function (file, index) {
+        pendingAttachmentFile = file;
+        var kind = attachmentKindFromName(file.name);
+        document.getElementById('attachment-file-name').textContent = file.name;
+        document.getElementById('attachment-file-meta').textContent = fileTypeLabel({ kind: kind }) + ' · ' + formatSize(file.size);
+        document.getElementById('attachment-picker-icon').innerHTML = kind === 'image' ? icons.image : icons.file;
+        updateAttachmentSaveState();
+      }
+
+      function saveAttachmentForm() {
+        var resolvedSku = resolvedAttachmentSku();
+        if (!resolvedSku) {
+          showToast('请完整选择关联 SKU 的各项规格', true);
+          var firstIncompleteRow = dimensionConfigs.find(function (dimension) { return !attachmentSkuDraft[dimension.key]; });
+          var focusTarget = firstIncompleteRow && document.querySelector('[data-attachment-dimension="' + firstIncompleteRow.key + '"]');
+          if (focusTarget) focusTarget.focus();
+          return;
+        }
+        if (editingAttachmentId) {
+          var existing = attachments.find(function (file) { return file.id === editingAttachmentId; });
+          if (!existing) return;
+          existing.skuId = resolvedSku.id;
+          if (pendingAttachmentFile) {
+            if (existing.objectUrl) URL.revokeObjectURL(existing.objectUrl);
+            existing.name = pendingAttachmentFile.name;
+            existing.kind = attachmentKindFromName(pendingAttachmentFile.name);
+            existing.size = formatSize(pendingAttachmentFile.size);
+            existing.objectUrl = URL.createObjectURL(pendingAttachmentFile);
+          }
+          closeDialog(document.getElementById('attachment-form-dialog'));
+          renderAttachments(exactMatchedSkus());
+          showToast('附件信息已更新');
+        } else {
+          if (!pendingAttachmentFile) {
+            showToast('请先选择附件文件', true);
+            return;
+          }
           attachments.unshift({
-            id: 'upload-' + Date.now() + '-' + index,
-            skuId: skuId,
-            name: file.name,
-            kind: file.type === 'application/pdf' ? 'pdf' : 'image',
-            size: formatSize(file.size),
-            date: '2026-09-02',
-            objectUrl: URL.createObjectURL(file)
+            id: 'upload-' + Date.now(),
+            skuId: resolvedSku.id,
+            name: pendingAttachmentFile.name,
+            kind: attachmentKindFromName(pendingAttachmentFile.name),
+            size: formatSize(pendingAttachmentFile.size),
+            date: '2026-09-04',
+            objectUrl: URL.createObjectURL(pendingAttachmentFile)
           });
-        });
-        renderAttachments(exactMatchedSkus());
-        showToast('已将 ' + accepted.length + ' 个文件归档至所选 SKU');
-        if (accepted.length !== files.length) showToast('部分文件因格式或大小不符合要求未上传', true);
-        document.getElementById('certificate-upload').value = '';
+          closeDialog(document.getElementById('attachment-form-dialog'));
+          renderAttachments(exactMatchedSkus());
+          showToast('附件已新增并关联至所选 SKU');
+        }
+        editingAttachmentId = '';
+        pendingAttachmentFile = null;
       }
 
       document.getElementById('open-dimension-manager').addEventListener('click', function (event) {
@@ -2998,31 +3216,22 @@
         if (button) setFlowFilter(button.dataset.flowFilter);
       });
 
-      var uploadInput = document.getElementById('certificate-upload');
-      var browseButton = document.getElementById('browse-button');
-      var dropZone = document.getElementById('drop-zone');
-      browseButton.addEventListener('click', function () { uploadInput.click(); });
-      dropZone.addEventListener('click', function () { uploadInput.click(); });
-      dropZone.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          uploadInput.click();
-        }
+      var uploadInput = document.getElementById('attachment-upload');
+      document.getElementById('open-attachment-form').addEventListener('click', function (event) {
+        openAttachmentForm(null, event.currentTarget);
       });
-      ['dragenter', 'dragover'].forEach(function (eventName) {
-        dropZone.addEventListener(eventName, function (event) {
-          event.preventDefault();
-          dropZone.classList.add('is-dragging');
-        });
+      document.getElementById('choose-attachment-file').addEventListener('click', function () { uploadInput.click(); });
+      uploadInput.addEventListener('change', function () { handleAttachmentFile(uploadInput.files); });
+      document.getElementById('attachment-sku-dimensions').addEventListener('click', function (event) {
+        var option = event.target.closest('[data-attachment-dimension]');
+        if (!option || option.disabled) return;
+        attachmentSkuDraft[option.dataset.attachmentDimension] = option.dataset.attachmentValue;
+        renderAttachmentSkuSelector();
       });
-      ['dragleave', 'drop'].forEach(function (eventName) {
-        dropZone.addEventListener(eventName, function (event) {
-          event.preventDefault();
-          dropZone.classList.remove('is-dragging');
-        });
+      document.getElementById('attachment-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        saveAttachmentForm();
       });
-      dropZone.addEventListener('drop', function (event) { handleFiles(event.dataTransfer.files); });
-      uploadInput.addEventListener('change', function () { handleFiles(uploadInput.files); });
 
       document.getElementById('attachment-list').addEventListener('click', function (event) {
         var action = event.target.closest('[data-file-action]');
@@ -3031,6 +3240,8 @@
         var file = attachments.find(function (item) { return item.id === card.dataset.fileId; });
         if (!file) return;
         if (action.dataset.fileAction === 'preview') openPreview(file, action);
+        if (action.dataset.fileAction === 'download') downloadAttachment(file);
+        if (action.dataset.fileAction === 'edit') openAttachmentForm(file, action);
         if (action.dataset.fileAction === 'delete') openDelete(file, action);
       });
 
@@ -3044,7 +3255,7 @@
         pendingDeleteId = '';
         window.setTimeout(function () {
           renderAttachments(exactMatchedSkus());
-          showToast('合格证已从当前展示中删除');
+          showToast('附件已删除');
         }, prefersReducedMotion ? 0 : 220);
       });
 
