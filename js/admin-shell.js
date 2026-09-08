@@ -47,11 +47,12 @@
       const activeKey = current === 'goods-detail' ? 'goods-list' : current;
       const inventoryKeys = ['goods-list', 'stocktake', 'transfer', 'flows'];
       const inventoryOpen = inventoryKeys.includes(activeKey);
+      const foundationOpen = ['foundation', 'goods-categories'].includes(activeKey);
       const user = userConfig(this);
 
       const sideLink = (key, label, href, icon) => {
         const active = current === key;
-        return `<a class="side-link${active ? ' parent-active' : ''}" href="${href}"${active ? ' aria-current="page"' : ''}>${icon}<span>${label}</span></a>`;
+        return `<a class="side-link${active ? ' parent-active' : ''}" href="${href}" aria-label="${label}" title="${label}"${active ? ' aria-current="page"' : ''}>${icon}<span>${label}</span></a>`;
       };
 
       const subLink = (key, label, href) => {
@@ -72,7 +73,7 @@
               ${sideLink('overview', '经营概览', '#', icons.overview)}
               ${sideLink('purchase', '采购管理', '#', icons.purchase)}
               ${sideLink('sales', '销售管理', '#', icons.sales)}
-              <a class="side-link${inventoryOpen ? ' parent-active' : ''}" href="goods-list.html" aria-expanded="${inventoryOpen}">
+              <a class="side-link${inventoryOpen ? ' parent-active' : ''}" href="goods-list.html" aria-label="库存管理" title="库存管理" aria-expanded="${inventoryOpen}">
                 ${icons.inventory}<span>库存管理</span>${icons.down}
               </a>
               <div class="subnav"${inventoryOpen ? '' : ' hidden'}>
@@ -81,7 +82,12 @@
                 ${subLink('transfer', '仓库调拨', '#')}
                 ${subLink('flows', '出入库记录', '#')}
               </div>
-              ${sideLink('foundation', '基础资料', '#', icons.foundation)}
+              <a class="side-link${foundationOpen ? ' parent-active' : ''}" href="goods-categories.html" aria-label="基础资料" title="基础资料" aria-expanded="${foundationOpen}"${current === 'foundation' ? ' aria-current="page"' : ''}>
+                ${icons.foundation}<span>基础资料</span>${icons.down}
+              </a>
+              <div class="subnav"${foundationOpen ? '' : ' hidden'}>
+                ${subLink('goods-categories', '货物类目', 'goods-categories.html')}
+              </div>
             </nav>
           </div>
           <div class="side-user" aria-label="当前用户：${user.role}">
@@ -120,7 +126,7 @@
             </div>
             <div class="breadcrumb" aria-label="当前位置">${breadcrumbs}</div>
             <div class="top-tools">
-              <div class="sync-state" aria-label="库存数据状态：${syncText}"><span class="sync-dot" aria-hidden="true"></span><span>${syncText}</span></div>
+              <div class="sync-state" aria-label="同步状态：${syncText}"><span class="sync-dot" aria-hidden="true"></span><span>${syncText}</span></div>
               <span class="top-divider" aria-hidden="true"></span>
               <div class="top-user"><span class="user-avatar" aria-hidden="true">${user.avatar}</span><span>${user.role}</span></div>
             </div>

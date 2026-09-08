@@ -367,6 +367,8 @@ admin-topbar { display: contents; }
   background: rgba(60, 60, 67, 0.14);
 }
 
+.admin-shell .subnav[hidden] { display: none; }
+
 .admin-shell .sub-link {
   min-height: 34px;
   padding: 0 10px;
