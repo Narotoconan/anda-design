@@ -4,7 +4,7 @@
 
   const nodes = [
     { id: 'fe', parentId: null, kind: 'branch', name: '灭火器材', code: 'FE', order: 10, enabled: true },
-    { id: 'fe-dry', parentId: 'fe', kind: 'product', name: '手提式干粉灭火器', code: 'FE-001', unit: '具', spu: 14, order: 10, enabled: true, defaultSku: { specs: [{ name: '容量', value: '4kg' }] } },
+    { id: 'fe-dry', parentId: 'fe', kind: 'product', name: '手提式干粉灭火器', code: 'FE-001', unit: '具', spu: 14, order: 10, enabled: true, defaultSku: { dimensions: [{ id: 'dim-capacity', name: '容量', values: [{ id: 'val-4kg', label: '4kg' }, { id: 'val-8kg', label: '8kg' }] }] } },
     { id: 'fe-co2', parentId: 'fe', kind: 'product', name: '手提式二氧化碳灭火器', code: 'FE-003', unit: '具', spu: 6, order: 20, enabled: true },
     { id: 'fe-cart', parentId: 'fe', kind: 'product', name: '推车式干粉灭火器', code: 'FE-002', unit: '台', spu: 5, order: 30, enabled: true },
     { id: 'hd', parentId: null, kind: 'branch', name: '消防水带', code: 'HD', order: 20, enabled: true },
@@ -40,7 +40,10 @@
   let detailId = null;
   let editingId = null;
   let sequence = 20;
-  let specSequence = 0;
+  let dimensionSequence = 0;
+  let valueSequence = 0;
+  let skuDimensionDraft = [];
+  let activeSkuDimensionId = '';
   let toastTimer;
 
   const escape = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
@@ -124,7 +127,7 @@
         '<td role="gridcell"><div class="ct-name-wrap">' + wires + toggle +
           '<span class="ct-node-icon is-' + node.kind + '" aria-hidden="true">' + icon(branch ? 'folder' : 'box') + '</span>' +
           '<button class="ct-node-name" type="button" data-action="detail" id="ct-node-' + node.id + '" title="' + escape(pathOf(node).map((item) => item.name).join(' / ')) + '"><span>' + nameMarkup(node.name) + '</span>' + (branch ? '<span class="ct-child-count" aria-label="' + count + ' 个直属下级">' + count + '</span>' : '') + '</button></div></td>' +
-        '<td role="gridcell">' + purposeMarkup(node) + (node.kind === 'product' && node.defaultSku ? '<button type="button" class="ct-sku-shortcut" data-action="defaults" aria-label="配置' + escape(node.name) + '的默认 SKU">含默认 SKU</button>' : '') + '</td>' +
+        '<td role="gridcell">' + purposeMarkup(node) + (node.kind === 'product' && node.defaultSku ? '<button type="button" class="ct-sku-shortcut" data-action="defaults" aria-label="配置' + escape(node.name) + '的默认 SKU">' + defaultSkuCombinations(node.defaultSku.dimensions).length + ' 条默认 SKU</button>' : '') + '</td>' +
         '<td role="gridcell" class="ct-numeric">' + (branch ? '<span class="ct-dash" aria-label="分类节点不直接关联 SPU">—</span>' : '<span class="ct-spu-number">' + node.spu + '</span>') + '</td>' +
         '<td role="gridcell">' + statusMarkup(node) + '</td>' +
         '<td role="gridcell"><div class="ct-row-actions">' +
@@ -195,9 +198,10 @@
   }
 
   function defaultSkuDetail(node) {
-    const specs = node.defaultSku?.specs || [];
-    return '<section class="ct-default-detail" aria-labelledby="ct-default-detail-title"><div class="ct-default-detail-heading"><h3 id="ct-default-detail-title">默认 SKU</h3><button type="button" class="ct-text-button" data-configure-default>' + icon('edit') + (specs.length ? '编辑配置' : '设置默认 SKU') + '</button></div>' +
-      (specs.length ? '<div class="ct-default-detail-specs"><span class="ct-sku-number">SKU 01</span>' + specs.map((spec) => '<span class="ct-sku-chip"><span>' + escape(spec.name) + '</span><strong>' + escape(spec.value) + '</strong></span>').join('') + '</div><p>新建本类目 SPU 时带入，可在建档时调整；修改此配置不影响已有货物。</p>' : '<p>尚未设置。可预设常用规格，减少新建 SPU 时的重复填写。</p>') + '</section>';
+    const dimensions = node.defaultSku?.dimensions || [];
+    const combinations = defaultSkuCombinations(dimensions);
+    return '<section class="ct-default-detail" aria-labelledby="ct-default-detail-title"><div class="ct-default-detail-heading"><h3 id="ct-default-detail-title">默认 SKU</h3><button type="button" class="ct-text-button" data-configure-default>' + icon('edit') + (combinations.length ? '编辑配置' : '设置默认 SKU') + '</button></div>' +
+      (combinations.length ? '<div class="ct-default-dimension-summary">' + dimensions.map((dimension) => '<span><strong>' + escape(dimension.name) + '</strong>' + dimension.values.map((value) => escape(value.label)).join('、') + '</span>').join('') + '</div><div class="ct-default-detail-specs">' + combinations.slice(0, 4).map((specs, index) => '<span class="ct-default-sku-row"><span class="ct-sku-number">SKU ' + String(index + 1).padStart(2, '0') + '</span>' + specs.map((spec) => '<span class="ct-sku-chip"><span>' + escape(spec.name) + '</span><strong>' + escape(spec.value) + '</strong></span>').join('') + '</span>').join('') + (combinations.length > 4 ? '<small>另有 ' + (combinations.length - 4) + ' 条组合</small>' : '') + '</div><p>新建本类目 SPU 时带入 ' + combinations.length + ' 条默认 SKU，可在建档时调整；修改此配置不影响已有货物。</p>' : '<p>尚未设置。可预设常用规格，减少新建 SPU 时的重复填写。</p>') + '</section>';
   }
 
   function openDetail(id, trigger) {
@@ -233,13 +237,18 @@
 
   function updatePlacement() {
     const parent = find($('ct-parent').value);
-    const names = parent ? pathOf(parent).map((node) => node.name) : [];
-    names.push($('ct-name').value.trim() || '新类目');
-    $('ct-placement').textContent = '第 ' + names.length + ' 层 · ' + names.join(' / ');
+    const parentNames = parent ? pathOf(parent).map((node) => node.name) : [];
+    const names = [...parentNames, $('ct-name').value.trim() || '新类目'];
+    $('ct-parent-name').textContent = parent ? parentNames.join(' / ') : '无上级类目（一级类目）';
+    $('ct-placement').textContent = (editingId ? '当前归属' : '新增位置') + ' · 第 ' + names.length + ' 层 · ' + names.join(' / ');
     updateSkuPreview();
     $('ct-parent-help').textContent = parent && !effectiveEnabled(parent)
       ? '该上级已停用，下属类目也暂不可用于新建 SPU。'
-      : '仅分类节点可作为上级；选择“无上级类目”放在第一层。';
+      : editingId
+        ? '上级归属随原类目保持不变。'
+        : parent
+          ? '创建位置已固定；如需更换，请从对应类目点击“添加下级”。'
+          : '从“新建一级类目”进入，创建位置已固定。';
   }
 
   function updateKind() {
@@ -270,22 +279,102 @@
     if (focus) $(defaults ? 'ct-default-tab' : 'ct-basic-tab').focus({ preventScroll: true });
   }
 
-  function skuSpecRows() {
-    return [...$('ct-sku-specs').querySelectorAll('.ct-sku-spec-row')];
+  function createDraftDimension(name = '', labels = ['']) {
+    return {
+      id: 'draft-dimension-' + (++dimensionSequence),
+      name,
+      values: labels.map((label) => ({ id: 'draft-value-' + (++valueSequence), label }))
+    };
   }
 
-  function readSkuSpecs() {
-    return skuSpecRows().map((row) => ({
-      name: row.querySelector('[data-spec-name]').value.trim(),
-      value: row.querySelector('[data-spec-value]').value.trim()
-    }));
+  function defaultSkuCombinationCount(dimensions) {
+    if (!dimensions?.length) return 0;
+    return dimensions.reduce((total, dimension) => {
+      const count = dimension.values.filter((value) => value.label.trim()).length;
+      return total * count;
+    }, 1);
+  }
+
+  function defaultSkuCombinations(dimensions, limit = Number.POSITIVE_INFINITY) {
+    if (!dimensions?.length || dimensions.some((dimension) => !dimension.name.trim() || !dimension.values.some((value) => value.label.trim()))) return [];
+    let combinations = [[]];
+    dimensions.forEach((dimension) => {
+      const next = [];
+      combinations.forEach((combination) => {
+        dimension.values.filter((value) => value.label.trim()).forEach((value) => {
+          if (next.length < limit) next.push([...combination, { name: dimension.name.trim(), value: value.label.trim() }]);
+        });
+      });
+      combinations = next;
+    });
+    return combinations;
+  }
+
+  function skuDimensionIssue() {
+    if (!skuDimensionDraft.length) return { message: '至少保留一个 SKU 维度。' };
+    const names = new Map();
+    for (const dimension of skuDimensionDraft) {
+      const name = dimension.name.trim().toLowerCase();
+      if (!name) return { message: '请填写维度名称。', dimensionId: dimension.id, field: 'name' };
+      if (names.has(name)) return { message: '维度名称不能重复。', dimensionId: dimension.id, field: 'name' };
+      names.set(name, true);
+      if (!dimension.values.length) return { message: '每个维度至少需要一个维度值。', dimensionId: dimension.id, field: 'value' };
+      const values = new Set();
+      for (const value of dimension.values) {
+        const label = value.label.trim().toLowerCase();
+        if (!label) return { message: '请填写维度值。', dimensionId: dimension.id, valueId: value.id, field: 'value' };
+        if (values.has(label)) return { message: '同一维度下的维度值不能重复。', dimensionId: dimension.id, valueId: value.id, field: 'value' };
+        values.add(label);
+      }
+    }
+    return null;
+  }
+
+  function activeSkuDimension() {
+    return skuDimensionDraft.find((dimension) => dimension.id === activeSkuDimensionId) || skuDimensionDraft[0];
+  }
+
+  function renderSkuDimensionTabs() {
+    $('ct-sku-dimension-tabs').innerHTML = skuDimensionDraft.map((dimension, index) => {
+      const active = dimension.id === activeSkuDimensionId;
+      return '<div class="ct-sku-dimension-tab' + (active ? ' is-active' : '') + '">' +
+        '<button type="button" role="tab" aria-selected="' + active + '" tabindex="' + (active ? '0' : '-1') + '" data-sku-action="select-dimension" data-dimension-id="' + dimension.id + '"><span><strong>' + escape(dimension.name || '未命名维度') + '</strong><small>' + dimension.values.length + ' 个维度值</small></span></button>' +
+        '<span class="ct-sku-dimension-move" aria-label="调整维度顺序"><button type="button" data-sku-action="move-dimension-up" data-dimension-id="' + dimension.id + '" aria-label="上移' + escape(dimension.name || '未命名维度') + '"' + (index === 0 ? ' disabled' : '') + '>' + icon('chevron') + '</button><button type="button" data-sku-action="move-dimension-down" data-dimension-id="' + dimension.id + '" aria-label="下移' + escape(dimension.name || '未命名维度') + '"' + (index === skuDimensionDraft.length - 1 ? ' disabled' : '') + '>' + icon('chevron') + '</button></span></div>';
+    }).join('');
+  }
+
+  function renderSkuDimensionEditor() {
+    const dimension = activeSkuDimension();
+    if (!dimension) { $('ct-sku-dimension-editor').innerHTML = ''; return; }
+    const issue = skuDimensionIssue();
+    const values = dimension.values.map((value, index) => '<div class="ct-sku-value-row"><span>' + String(index + 1).padStart(2, '0') + '</span><input id="ct-sku-value-' + value.id + '" type="text" value="' + escape(value.label) + '" maxlength="30" placeholder="例如：4kg" data-sku-field="value" data-dimension-id="' + dimension.id + '" data-value-id="' + value.id + '" aria-label="第 ' + (index + 1) + ' 个维度值"><button class="ct-icon-button" type="button" data-sku-action="remove-value" data-dimension-id="' + dimension.id + '" data-value-id="' + value.id + '" aria-label="删除维度值' + escape(value.label || String(index + 1)) + '"' + (dimension.values.length === 1 ? ' disabled title="每个维度至少保留一个值"' : '') + '>' + icon('trash') + '</button></div>').join('');
+    $('ct-sku-dimension-editor').innerHTML = '<div class="ct-sku-editor-card"><label class="ct-sku-editor-label" for="ct-sku-dimension-name"><span>维度名称</span><small>只需填写一次，例如“容量”</small></label><input class="ct-sku-manager-input" id="ct-sku-dimension-name" type="text" value="' + escape(dimension.name) + '" maxlength="20" placeholder="例如：容量" data-sku-field="dimension-name" data-dimension-id="' + dimension.id + '">' +
+      '<div class="ct-sku-values-head"><span>维度值</span><small>同一维度下可连续添加 4kg、8kg</small></div><div class="ct-sku-value-list">' + values + '</div><button class="ct-sku-add-value" type="button" data-sku-action="add-value" data-dimension-id="' + dimension.id + '">' + icon('plus') + '添加维度值</button>' +
+      '<div class="ct-sku-editor-note">' + icon('info') + '<span>每个维度值会生成对应的默认 SKU；多个维度会自动组合。</span></div></div>' +
+      '<div class="ct-sku-dimension-danger"><span><strong>删除此维度</strong><small>只影响尚未保存的默认配置。</small></span><button type="button" data-sku-action="remove-dimension" data-dimension-id="' + dimension.id + '"' + (skuDimensionDraft.length === 1 ? ' disabled' : '') + '>删除维度</button></div>' +
+      '<p class="ct-sku-validation" id="ct-sku-validation" role="alert"' + (issue ? '' : ' hidden') + '>' + escape(issue?.message || '') + '</p>';
+    syncSkuInvalidState();
+  }
+
+  function syncSkuInvalidState() {
+    $('ct-sku-fields').querySelectorAll('[aria-invalid]').forEach((input) => input.removeAttribute('aria-invalid'));
+    const issue = skuDimensionIssue();
+    const validation = $('ct-sku-validation');
+    if (validation) { validation.hidden = !issue; validation.textContent = issue?.message || ''; }
+    if (!issue || issue.dimensionId !== activeSkuDimensionId) return;
+    const target = issue.field === 'name' ? $('ct-sku-dimension-name') : issue.valueId ? $('ct-sku-value-' + issue.valueId) : null;
+    if (target) target.setAttribute('aria-invalid', 'true');
   }
 
   function updateSkuPreview() {
     const name = $('ct-name').value.trim() || '新类目';
+    const issue = skuDimensionIssue();
+    const count = issue ? 0 : defaultSkuCombinationCount(skuDimensionDraft);
+    const combinations = issue ? [] : defaultSkuCombinations(skuDimensionDraft, 12);
     $('ct-sku-category-name').textContent = name;
     $('ct-sku-preview-spu').textContent = '所选品牌 · ' + name;
-    $('ct-sku-preview-specs').innerHTML = readSkuSpecs().map((spec) => '<span class="ct-sku-chip"><span>' + escape(spec.name || '规格名称') + '</span><strong>' + escape(spec.value || '待填写') + '</strong></span>').join('');
+    $('ct-sku-preview-count').textContent = issue ? '请修正维度配置' : '将生成 ' + count + ' 条默认 SKU';
+    $('ct-sku-combinations').innerHTML = combinations.length ? combinations.map((specs, index) => '<div class="ct-sku-combination"><span>SKU ' + String(index + 1).padStart(2, '0') + '</span><div>' + specs.map((spec) => '<span class="ct-sku-chip"><span>' + escape(spec.name) + '</span><strong>' + escape(spec.value) + '</strong></span>').join('') + '</div></div>').join('') + (count > combinations.length ? '<p>另有 ' + (count - combinations.length) + ' 条组合，保存后将在新建 SPU 时一并带入。</p>' : '') : '<p>' + (issue ? '修正维度配置后，这里会重新显示生成结果。' : '添加维度值后，这里会显示生成结果。') + '</p>';
   }
 
   function updateSkuEnabled() {
@@ -293,40 +382,14 @@
     $('ct-sku-fields').disabled = !active;
     $('ct-sku-fields').hidden = !active;
     $('ct-sku-off').hidden = active;
+    if (active && !skuDimensionDraft.length) {
+      const dimension = createDraftDimension();
+      skuDimensionDraft.push(dimension);
+      activeSkuDimensionId = dimension.id;
+      renderSkuDimensionTabs();
+      renderSkuDimensionEditor();
+    }
     updateSkuPreview();
-  }
-
-  function updateSpecRemoveButtons() {
-    const rows = skuSpecRows();
-    rows.forEach((row) => {
-      const button = row.querySelector('[data-remove-spec]');
-      button.disabled = rows.length === 1;
-      button.title = rows.length === 1 ? '默认 SKU 至少保留一个规格项' : '移除规格项';
-    });
-  }
-
-  function addSkuSpec(spec = { name: '', value: '' }, focus = false) {
-    const id = ++specSequence;
-    $('ct-sku-specs').insertAdjacentHTML('beforeend', '<div class="ct-sku-spec-row">' +
-      '<div class="ct-field"><label for="ct-spec-name-' + id + '">规格名称 <span>*</span></label><input id="ct-spec-name-' + id + '" data-spec-name value="' + escape(spec.name) + '" placeholder="例如：容量" maxlength="24" required aria-describedby="ct-spec-name-' + id + '-error"><small class="ct-error" id="ct-spec-name-' + id + '-error" hidden></small></div>' +
-      '<div class="ct-field"><label for="ct-spec-value-' + id + '">默认规格值 <span>*</span></label><input id="ct-spec-value-' + id + '" data-spec-value value="' + escape(spec.value) + '" placeholder="例如：4kg" maxlength="40" required aria-describedby="ct-spec-value-' + id + '-error"><small class="ct-error" id="ct-spec-value-' + id + '-error" hidden></small></div>' +
-      '<button class="ct-icon-button ct-remove-spec" data-remove-spec type="button" aria-label="移除此规格项">' + icon('trash') + '</button></div>');
-    updateSpecRemoveButtons();
-    updateSkuPreview();
-    if (focus) $('ct-spec-name-' + id).focus();
-  }
-
-  function validateSkuField(input) {
-    const value = input.value.trim();
-    const isName = input.hasAttribute('data-spec-name');
-    const duplicate = isName && [...$('ct-sku-specs').querySelectorAll('[data-spec-name]')].some((other) => other !== input && other.value.trim().toLowerCase() === value.toLowerCase());
-    const message = !value ? (isName ? '请填写规格名称。' : '请填写这条 SKU 的规格值。') : duplicate ? '同一条 SKU 的规格名称不能重复。' : '';
-    const error = $(input.id + '-error');
-    error.textContent = message;
-    error.hidden = !message;
-    if (message) input.setAttribute('aria-invalid', 'true');
-    else input.removeAttribute('aria-invalid');
-    return !message;
   }
 
   function openEditor(node, parentId, trigger, tab = 'basic') {
@@ -336,17 +399,6 @@
     $('ct-name').removeAttribute('aria-invalid');
     $('ct-form-error').hidden = true;
     $('ct-editor-title').textContent = node ? '编辑类目' : parentId ? '添加下级类目' : '新建一级类目';
-    const excluded = new Set(node ? [node.id, ...descendants(node.id).map((item) => item.id)] : []);
-    const options = [];
-    function walk(id) {
-      children(id).forEach((item) => {
-        if (item.kind !== 'branch' || excluded.has(item.id)) return;
-        options.push('<option value="' + item.id + '">' + escape(pathOf(item).map((entry) => entry.name).join(' / ')) + '</option>');
-        walk(item.id);
-      });
-    }
-    walk(null);
-    $('ct-parent').innerHTML = '<option value="root">无上级类目（一级类目）</option>' + options.join('');
     $('ct-parent').value = node?.parentId || parentId || 'root';
     const kind = node?.kind || (parentId ? 'product' : 'branch');
     form.querySelector('input[name="kind"][value="' + kind + '"]').checked = true;
@@ -360,8 +412,12 @@
     $('ct-unit').value = node?.unit || '';
     $('ct-enabled').checked = node ? node.enabled : true;
     $('ct-sku-enabled').checked = Boolean(node?.defaultSku);
-    $('ct-sku-specs').innerHTML = '';
-    (node?.defaultSku?.specs || [{ name: '', value: '' }]).forEach((spec) => addSkuSpec(spec));
+    const sourceDimensions = node?.defaultSku?.dimensions || (node?.defaultSku?.specs || []).map((spec) => ({ name: spec.name, values: [{ label: spec.value }] }));
+    skuDimensionDraft = sourceDimensions.map((dimension) => createDraftDimension(dimension.name, dimension.values.map((value) => value.label)));
+    if (!skuDimensionDraft.length) skuDimensionDraft = [createDraftDimension()];
+    activeSkuDimensionId = skuDimensionDraft[0].id;
+    renderSkuDimensionTabs();
+    renderSkuDimensionEditor();
     updateKind();
     updatePlacement();
     setEditorTab(tab);
@@ -477,7 +533,6 @@
     render(true);
   });
   $('ct-collapse-all').addEventListener('click', () => { expanded.clear(); render(true); });
-  $('ct-parent').addEventListener('change', updatePlacement);
   form.querySelectorAll('input[name="kind"]').forEach((input) => input.addEventListener('change', updateKind));
   $('ct-basic-tab').addEventListener('click', () => setEditorTab('basic'));
   $('ct-default-tab').addEventListener('click', () => setEditorTab('defaults'));
@@ -488,29 +543,57 @@
     setEditorTab(defaults ? 'defaults' : 'basic', true);
   });
   $('ct-sku-enabled').addEventListener('change', updateSkuEnabled);
-  $('ct-sku-add-spec').addEventListener('click', () => addSkuSpec(undefined, true));
-  $('ct-sku-specs').addEventListener('input', (event) => {
-    if (!event.target.matches('input')) return;
-    $(event.target.id + '-error').hidden = true;
-    event.target.removeAttribute('aria-invalid');
-    if (event.target.hasAttribute('data-spec-name')) {
-      $('ct-sku-specs').querySelectorAll('[data-spec-name][aria-invalid="true"]').forEach(validateSkuField);
+  $('ct-sku-add-dimension').addEventListener('click', () => {
+    const dimension = createDraftDimension();
+    skuDimensionDraft.push(dimension);
+    activeSkuDimensionId = dimension.id;
+    renderSkuDimensionTabs();
+    renderSkuDimensionEditor();
+    updateSkuPreview();
+    $('ct-sku-dimension-name').focus();
+  });
+  $('ct-sku-fields').addEventListener('input', (event) => {
+    const dimension = skuDimensionDraft.find((item) => item.id === event.target.dataset.dimensionId);
+    if (!dimension) return;
+    if (event.target.dataset.skuField === 'dimension-name') dimension.name = event.target.value;
+    if (event.target.dataset.skuField === 'value') {
+      const value = dimension.values.find((item) => item.id === event.target.dataset.valueId);
+      if (value) value.label = event.target.value;
     }
+    renderSkuDimensionTabs();
+    syncSkuInvalidState();
     updateSkuPreview();
   });
-  $('ct-sku-specs').addEventListener('focusout', (event) => {
-    if (event.target.matches('input')) validateSkuField(event.target);
+  $('ct-sku-fields').addEventListener('focusout', (event) => {
+    if (event.target.matches('[data-sku-field]')) syncSkuInvalidState();
   });
-  $('ct-sku-specs').addEventListener('click', (event) => {
-    const button = event.target.closest('[data-remove-spec]');
-    if (!button || skuSpecRows().length <= 1) return;
-    const row = button.closest('.ct-sku-spec-row');
-    const adjacent = row.nextElementSibling || row.previousElementSibling;
-    row.remove();
-    updateSpecRemoveButtons();
-    $('ct-sku-specs').querySelectorAll('[data-spec-name][aria-invalid="true"]').forEach(validateSkuField);
+  $('ct-sku-fields').addEventListener('click', (event) => {
+    const button = event.target.closest('[data-sku-action]');
+    if (!button) return;
+    const dimension = skuDimensionDraft.find((item) => item.id === button.dataset.dimensionId);
+    if (button.dataset.skuAction === 'select-dimension') {
+      activeSkuDimensionId = button.dataset.dimensionId;
+    } else if (button.dataset.skuAction === 'add-value' && dimension) {
+      const value = { id: 'draft-value-' + (++valueSequence), label: '' };
+      dimension.values.push(value);
+      renderSkuDimensionEditor();
+      updateSkuPreview();
+      $('ct-sku-value-' + value.id).focus();
+      return;
+    } else if (button.dataset.skuAction === 'remove-value' && dimension && dimension.values.length > 1) {
+      dimension.values = dimension.values.filter((value) => value.id !== button.dataset.valueId);
+    } else if (button.dataset.skuAction === 'remove-dimension' && skuDimensionDraft.length > 1) {
+      const index = skuDimensionDraft.findIndex((item) => item.id === button.dataset.dimensionId);
+      skuDimensionDraft.splice(index, 1);
+      activeSkuDimensionId = skuDimensionDraft[Math.max(0, index - 1)].id;
+    } else if ((button.dataset.skuAction === 'move-dimension-up' || button.dataset.skuAction === 'move-dimension-down') && dimension) {
+      const index = skuDimensionDraft.indexOf(dimension);
+      const target = index + (button.dataset.skuAction === 'move-dimension-up' ? -1 : 1);
+      if (target >= 0 && target < skuDimensionDraft.length) [skuDimensionDraft[index], skuDimensionDraft[target]] = [skuDimensionDraft[target], skuDimensionDraft[index]];
+    }
+    renderSkuDimensionTabs();
+    renderSkuDimensionEditor();
     updateSkuPreview();
-    adjacent.querySelector('input').focus();
   });
   $('ct-name').addEventListener('input', () => {
     $('ct-name-error').hidden = true;
@@ -539,8 +622,16 @@
     if (invalidBasic) { setEditorTab('basic'); invalidBasic.reportValidity(); return; }
     const useDefaultSku = kind === 'product' && $('ct-sku-enabled').checked;
     if (useDefaultSku) {
-      const invalidSpecs = [...$('ct-sku-specs').querySelectorAll('input')].filter((input) => !validateSkuField(input));
-      if (invalidSpecs.length) { setEditorTab('defaults'); invalidSpecs[0].focus(); return; }
+      const issue = skuDimensionIssue();
+      if (issue) {
+        activeSkuDimensionId = issue.dimensionId || skuDimensionDraft[0]?.id;
+        setEditorTab('defaults');
+        renderSkuDimensionTabs();
+        renderSkuDimensionEditor();
+        const target = issue.field === 'name' ? $('ct-sku-dimension-name') : issue.valueId ? $('ct-sku-value-' + issue.valueId) : $('ct-sku-add-dimension');
+        target?.focus();
+        return;
+      }
     }
     const invalidParent = parentId && (find(parentId)?.kind !== 'branch' || (existing && [existing.id, ...descendants(existing.id).map((node) => node.id)].includes(parentId)));
     if (invalidParent || (existing && ((kind === 'product' && children(existing.id).length) || (kind === 'branch' && existing.spu > 0)))) {
@@ -555,7 +646,7 @@
       enabled: $('ct-enabled').checked,
       unit: kind === 'product' ? $('ct-unit').value : '',
       spu: kind === 'product' ? (existing?.spu || 0) : 0,
-      defaultSku: useDefaultSku ? { specs: readSkuSpecs() } : null
+      defaultSku: useDefaultSku ? { dimensions: skuDimensionDraft.map((dimension) => ({ id: dimension.id, name: dimension.name.trim(), values: dimension.values.map((value) => ({ id: value.id, label: value.label.trim() })) })) } : null
     };
     if (existing) Object.assign(existing, saved);
     else { nodes.push(saved); sequence += 1; }
