@@ -18,30 +18,10 @@
 
     .page-head {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-between;
       gap: 28px;
       margin-bottom: 22px;
-    }
-
-    .eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      margin: 0 0 7px;
-      color: var(--red-dark);
-      font-size: var(--type-base);
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 18px;
-      height: 2px;
-      background: var(--red);
-      border-radius: 999px;
     }
 
     h1 {
@@ -52,49 +32,30 @@
       letter-spacing: -.04em;
     }
 
-    .head-copy {
-      max-width: 720px;
-      margin: 9px 0 0;
-      color: var(--ink-2);
-      font-size: var(--type-base);
-      line-height: 1.55;
-    }
-
-    .catalog-summary {
-      min-width: 220px;
-      min-height: 66px;
-      padding: 10px 16px;
-      display: grid;
-      grid-template-columns: 1fr 1px 1fr;
+    .create-goods-button {
+      flex: 0 0 auto;
+      min-height: 46px;
+      padding: 0 17px;
+      display: inline-flex;
       align-items: center;
-      gap: 15px;
-      background: rgba(255,255,255,.7);
-      border: 1px solid rgba(255,255,255,.92);
-      border-radius: 17px;
-      box-shadow: var(--shadow-sm);
-      backdrop-filter: blur(18px) saturate(160%);
-      -webkit-backdrop-filter: blur(18px) saturate(160%);
-    }
-
-    .summary-item { min-width: 0; }
-    .summary-item span {
-      display: block;
-      color: var(--ink-3);
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      background: linear-gradient(180deg, #e54138 0%, var(--red) 100%);
+      border: 0;
+      border-radius: 12px;
+      box-shadow: 0 1px 1px rgba(255,255,255,.22) inset, 0 4px 12px rgba(173,33,27,.2);
+      font: inherit;
       font-size: var(--type-base);
-      font-weight: 600;
+      font-weight: 680;
+      white-space: nowrap;
+      transition: transform 90ms ease-out, filter var(--motion-fast), box-shadow var(--motion-fast);
     }
 
-    .summary-item strong {
-      display: block;
-      margin-top: 1px;
-      font-size: 20px;
-      line-height: 1.2;
-      font-weight: 700;
-      letter-spacing: -.025em;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .summary-divider { align-self: stretch; background: var(--line); }
+    .create-goods-button svg { width: 17px; height: 17px; }
+    .create-goods-button:hover { filter: brightness(.97); box-shadow: 0 1px 1px rgba(255,255,255,.22) inset, 0 6px 16px rgba(173,33,27,.24); }
+    .create-goods-button:active { transform: scale(.97); }
+    .create-goods-button:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(216,50,41,.2); }
 
     .filter-panel {
       padding: 9px;
@@ -716,6 +677,61 @@
     .empty-state[hidden],
     .pagination[hidden] { display: none !important; }
 
+    .create-goods-dialog {
+      width: min(536px, calc(100% - 28px));
+      max-height: calc(100dvh - 28px);
+      padding: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: rgba(255,255,255,.97);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 20px;
+      box-shadow: 0 26px 70px rgba(0,0,0,.22), 0 1px 0 rgba(255,255,255,.9) inset;
+    }
+
+    .create-goods-dialog::backdrop {
+      background: rgba(30,30,34,.3);
+      backdrop-filter: blur(8px) saturate(115%);
+      -webkit-backdrop-filter: blur(8px) saturate(115%);
+    }
+
+    .create-dialog-form { display: flex; max-height: calc(100dvh - 28px); flex-direction: column; }
+    .create-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 22px 24px 18px; border-bottom: 1px solid var(--line); }
+    .create-dialog-head p { margin: 0 0 4px; color: var(--ink-3); font-size: var(--type-base); }
+    .create-dialog-head h2 { margin: 0; font-size: 21px; line-height: 1.25; letter-spacing: -.025em; }
+    .create-dialog-close { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; color: var(--ink-2); background: var(--surface-soft); border: 0; border-radius: 50%; }
+    .create-dialog-close:hover { color: var(--ink); background: #ececef; }
+    .create-dialog-close:focus-visible { outline: none; box-shadow: var(--focus); }
+    .create-dialog-close svg { width: 16px; height: 16px; }
+    .create-dialog-body { min-height: 0; padding: 22px 24px 20px; overflow-y: auto; }
+    .create-intro { margin: 0 0 19px; color: var(--ink-2); font-size: var(--type-base); line-height: 1.65; }
+    .create-field + .create-field { margin-top: 15px; }
+    .create-field label { display: block; margin-bottom: 7px; color: #414149; font-size: var(--type-base); font-weight: 650; }
+    .create-field label span { color: var(--red); }
+    .create-select { width: 100%; height: 46px; padding: 0 40px 0 12px; color: var(--ink); background: #f7f7f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d7d85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 13px center; border: 1px solid #dddde3; border-radius: 9px; appearance: none; font: inherit; font-size: 14px; }
+    .create-select:focus-visible { outline: none; border-color: rgba(216,50,41,.48); box-shadow: var(--focus); }
+    .create-selection-preview { display: flex; align-items: flex-start; gap: 12px; margin-top: 20px; padding: 14px; background: #f6f8fb; border: 1px solid #e1e7ef; border-radius: 12px; }
+    .create-preview-icon { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; color: #4d657d; background: #fff; border: 1px solid #dfe6ed; border-radius: 9px; }
+    .create-preview-icon svg { width: 19px; height: 19px; }
+    .create-preview-copy { min-width: 0; }
+    .create-preview-copy > span { display: block; color: var(--ink-3); font-size: 11px; }
+    .create-preview-copy strong { display: block; margin-top: 3px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+    .create-preview-copy small { display: block; margin-top: 4px; color: var(--ink-2); font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+    .create-selection-preview.is-empty { color: var(--ink-3); background: #fafafb; border-style: dashed; }
+    .create-selection-preview.is-empty .create-preview-copy strong { color: var(--ink-2); font-size: 13px; font-weight: 550; }
+    .create-selection-preview.has-error { background: #fff7f5; border-color: rgba(216,50,41,.25); border-style: solid; }
+    .create-selection-preview.has-error .create-preview-copy small { color: var(--red-dark); }
+    .create-dialog-note { margin: 13px 2px 0; color: var(--ink-3); font-size: 11px; line-height: 1.6; }
+    .create-dialog-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 15px 24px; background: rgba(250,250,251,.92); border-top: 1px solid var(--line); }
+    .create-dialog-action { min-height: 42px; padding: 0 17px; border-radius: 10px; font: inherit; font-size: var(--type-base); font-weight: 650; }
+    .create-dialog-cancel { color: var(--ink); background: #fff; border: 1px solid #d9d9df; }
+    .create-dialog-submit { color: #fff; background: var(--red); border: 1px solid var(--red); box-shadow: 0 2px 7px rgba(173,33,27,.18); }
+    .create-dialog-submit:disabled { color: #9999a1; background: #e9e9ed; border-color: #e9e9ed; box-shadow: none; cursor: default; }
+    .create-dialog-action:focus-visible { outline: none; box-shadow: var(--focus); }
+    .create-goods-toast { position: fixed; z-index: 80; left: 50%; bottom: 24px; display: flex; align-items: center; gap: 8px; max-width: calc(100% - 32px); padding: 11px 16px; color: #fff; background: #2d2e33; border-radius: 11px; box-shadow: 0 10px 30px rgba(0,0,0,.2); font-size: var(--type-base); transform: translateX(-50%); }
+    .create-goods-toast[hidden] { display: none; }
+    .create-goods-toast svg { width: 16px; height: 16px; color: #83dba5; }
+
     @media (max-width: 1240px) {
       .spu-trigger { grid-template-columns: minmax(235px, 1fr) 186px minmax(330px, 360px) 44px; gap: 10px; }
       .spu-facts { max-width: 360px; }
@@ -741,7 +757,6 @@
 
     @media (max-width: 920px) {
       .page-head { align-items: flex-start; }
-      .catalog-summary { min-width: 200px; }
       .filter-panel { grid-template-columns: 1fr 1fr; }
       .filter-panel .field:first-child,
       .filter-panel .stock-field { grid-column: 1 / -1; }
@@ -753,8 +768,6 @@
     @media (max-width: 840px) {
       .page-head { margin-bottom: 18px; }
       h1 { font-size: 30px; }
-      .catalog-summary { display: none; }
-      .head-copy { max-width: none; }
 
       .sku-panel { padding: 0 10px 10px; }
       .sku-panel-inner { padding: 12px; }
@@ -799,6 +812,8 @@
     }
 
     @media (max-width: 560px) {
+      .page-head { flex-direction: column; }
+      .create-goods-button { width: 100%; min-height: 48px; }
       .filter-panel { grid-template-columns: 1fr; }
       .filter-panel .field,
       .filter-panel .field:first-child,
@@ -833,19 +848,25 @@
       .page-controls { width: 100%; justify-content: space-between; }
       .page-button { min-width: 44px; }
       .hide-phone { display: none; }
+
+      .create-dialog-head { padding: 19px 18px 16px; }
+      .create-dialog-body { padding: 19px 18px 18px; }
+      .create-dialog-footer { padding: 13px 18px; }
+      .create-dialog-action { flex: 1; min-height: 44px; }
+      .create-select { height: 46px; font-size: 16px; }
     }
 
     @media (prefers-reduced-transparency: reduce) {
-      .catalog-summary,
       .filter-panel,
-      .pagination { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .pagination,
+      .create-goods-dialog { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .create-goods-dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
       .spu-card { background: #fff; }
       .dimension-summary { background: #f2f2f4; }
       .spu-facts { background: #f5f5f7; }
     }
 
     @media (prefers-contrast: more) {
-      .catalog-summary,
       .filter-panel,
       .spu-card,
       .dimension-summary,
@@ -867,7 +888,8 @@
       .dimension-panel,
       .dimension-tab,
       .quiet-button,
-      .page-button { transition: none !important; }
+      .page-button,
+      .create-goods-button { transition: none !important; }
       .dimension-panel { animation: none !important; }
     }
 
@@ -881,16 +903,11 @@
 
   <main id="main-content" tabindex="-1">
     <section class="page-head" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">Inventory catalog · V2</p>
-        <h1 id="page-title">货物列表</h1>
-        <p class="head-copy">按“类目 + 品牌”聚合为 SPU，列表呈现规格维度与库存概览；展开后通过页签切换 SKU 维度，快速比较规格值及其关联库存。</p>
-      </div>
-      <div class="catalog-summary" aria-label="货物统计：52 个 SPU，186 个 SKU">
-        <div class="summary-item"><span>SPU</span><strong>52</strong></div>
-        <span class="summary-divider" aria-hidden="true"></span>
-        <div class="summary-item"><span>SKU</span><strong>186</strong></div>
-      </div>
+      <h1 id="page-title">货物列表</h1>
+      <button class="create-goods-button" id="create-goods-button" type="button">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+        新增货物
+      </button>
     </section>
 
     <form class="filter-panel" id="filter-form" aria-label="货物搜索与筛选">
@@ -1067,6 +1084,60 @@
     </nav>
   </main>
 
+  <dialog class="create-goods-dialog" id="create-goods-dialog" aria-labelledby="create-goods-title">
+    <form class="create-dialog-form" id="create-goods-form" method="dialog" novalidate>
+      <header class="create-dialog-head">
+        <div><p>货物建档</p><h2 id="create-goods-title">新增货物</h2></div>
+        <button class="create-dialog-close" type="button" data-create-close aria-label="关闭新增货物弹窗">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+      <div class="create-dialog-body">
+        <p class="create-intro">选择品牌和建档类目，即可创建一个新的 SPU。</p>
+        <div class="create-field">
+          <label for="create-brand">品牌 <span>*</span></label>
+          <select class="create-select" id="create-brand" required>
+            <option value="">请选择品牌</option>
+            <option>淮海</option><option>桂安</option><option>沱雨</option><option>海湾</option><option>敏华</option><option>东安</option>
+          </select>
+        </div>
+        <div class="create-field">
+          <label for="create-category">货物类目 <span>*</span></label>
+          <select class="create-select" id="create-category" required>
+            <option value="">请选择可建 SPU 的类目</option>
+            <optgroup label="灭火器材">
+              <option value="手提式干粉灭火器" data-path="灭火器材 / 手提式干粉灭火器" data-unit="具" data-default-sku="2">手提式干粉灭火器</option>
+              <option value="手提式二氧化碳灭火器" data-path="灭火器材 / 手提式二氧化碳灭火器" data-unit="具">手提式二氧化碳灭火器</option>
+              <option value="推车式干粉灭火器" data-path="灭火器材 / 推车式干粉灭火器" data-unit="台">推车式干粉灭火器</option>
+            </optgroup>
+            <optgroup label="消防水带">
+              <option value="有衬里消防水带" data-path="消防水带 / 有衬里消防水带" data-unit="盘">有衬里消防水带</option>
+            </optgroup>
+            <optgroup label="应急照明">
+              <option value="消防应急照明灯" data-path="应急照明 / 消防应急照明灯" data-unit="台">消防应急照明灯</option>
+              <option value="安全出口标志灯" data-path="应急照明 / 疏散指示灯 / 安全出口标志灯" data-unit="台">安全出口标志灯</option>
+              <option value="疏散方向标志灯" data-path="应急照明 / 疏散指示灯 / 疏散方向标志灯" data-unit="台">疏散方向标志灯</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="create-selection-preview is-empty" id="create-selection-preview" aria-live="polite">
+          <span class="create-preview-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 7 8-4 8 4-8 4-8-4Z"></path><path d="m4 7 8 4 8-4v10l-8 4-8-4V7Z"></path><path d="M12 11v10"></path></svg></span>
+          <span class="create-preview-copy"><span>即将创建</span><strong id="create-preview-name">请选择品牌和类目</strong><small id="create-preview-meta">选择完成后显示 SPU 信息</small></span>
+        </div>
+        <p class="create-dialog-note">新增后可在货物详情中继续维护 SKU、价格和库存资料。</p>
+      </div>
+      <footer class="create-dialog-footer">
+        <button class="create-dialog-action create-dialog-cancel" type="button" data-create-close>取消</button>
+        <button class="create-dialog-action create-dialog-submit" id="create-goods-submit" type="submit" disabled>新增货物</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="create-goods-toast" id="create-goods-toast" role="status" hidden>
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></svg>
+    <span></span>
+  </div>
+
   <script>
     const cards = [...document.querySelectorAll('.spu-card')];
     const filterForm = document.getElementById('filter-form');
@@ -1082,6 +1153,86 @@
     const toggleAllLabel = toggleAllButton.querySelector('span');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const dimensionSummaries = [...document.querySelectorAll('.dimension-summary')];
+    const createGoodsButton = document.getElementById('create-goods-button');
+    const createGoodsDialog = document.getElementById('create-goods-dialog');
+    const createGoodsForm = document.getElementById('create-goods-form');
+    const createBrand = document.getElementById('create-brand');
+    const createCategory = document.getElementById('create-category');
+    const createGoodsSubmit = document.getElementById('create-goods-submit');
+    const createSelectionPreview = document.getElementById('create-selection-preview');
+    const createPreviewName = document.getElementById('create-preview-name');
+    const createPreviewMeta = document.getElementById('create-preview-meta');
+    const createGoodsToast = document.getElementById('create-goods-toast');
+    let createDialogOpener = null;
+    let createToastTimer = 0;
+
+    function createSelectionState() {
+      const brand = createBrand.value;
+      const category = createCategory.value;
+      const option = createCategory.selectedOptions[0];
+      const duplicate = Boolean(brand && category && cards.some((card) => {
+        const title = card.querySelector('.spu-title')?.textContent || '';
+        return card.dataset.brand === brand && title.includes(category);
+      }));
+      return { brand, category, option, duplicate };
+    }
+
+    function updateCreatePreview() {
+      const { brand, category, option, duplicate } = createSelectionState();
+      const complete = Boolean(brand && category);
+      createSelectionPreview.classList.toggle('is-empty', !complete);
+      createSelectionPreview.classList.toggle('has-error', duplicate);
+      createPreviewName.textContent = complete ? `${brand} · ${category}` : brand ? `${brand} · 请选择类目` : category ? `请选择品牌 · ${category}` : '请选择品牌和类目';
+      if (duplicate) {
+        createPreviewMeta.textContent = '该品牌与类目已存在，无需重复新增。';
+      } else if (complete) {
+        const defaultSku = Number(option.dataset.defaultSku || 0);
+        createPreviewMeta.textContent = `${option.dataset.path} · 默认单位：${option.dataset.unit}${defaultSku ? ` · 带入 ${defaultSku} 条默认 SKU` : ''}`;
+      } else {
+        createPreviewMeta.textContent = '选择完成后显示 SPU 信息';
+      }
+      createGoodsSubmit.disabled = !complete || duplicate;
+    }
+
+    function closeCreateGoodsDialog() {
+      if (createGoodsDialog.open) createGoodsDialog.close();
+    }
+
+    function showCreateToast(message) {
+      clearTimeout(createToastTimer);
+      createGoodsToast.querySelector('span').textContent = message;
+      createGoodsToast.hidden = false;
+      createToastTimer = setTimeout(() => { createGoodsToast.hidden = true; }, 2800);
+    }
+
+    createGoodsButton.addEventListener('click', () => {
+      createDialogOpener = createGoodsButton;
+      createGoodsForm.reset();
+      updateCreatePreview();
+      createGoodsDialog.showModal();
+      createBrand.focus();
+    });
+
+    [createBrand, createCategory].forEach((select) => select.addEventListener('change', updateCreatePreview));
+    document.querySelectorAll('[data-create-close]').forEach((button) => button.addEventListener('click', closeCreateGoodsDialog));
+    createGoodsDialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeCreateGoodsDialog();
+    });
+    createGoodsDialog.addEventListener('close', () => createDialogOpener?.focus());
+    let createOutsideStart = false;
+    createGoodsDialog.addEventListener('pointerdown', (event) => { createOutsideStart = event.target === createGoodsDialog; });
+    createGoodsDialog.addEventListener('click', (event) => {
+      if (createOutsideStart && event.target === createGoodsDialog) closeCreateGoodsDialog();
+      createOutsideStart = false;
+    });
+    createGoodsForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const { brand, category, duplicate } = createSelectionState();
+      if (!brand || !category || duplicate) return;
+      closeCreateGoodsDialog();
+      showCreateToast(`已新增“${brand} · ${category}”`);
+    });
 
     const dimensionSummaryLayouts = dimensionSummaries.map((summary) => {
       const chipList = summary.querySelector('.variant-chips');
