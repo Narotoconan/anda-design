@@ -2,17 +2,6 @@
 (function () {
   'use strict';
 
-  const brands = {
-    'brand-001': '淮海',
-    'brand-002': '桂安',
-    'brand-003': '沱雨',
-    'brand-004': '海湾',
-    'brand-005': '敏华',
-    'brand-006': '东安',
-    'brand-007': '三江',
-    'brand-008': '劳士'
-  };
-
   const sourceTypes = {
     regional_agent: { label: '区域代理', icon: 'supplier-agent' },
     manufacturer: { label: '厂家直供', icon: 'supplier-factory' },
@@ -29,42 +18,42 @@
   const suppliers = [
     {
       id: 'supplier-001', code: 'SUP-001', name: '宁城消防商行', sourceType: 'regional_agent', priority: 'preferred',
-      brandIds: ['brand-001', 'brand-003'], contacts: [{ name: '张经理', info: '138 **** 2608' }, { name: '刘会计', info: '025-**** 1630' }, { name: '仓储部', info: '025-**** 1725' }],
+      contacts: [{ name: '张经理', info: '138 **** 2608' }, { name: '刘会计', info: '025-**** 1630' }, { name: '仓储部', info: '025-**** 1725' }],
       region: '江苏·南京', platform: '', shopUrl: '', remark: '常用灭火器与水带采购对象。', enabled: true
     },
     {
       id: 'supplier-002', code: 'SUP-002', name: '华源消防器材厂', sourceType: 'manufacturer', priority: 'preferred',
-      brandIds: ['brand-001'], contacts: [{ name: '李经理', info: '139 **** 7026' }, { name: '售后部', info: '0516-**** 6075' }],
+      contacts: [{ name: '李经理', info: '139 **** 7026' }, { name: '售后部', info: '0516-**** 6075' }],
       region: '江苏·徐州', platform: '', shopUrl: '', remark: '', enabled: true
     },
     {
       id: 'supplier-003', code: 'SUP-003', name: '安备消防用品店', sourceType: 'online_store', priority: 'normal',
-      brandIds: ['brand-001', 'brand-002'], contacts: [{ name: '平台客服', info: '通过店铺客服联系' }],
+      contacts: [{ name: '平台客服', info: '通过店铺客服联系' }],
       region: '浙江·杭州', platform: '1688', shopUrl: 'https://example.com/store/003', remark: '', enabled: true
     },
     {
       id: 'supplier-004', code: 'SUP-004', name: '江南消防设备公司', sourceType: 'regional_agent', priority: 'normal',
-      brandIds: ['brand-004', 'brand-007'], contacts: [{ name: '赵经理', info: '微信：jiangnan_demo' }],
+      contacts: [{ name: '赵经理', info: '微信：jiangnan_demo' }],
       region: '江苏·苏州', platform: '', shopUrl: '', remark: '', enabled: true
     },
     {
       id: 'supplier-005', code: 'SUP-005', name: '光安应急照明厂', sourceType: 'manufacturer', priority: 'preferred',
-      brandIds: ['brand-005', 'brand-006', 'brand-008'], contacts: [{ name: '钱经理', info: '137 **** 6112' }, { name: '仓储部', info: '0760-**** 9012' }],
+      contacts: [{ name: '钱经理', info: '137 **** 6112' }, { name: '仓储部', info: '0760-**** 9012' }],
       region: '广东·中山', platform: '', shopUrl: '', remark: '应急照明类常用采购对象。', enabled: true
     },
     {
       id: 'supplier-006', code: 'SUP-006', name: '优安劳保店', sourceType: 'online_store', priority: 'backup',
-      brandIds: [], contacts: [{ name: '', info: '通过店铺客服联系' }],
+      contacts: [{ name: '', info: '通过店铺客服联系' }],
       region: '浙江·宁波', platform: '淘宝', shopUrl: 'https://example.com/store/006', remark: '', enabled: true
     },
     {
       id: 'supplier-007', code: 'SUP-007', name: '城北器材经营部', sourceType: 'other', priority: 'normal',
-      brandIds: ['brand-003'], contacts: [{ name: '吴经理', info: '136 **** 0806' }],
+      contacts: [{ name: '吴经理', info: '136 **** 0806' }],
       region: '安徽·合肥', platform: '', shopUrl: '', remark: '', enabled: true
     },
     {
       id: 'supplier-008', code: 'SUP-008', name: '华南消防商行', sourceType: 'regional_agent', priority: 'backup',
-      brandIds: ['brand-002'], contacts: [{ name: '周经理', info: '138 **** 1540' }],
+      contacts: [{ name: '周经理', info: '138 **** 1540' }],
       region: '广东·广州', platform: '', shopUrl: '', remark: '暂停新增采购。', enabled: false
     }
   ];
@@ -77,7 +66,6 @@
   const emptyAction = document.getElementById('supplier-empty-action');
   const keywordInput = document.getElementById('supplier-keyword');
   const sourceFilter = document.getElementById('supplier-source-filter');
-  const brandFilter = document.getElementById('supplier-brand-filter');
   const clearFiltersButton = document.getElementById('supplier-clear-filters');
   const statusButtons = [...document.querySelectorAll('.supplier-filter-button[data-status]')];
   const visibleCount = document.getElementById('supplier-visible-count');
@@ -104,11 +92,6 @@
   const remarkInput = document.getElementById('supplier-remark-input');
   const remarkCount = document.getElementById('supplier-remark-count');
   const enabledInput = document.getElementById('supplier-enabled-input');
-  const brandPicker = document.getElementById('supplier-brand-picker');
-  const brandTrigger = document.getElementById('supplier-brand-trigger');
-  const brandMenu = document.getElementById('supplier-brand-menu');
-  const brandSelection = document.getElementById('supplier-brand-selection');
-  const brandCheckboxes = [...brandMenu.querySelectorAll('input[type="checkbox"]')];
   const toast = document.getElementById('supplier-toast');
 
   const PAGE_SIZE = 8;
@@ -127,10 +110,6 @@
       .replaceAll("'", '&#039;');
   }
 
-  function selectedBrandIds() {
-    return brandCheckboxes.filter((input) => input.checked).map((input) => input.value);
-  }
-
   function sourceMarkup(sourceType, platform) {
     const source = sourceTypes[sourceType] || sourceTypes.other;
     const platformLine = sourceType === 'online_store' && platform
@@ -141,14 +120,6 @@
         <svg class="supplier-icon" aria-hidden="true"><use href="#${source.icon}"/></svg>
         <span class="supplier-source-copy"><strong>${source.label}</strong>${platformLine}</span>
       </span>`;
-  }
-
-  function brandMarkup(brandIds) {
-    if (!brandIds.length) return '<span class="supplier-empty-value">未关联</span>';
-    const shown = brandIds.slice(0, 2);
-    const tags = shown.map((brandId) => `<span class="supplier-brand-chip">${escapeHtml(brands[brandId] || '未知品牌')}</span>`);
-    if (brandIds.length > 2) tags.push(`<span class="supplier-brand-chip is-more" aria-label="另有 ${brandIds.length - 2} 个品牌">+${brandIds.length - 2}</span>`);
-    return `<span class="supplier-brand-list">${tags.join('')}</span>`;
   }
 
   function contactMarkup(supplier) {
@@ -184,7 +155,6 @@
           <span class="supplier-priority ${priority.className}"><span aria-hidden="true"></span>${priority.label}</span>
         </td>
         <td class="supplier-source-cell" data-label="主要来源" aria-label="主要来源：${source.label}${supplier.sourceType === 'online_store' && supplier.platform ? `，采购平台：${escapeHtml(supplier.platform)}` : ''}">${sourceMarkup(supplier.sourceType, supplier.platform)}</td>
-        <td class="supplier-brands-cell" data-label="供应品牌">${brandMarkup(supplier.brandIds)}</td>
         <td class="supplier-contact-cell" data-label="联系人"><span class="supplier-contact-copy">${contactMarkup(supplier)}</span></td>
         <td class="supplier-action-cell" data-label="操作">
           <button class="supplier-edit-button" type="button" data-edit-supplier="${supplier.id}" aria-label="编辑${escapeHtml(supplier.name)}">编辑</button>
@@ -193,7 +163,7 @@
   }
 
   function currentFiltersAreDefault() {
-    return !keywordInput.value.trim() && sourceFilter.value === 'all' && brandFilter.value === 'all' && activeStatus === 'all';
+    return !keywordInput.value.trim() && sourceFilter.value === 'all' && activeStatus === 'all';
   }
 
   function filteredSuppliers() {
@@ -201,12 +171,10 @@
     return suppliers.filter((supplier) => {
       const statusMatches = activeStatus === 'all' || (activeStatus === 'active' ? supplier.enabled : !supplier.enabled);
       const sourceMatches = sourceFilter.value === 'all' || supplier.sourceType === sourceFilter.value;
-      const brandMatches = brandFilter.value === 'all'
-        || (brandFilter.value === 'unlinked' ? supplier.brandIds.length === 0 : supplier.brandIds.includes(brandFilter.value));
       const searchableContacts = (supplier.contacts || []).flatMap((contact) => [contact.name, contact.info]);
       const searchable = [supplier.name, supplier.code, ...searchableContacts].join(' ').toLocaleLowerCase('zh-CN');
       const keywordMatches = !keyword || searchable.includes(keyword);
-      return statusMatches && sourceMatches && brandMatches && keywordMatches;
+      return statusMatches && sourceMatches && keywordMatches;
     });
   }
 
@@ -258,7 +226,6 @@
   function resetFilters() {
     keywordInput.value = '';
     sourceFilter.value = 'all';
-    brandFilter.value = 'all';
     activeStatus = 'all';
     currentPage = 1;
     statusButtons.forEach((button) => {
@@ -292,31 +259,6 @@
 
   function updateRemarkCount() {
     remarkCount.textContent = String(remarkInput.value.length);
-  }
-
-  function updateBrandSelection() {
-    const selected = selectedBrandIds();
-    if (!selected.length) {
-      brandSelection.textContent = '选择供应品牌';
-      brandSelection.className = 'supplier-brand-selection is-placeholder';
-      return;
-    }
-
-    const visible = selected.slice(0, 4).map((brandId) => `<span class="supplier-selection-chip">${escapeHtml(brands[brandId] || '未知品牌')}</span>`);
-    if (selected.length > 4) visible.push(`<span class="supplier-selection-more">+${selected.length - 4}</span>`);
-    brandSelection.className = 'supplier-brand-selection';
-    brandSelection.innerHTML = visible.join('');
-  }
-
-  function closeBrandMenu() {
-    brandMenu.hidden = true;
-    brandTrigger.setAttribute('aria-expanded', 'false');
-  }
-
-  function toggleBrandMenu() {
-    const open = brandMenu.hidden;
-    brandMenu.hidden = !open;
-    brandTrigger.setAttribute('aria-expanded', String(open));
   }
 
   function contactRowMarkup(contact, index, total) {
@@ -360,11 +302,6 @@
     urlInput.value = supplier.shopUrl;
     remarkInput.value = supplier.remark;
     enabledInput.checked = supplier.enabled;
-    brandCheckboxes.forEach((input) => {
-      input.checked = supplier.brandIds.includes(input.value);
-      input.disabled = input.value === 'brand-008' && !input.checked;
-      input.closest('label').classList.toggle('is-disabled', input.disabled);
-    });
     updateSourceFields();
   }
 
@@ -374,11 +311,6 @@
     priorityInput.value = 'normal';
     enabledInput.checked = true;
     renderContactEditor([{ name: '', info: '' }]);
-    brandCheckboxes.forEach((input) => {
-      input.checked = false;
-      input.disabled = input.value === 'brand-008';
-      input.closest('label').classList.toggle('is-disabled', input.disabled);
-    });
     updateSourceFields();
   }
 
@@ -386,8 +318,6 @@
     editingId = mode === 'edit' ? supplierId : '';
     editorOpener = opener || document.activeElement;
     clearErrors();
-    closeBrandMenu();
-
     const supplier = suppliers.find((item) => item.id === supplierId);
     if (mode === 'edit' && supplier) {
       editorTitle.textContent = '编辑供应商';
@@ -397,7 +327,6 @@
       resetForm();
     }
 
-    updateBrandSelection();
     updateRemarkCount();
     editor.showModal();
     document.body.classList.add('supplier-dialog-open');
@@ -405,7 +334,6 @@
   }
 
   function closeEditor() {
-    closeBrandMenu();
     if (editor.open) editor.close();
   }
 
@@ -422,7 +350,6 @@
       name: nameInput.value.trim(),
       sourceType: sourceInput.value,
       priority: priorityInput.value || 'normal',
-      brandIds: selectedBrandIds(),
       contacts: contactValues().filter((contact) => contact.name || contact.info),
       region: regionInput.value.trim(),
       platform: isOnlineStore ? platformInput.value.trim() : '',
@@ -456,7 +383,6 @@
 
   keywordInput.addEventListener('input', () => { currentPage = 1; renderList(); });
   sourceFilter.addEventListener('change', () => { currentPage = 1; renderList(); });
-  brandFilter.addEventListener('change', () => { currentPage = 1; renderList(); });
   clearFiltersButton.addEventListener('click', resetFilters);
   emptyAction.addEventListener('click', () => {
     if (suppliers.length) resetFilters();
@@ -502,9 +428,6 @@
   });
   urlInput.addEventListener('input', () => clearFieldError('supplier-url-field', 'supplier-url-error'));
   remarkInput.addEventListener('input', updateRemarkCount);
-  brandTrigger.addEventListener('click', toggleBrandMenu);
-  brandCheckboxes.forEach((input) => input.addEventListener('change', updateBrandSelection));
-
   addContactButton.addEventListener('click', () => {
     const contacts = contactValues();
     contacts.push({ name: '', info: '' });
@@ -518,19 +441,6 @@
     const contacts = contactValues();
     contacts.splice(Number(button.dataset.removeContact), 1);
     renderContactEditor(contacts);
-  });
-
-  document.addEventListener('click', (event) => {
-    if (!brandPicker.contains(event.target)) closeBrandMenu();
-  });
-
-  brandPicker.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !brandMenu.hidden) {
-      event.preventDefault();
-      event.stopPropagation();
-      closeBrandMenu();
-      brandTrigger.focus();
-    }
   });
 
   form.addEventListener('submit', (event) => {

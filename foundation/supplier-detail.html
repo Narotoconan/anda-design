@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <meta name="description" content="查看供应商基本资料、联系人和供应货物。">
+  <title>供应商详情 · 燧安进销存</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/supplier-detail.css?v=detail-5">
+  <script src="../js/admin-shell.js" defer></script>
+  <script src="../js/supplier-detail.js?v=detail-5" defer></script>
+</head>
+<body class="admin-shell supplier-detail-page">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <admin-sidebar active="suppliers"></admin-sidebar>
+  <admin-topbar trail="基础资料|供应商管理|供应商详情"></admin-topbar>
+
+  <svg class="sd-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="sd-arrow-left" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/><path d="M9 12h10"/></symbol>
+    <symbol id="sd-edit" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z"/></symbol>
+    <symbol id="sd-building" viewBox="0 0 24 24"><path d="M4 21V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v15M16 9h2a2 2 0 0 1 2 2v10M8 8h4m-4 4h4m-4 4h4M3 21h18"/></symbol>
+    <symbol id="sd-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="sd-phone" viewBox="0 0 24 24"><path d="M6.7 3.8 9.5 7l-2 2.4a15 15 0 0 0 7.1 7.1l2.4-2 3.2 2.8-.8 2.8c-.3 1-1.3 1.7-2.4 1.6C9.5 21 3 14.5 2.3 7c-.1-1.1.6-2.1 1.6-2.4Z"/></symbol>
+    <symbol id="sd-folder" viewBox="0 0 24 24"><path d="M3 8V6a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/><path d="M3 9h18"/></symbol>
+    <symbol id="sd-layers" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></symbol>
+    <symbol id="sd-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="sd-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="sd-box" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4Z"/><path d="M4 7v10l8 4 8-4V7M12 11v10"/></symbol>
+    <symbol id="sd-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="sd-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="sd-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5m4-5v5"/></symbol>
+    <symbol id="sd-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="sd-down" viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"/></symbol>
+  </svg>
+
+  <main id="main-content" class="sd-main" tabindex="-1">
+    <div class="sd-content">
+      <header class="sd-page-heading">
+        <a class="sd-back-link" href="suppliers.html">
+          <svg class="sd-icon" aria-hidden="true"><use href="#sd-arrow-left"/></svg>
+          供应商管理
+        </a>
+        <div class="sd-identity-row">
+          <span class="sd-profile-mark" aria-hidden="true"><svg class="sd-icon"><use href="#sd-building"/></svg></span>
+          <div class="sd-heading-copy">
+            <div class="sd-title-line">
+              <h1 id="sd-page-title">宁城消防商行</h1>
+              <span class="sd-status is-active" id="sd-heading-status"><span aria-hidden="true"></span>启用</span>
+              <span class="sd-priority is-preferred" id="sd-heading-priority"><span aria-hidden="true"></span>优先采购</span>
+            </div>
+            <p><span class="sd-code" id="sd-heading-code">SUP-001</span><span aria-hidden="true">·</span><span id="sd-heading-region">江苏·南京</span></p>
+          </div>
+        </div>
+      </header>
+
+      <section class="sd-overview" aria-label="供应商基本资料">
+        <article class="sd-card sd-basic-card" aria-labelledby="sd-basic-title">
+          <header class="sd-card-header">
+            <div>
+              <p class="sd-section-kicker">供应商资料</p>
+              <h2 id="sd-basic-title">基本信息</h2>
+            </div>
+            <button class="sd-card-action" id="sd-edit-basic" type="button" aria-haspopup="dialog" aria-controls="sd-basic-dialog">
+              <svg class="sd-icon" aria-hidden="true"><use href="#sd-edit"/></svg>
+              编辑
+            </button>
+          </header>
+
+          <dl class="sd-fact-grid">
+            <div><dt>供应商名称</dt><dd id="sd-basic-name">宁城消防商行</dd></div>
+            <div><dt>供应商编码</dt><dd class="sd-code" id="sd-basic-code">SUP-001</dd></div>
+            <div><dt>主要来源</dt><dd id="sd-basic-source">区域代理</dd></div>
+            <div><dt>采购优先级</dt><dd id="sd-basic-priority">优先</dd></div>
+            <div><dt>所在地区</dt><dd id="sd-basic-region">江苏·南京</dd></div>
+            <div><dt>供应状态</dt><dd id="sd-basic-status">启用</dd></div>
+            <div class="sd-fact-wide">
+              <dt>供应品牌</dt>
+              <dd class="sd-brand-list" id="sd-basic-brands">
+                <span>淮海</span><span>沱雨</span><span>敏华</span>
+              </dd>
+            </div>
+            <div class="sd-fact-wide sd-remark-fact"><dt>备注</dt><dd id="sd-basic-remark">常用灭火器、水带与应急照明采购对象，常规订单可直接联系张经理。</dd></div>
+          </dl>
+        </article>
+
+        <aside class="sd-card sd-contact-card" aria-labelledby="sd-contacts-title">
+          <header class="sd-card-header">
+            <div>
+              <p class="sd-section-kicker">联系信息</p>
+              <h2 id="sd-contacts-title">联系人 <span id="sd-contact-count">3</span></h2>
+            </div>
+            <button class="sd-card-action" id="sd-edit-contacts" type="button" aria-haspopup="dialog" aria-controls="sd-contact-dialog">
+              <svg class="sd-icon" aria-hidden="true"><use href="#sd-edit"/></svg>
+              编辑
+            </button>
+          </header>
+          <div class="sd-contact-list" id="sd-contact-list"></div>
+        </aside>
+      </section>
+
+      <section class="sd-goods-section" aria-labelledby="sd-goods-section-title">
+        <header class="sd-section-heading">
+          <div>
+            <p class="sd-section-kicker">供应关系</p>
+            <h2 id="sd-goods-section-title">供应货物</h2>
+          </div>
+          <p>按分类节点查看该供应商关联的 SPU。</p>
+        </header>
+
+        <div class="sd-goods-browser">
+          <aside class="sd-card sd-tree-card" aria-labelledby="sd-tree-title">
+            <header class="sd-tree-header">
+              <div><h3 id="sd-tree-title">货物类目</h3><span>分类节点</span></div>
+              <span class="sd-tree-total"><strong id="sd-tree-total-count">11</strong> SPU</span>
+            </header>
+            <nav aria-label="供应货物类目">
+              <ul class="sd-tree" role="tree" aria-label="货物类目分类节点">
+                <li role="none">
+                  <button class="sd-tree-select is-selected" type="button" role="treeitem" aria-level="1" aria-selected="true" data-category="all" title="全部供应货物">
+                    <svg class="sd-icon" aria-hidden="true"><use href="#sd-layers"/></svg>
+                    <span class="sd-tree-name">全部供应货物</span><strong data-category-count="all">11</strong>
+                  </button>
+                </li>
+                <li role="none">
+                  <div class="sd-tree-row">
+                    <span class="sd-tree-toggle-space" aria-hidden="true"></span>
+                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-selected="false" data-category="fe" title="灭火器材">
+                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                      <span class="sd-tree-name">灭火器材</span><strong data-category-count="fe">0</strong>
+                    </button>
+                  </div>
+                </li>
+                <li role="none">
+                  <div class="sd-tree-row">
+                    <span class="sd-tree-toggle-space" aria-hidden="true"></span>
+                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-selected="false" data-category="hd" title="消防水带">
+                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                      <span class="sd-tree-name">消防水带</span><strong data-category-count="hd">0</strong>
+                    </button>
+                  </div>
+                </li>
+                <li role="none">
+                  <div class="sd-tree-row">
+                    <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-el-children" data-tree-toggle="el" aria-label="收起应急照明">
+                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
+                    </button>
+                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-expanded="true" aria-selected="false" data-category="el" title="应急照明">
+                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                      <span class="sd-tree-name">应急照明</span><strong data-category-count="el">0</strong>
+                    </button>
+                  </div>
+                  <ul class="sd-tree-group" id="sd-tree-el-children" role="group">
+                    <li role="none">
+                      <div class="sd-tree-row is-child">
+                        <span class="sd-tree-toggle-space" aria-hidden="true"></span>
+                        <button class="sd-tree-select" type="button" role="treeitem" aria-level="2" aria-selected="false" data-category="el-sign" title="疏散指示灯">
+                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                          <span class="sd-tree-name">疏散指示灯</span><strong data-category-count="el-sign">0</strong>
+                        </button>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li role="none">
+                  <div class="sd-tree-row">
+                    <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-pj-children" data-tree-toggle="pj" aria-label="收起配件">
+                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
+                    </button>
+                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-expanded="true" aria-selected="false" data-category="pj" title="配件">
+                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                      <span class="sd-tree-name">配件</span><strong data-category-count="pj">0</strong>
+                    </button>
+                  </div>
+                  <ul class="sd-tree-group" id="sd-tree-pj-children" role="group">
+                    <li role="none">
+                      <div class="sd-tree-row is-child">
+                        <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-pj-extinguisher-children" data-tree-toggle="pj-extinguisher" aria-label="收起灭火器配件">
+                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
+                        </button>
+                        <button class="sd-tree-select" type="button" role="treeitem" aria-level="2" aria-expanded="true" aria-selected="false" data-category="pj-extinguisher" title="灭火器配件">
+                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                          <span class="sd-tree-name">灭火器配件</span><strong data-category-count="pj-extinguisher">0</strong>
+                        </button>
+                      </div>
+                      <ul class="sd-tree-group" id="sd-tree-pj-extinguisher-children" role="group">
+                        <li role="none">
+                          <div class="sd-tree-row is-child">
+                            <span class="sd-tree-toggle-space" aria-hidden="true"></span>
+                            <button class="sd-tree-select" type="button" role="treeitem" aria-level="3" aria-selected="false" data-category="pj-extinguisher-discharge" title="灭火器喷射组件及维修替换配件">
+                              <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                              <span class="sd-tree-name">灭火器喷射组件及维修替换配件</span><strong data-category-count="pj-extinguisher-discharge">0</strong>
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                    </li>
+                    <li role="none">
+                      <div class="sd-tree-row is-child">
+                        <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-pj-water-children" data-tree-toggle="pj-water" aria-label="收起消防水带连接配件">
+                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
+                        </button>
+                        <button class="sd-tree-select" type="button" role="treeitem" aria-level="2" aria-expanded="true" aria-selected="false" data-category="pj-water" title="消防水带连接配件">
+                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                          <span class="sd-tree-name">消防水带连接配件</span><strong data-category-count="pj-water">0</strong>
+                        </button>
+                      </div>
+                      <ul class="sd-tree-group" id="sd-tree-pj-water-children" role="group">
+                        <li role="none">
+                          <div class="sd-tree-row is-child">
+                            <span class="sd-tree-toggle-space" aria-hidden="true"></span>
+                            <button class="sd-tree-select" type="button" role="treeitem" aria-level="3" aria-selected="false" data-category="pj-water-connectors" title="水带接口与连接组件">
+                              <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
+                              <span class="sd-tree-name">水带接口与连接组件</span><strong data-category-count="pj-water-connectors">0</strong>
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </aside>
+
+          <div class="sd-card sd-goods-card">
+            <header class="sd-goods-header">
+              <div class="sd-goods-heading-copy">
+                <p id="sd-category-path">全部类目</p>
+                <h3 id="sd-goods-title">全部供应货物</h3>
+                <span>共 <strong id="sd-goods-count">11</strong> 个 SPU</span>
+              </div>
+              <div class="sd-search" role="search">
+                <svg class="sd-icon" aria-hidden="true"><use href="#sd-search"/></svg>
+                <label class="visually-hidden" for="sd-goods-search">搜索供应货物</label>
+                <input id="sd-goods-search" type="search" placeholder="搜索名称、编码或品牌" autocomplete="off">
+              </div>
+            </header>
+
+            <div class="sd-spu-list" role="table" aria-label="供应商关联的 SPU 列表" aria-colcount="3">
+              <div class="sd-spu-head" role="row">
+                <span role="columnheader">SPU 信息</span>
+                <span role="columnheader">规格与进价</span>
+                <span role="columnheader">供货状态</span>
+              </div>
+              <div id="sd-spu-body" role="rowgroup"></div>
+            </div>
+
+            <div class="sd-empty-state" id="sd-goods-empty" hidden>
+              <span aria-hidden="true"><svg class="sd-icon"><use href="#sd-box"/></svg></span>
+              <strong>当前类目暂无供应货物</strong>
+              <p>可选择其他分类节点继续查看。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <dialog class="sd-dialog" id="sd-basic-dialog" aria-labelledby="sd-basic-dialog-title">
+    <form class="sd-dialog-shell" id="sd-basic-form">
+      <header class="sd-dialog-header">
+        <div><p>供应商资料</p><h2 id="sd-basic-dialog-title">编辑基本信息</h2></div>
+        <button class="sd-icon-button" type="button" data-close-dialog aria-label="关闭基本信息表单"><svg class="sd-icon" aria-hidden="true"><use href="#sd-close"/></svg></button>
+      </header>
+      <div class="sd-dialog-body">
+        <div class="sd-form-field sd-field-wide">
+          <label for="sd-name-input">供应商名称 <span aria-hidden="true">*</span></label>
+          <input id="sd-name-input" maxlength="80" value="宁城消防商行" required>
+        </div>
+        <div class="sd-form-field">
+          <label for="sd-code-input">供应商编码</label>
+          <input id="sd-code-input" value="SUP-001" readonly>
+        </div>
+        <div class="sd-form-field">
+          <label for="sd-source-input">主要来源</label>
+          <span class="sd-select-field"><select id="sd-source-input"><option value="regional_agent" selected>区域代理</option><option value="manufacturer">厂家直供</option><option value="online_store">线上店铺</option><option value="other">其他</option></select><svg class="sd-icon" aria-hidden="true"><use href="#sd-down"/></svg></span>
+        </div>
+        <div class="sd-form-field">
+          <label for="sd-priority-input">采购优先级</label>
+          <span class="sd-select-field"><select id="sd-priority-input"><option value="preferred" selected>优先</option><option value="normal">普通</option><option value="backup">备选</option></select><svg class="sd-icon" aria-hidden="true"><use href="#sd-down"/></svg></span>
+        </div>
+        <div class="sd-form-field">
+          <label for="sd-region-input">所在地区</label>
+          <input id="sd-region-input" maxlength="60" value="江苏·南京">
+        </div>
+        <div class="sd-form-field">
+          <label for="sd-status-input">供应状态</label>
+          <span class="sd-select-field"><select id="sd-status-input"><option value="active" selected>启用</option><option value="inactive">已停用</option></select><svg class="sd-icon" aria-hidden="true"><use href="#sd-down"/></svg></span>
+        </div>
+        <fieldset class="sd-brand-field sd-field-wide">
+          <legend>供应品牌</legend>
+          <div class="sd-brand-options">
+            <label><input type="checkbox" value="淮海" checked><span>淮海</span></label>
+            <label><input type="checkbox" value="沱雨" checked><span>沱雨</span></label>
+            <label><input type="checkbox" value="敏华" checked><span>敏华</span></label>
+            <label><input type="checkbox" value="桂安"><span>桂安</span></label>
+            <label><input type="checkbox" value="海湾"><span>海湾</span></label>
+            <label><input type="checkbox" value="三江"><span>三江</span></label>
+          </div>
+        </fieldset>
+        <div class="sd-online-fields sd-field-wide" id="sd-online-fields" hidden>
+          <div class="sd-form-field"><label for="sd-platform-input">采购平台</label><input id="sd-platform-input" placeholder="例如：1688、淘宝"></div>
+          <div class="sd-form-field"><label for="sd-shop-url-input">店铺链接</label><input id="sd-shop-url-input" type="url" placeholder="https://" inputmode="url"></div>
+        </div>
+        <div class="sd-form-field sd-field-wide">
+          <label for="sd-remark-input">备注</label>
+          <textarea id="sd-remark-input" maxlength="200" rows="3">常用灭火器、水带与应急照明采购对象，常规订单可直接联系张经理。</textarea>
+        </div>
+      </div>
+      <footer class="sd-dialog-footer"><button class="sd-secondary-button" type="button" data-close-dialog>取消</button><button class="sd-primary-button" type="submit">保存基本信息</button></footer>
+    </form>
+  </dialog>
+
+  <dialog class="sd-dialog sd-contact-dialog" id="sd-contact-dialog" aria-labelledby="sd-contact-dialog-title">
+    <form class="sd-dialog-shell" id="sd-contact-form">
+      <header class="sd-dialog-header">
+        <div><p>联系信息</p><h2 id="sd-contact-dialog-title">编辑联系人</h2></div>
+        <button class="sd-icon-button" type="button" data-close-dialog aria-label="关闭联系人表单"><svg class="sd-icon" aria-hidden="true"><use href="#sd-close"/></svg></button>
+      </header>
+      <div class="sd-dialog-body sd-contact-dialog-body">
+        <div class="sd-contact-editor-head"><span>第一位联系人作为主要联系人展示</span><button class="sd-add-button" id="sd-add-contact" type="button"><svg class="sd-icon" aria-hidden="true"><use href="#sd-plus"/></svg>添加联系人</button></div>
+        <div class="sd-contact-editor-labels" aria-hidden="true"><span>姓名或称谓</span><span>联系方式</span></div>
+        <div class="sd-contact-editor" id="sd-contact-editor"></div>
+      </div>
+      <footer class="sd-dialog-footer"><button class="sd-secondary-button" type="button" data-close-dialog>取消</button><button class="sd-primary-button" type="submit">保存联系人</button></footer>
+    </form>
+  </dialog>
+
+  <div class="sd-toast" id="sd-toast" role="status" hidden><svg class="sd-icon" aria-hidden="true"><use href="#sd-check"/></svg><span></span></div>
+</body>
+</html>

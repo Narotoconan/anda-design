@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f5f5f7">
-  <meta name="description" content="维护供应商、进货来源与供应品牌。">
+  <meta name="description" content="维护供应商、进货来源与联系信息。">
   <title>供应商管理 · 燧安进销存</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="../css/common.css">
-  <link rel="stylesheet" href="../css/suppliers.css">
+  <link rel="stylesheet" href="../css/suppliers.css?v=no-brands-1">
   <script src="../js/admin-shell.js" defer></script>
-  <script src="../js/suppliers.js" defer></script>
+  <script src="../js/suppliers.js?v=no-brands-1" defer></script>
 </head>
 <body class="admin-shell suppliers-page">
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -38,7 +38,7 @@
       <header class="supplier-page-heading">
         <div class="supplier-heading-copy">
           <h1>供应商管理</h1>
-          <p>维护供应商与供应品牌，方便进货时选择来源。</p>
+          <p>维护供应商基础信息，方便进货时选择来源。</p>
         </div>
         <button class="supplier-primary-button" id="supplier-create" type="button" aria-haspopup="dialog" aria-controls="supplier-editor">
           <svg class="supplier-icon" aria-hidden="true"><use href="#supplier-plus"/></svg>
@@ -63,22 +63,6 @@
           </select>
           <svg class="supplier-icon" aria-hidden="true"><use href="#supplier-chevron"/></svg>
         </div>
-        <div class="supplier-select-wrap supplier-brand-filter-wrap">
-          <label class="visually-hidden" for="supplier-brand-filter">按供应品牌筛选</label>
-          <select id="supplier-brand-filter">
-            <option value="all">全部品牌</option>
-            <option value="brand-001">淮海</option>
-            <option value="brand-002">桂安</option>
-            <option value="brand-003">沱雨</option>
-            <option value="brand-004">海湾</option>
-            <option value="brand-005">敏华</option>
-            <option value="brand-006">东安</option>
-            <option value="brand-007">三江</option>
-            <option value="brand-008">劳士</option>
-            <option value="unlinked">未关联品牌</option>
-          </select>
-          <svg class="supplier-icon" aria-hidden="true"><use href="#supplier-chevron"/></svg>
-        </div>
         <button class="supplier-clear-button" id="supplier-clear-filters" type="button" hidden>清空筛选</button>
       </section>
 
@@ -95,13 +79,12 @@
 
         <div class="supplier-table-wrap" id="supplier-results">
           <table class="supplier-table">
-            <caption class="visually-hidden">供应商、采购优先级、进货来源、供应品牌与联系方式列表</caption>
+            <caption class="visually-hidden">供应商、采购优先级、进货来源与联系方式列表</caption>
             <colgroup>
               <col class="supplier-name-column">
               <col class="supplier-status-column">
               <col class="supplier-priority-column">
               <col class="supplier-source-column">
-              <col class="supplier-brand-column">
               <col class="supplier-contact-column">
               <col class="supplier-action-column">
             </colgroup>
@@ -111,7 +94,6 @@
                 <th scope="col">状态</th>
                 <th scope="col">优先级</th>
                 <th scope="col">主要来源</th>
-                <th scope="col">供应品牌</th>
                 <th scope="col">联系人</th>
                 <th scope="col">操作</th>
               </tr>
@@ -188,26 +170,6 @@
         <div class="supplier-form-field">
           <label for="supplier-region-input">所在地区</label>
           <input id="supplier-region-input" maxlength="60" placeholder="例如：江苏·南京" autocomplete="address-level1">
-        </div>
-
-        <div class="supplier-form-field supplier-field-wide">
-          <label id="supplier-brand-label">供应品牌</label>
-          <div class="supplier-brand-picker" id="supplier-brand-picker">
-            <button class="supplier-brand-trigger" id="supplier-brand-trigger" type="button" aria-expanded="false" aria-controls="supplier-brand-menu" aria-labelledby="supplier-brand-label supplier-brand-selection">
-              <span class="supplier-brand-selection is-placeholder" id="supplier-brand-selection">选择供应品牌</span>
-              <svg class="supplier-icon" aria-hidden="true"><use href="#supplier-chevron"/></svg>
-            </button>
-            <div class="supplier-brand-menu" id="supplier-brand-menu" role="group" aria-labelledby="supplier-brand-label" hidden>
-              <label><input type="checkbox" value="brand-001" data-label="淮海"><span>淮海</span></label>
-              <label><input type="checkbox" value="brand-002" data-label="桂安"><span>桂安</span></label>
-              <label><input type="checkbox" value="brand-003" data-label="沱雨"><span>沱雨</span></label>
-              <label><input type="checkbox" value="brand-004" data-label="海湾"><span>海湾</span></label>
-              <label><input type="checkbox" value="brand-005" data-label="敏华"><span>敏华</span></label>
-              <label><input type="checkbox" value="brand-006" data-label="东安"><span>东安</span></label>
-              <label><input type="checkbox" value="brand-007" data-label="三江"><span>三江</span></label>
-              <label class="is-disabled"><input type="checkbox" value="brand-008" data-label="劳士" disabled><span>劳士 <small>已停用</small></span></label>
-            </div>
-          </div>
         </div>
 
         <div class="supplier-form-field supplier-field-wide supplier-contacts-field">
