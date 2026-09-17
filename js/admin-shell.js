@@ -10,6 +10,15 @@
 (function () {
   'use strict';
 
+  const shellScript = document.currentScript || document.querySelector('script[src$="admin-shell.js"]');
+  const projectRoot = shellScript && shellScript.src
+    ? new URL('../', shellScript.src)
+    : new URL('../', window.location.href);
+
+  function resolvePageHref(path) {
+    return path === '#' ? '#' : new URL(path, projectRoot).href;
+  }
+
   const icons = {
     brand: '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2.5 3 5.2 5.5 5.2 9.1A5.2 5.2 0 0 1 12 17.3a5.2 5.2 0 0 1-5.2-5.2C6.8 9.7 8 7.5 9.4 6c.2 2 1 3.1 2 3.7.7-2.7.4-4.7.6-6.7Z"></path><path d="M5 21h14"></path></svg>',
     mobileBrand: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3c2.5 3 5.2 5.5 5.2 9.1A5.2 5.2 0 0 1 12 17.3a5.2 5.2 0 0 1-5.2-5.2C6.8 9.7 8 7.5 9.4 6c.2 2 1 3.1 2 3.7.7-2.7.4-4.7.6-6.7Z"></path></svg>',
@@ -52,13 +61,13 @@
 
       const sideLink = (key, label, href, icon) => {
         const active = current === key;
-        return `<a class="side-link${active ? ' parent-active' : ''}" href="${href}" aria-label="${label}" title="${label}"${active ? ' aria-current="page"' : ''}>${icon}<span>${label}</span></a>`;
+        return `<a class="side-link${active ? ' parent-active' : ''}" href="${resolvePageHref(href)}" aria-label="${label}" title="${label}"${active ? ' aria-current="page"' : ''}>${icon}<span>${label}</span></a>`;
       };
 
       const subLink = (key, label, href) => {
         const active = activeKey === key;
         const isCurrent = current === key;
-        return `<a class="sub-link${active ? ' active' : ''}" href="${href}"${isCurrent ? ' aria-current="page"' : ''}>${label}</a>`;
+        return `<a class="sub-link${active ? ' active' : ''}" href="${resolvePageHref(href)}"${isCurrent ? ' aria-current="page"' : ''}>${label}</a>`;
       };
 
       this.innerHTML = `
@@ -73,22 +82,22 @@
               ${sideLink('overview', '经营概览', '#', icons.overview)}
               ${sideLink('purchase', '采购管理', '#', icons.purchase)}
               ${sideLink('sales', '销售管理', '#', icons.sales)}
-              <a class="side-link${inventoryOpen ? ' parent-active' : ''}" href="goods-list.html" aria-label="库存管理" title="库存管理" aria-expanded="${inventoryOpen}">
+              <a class="side-link${inventoryOpen ? ' parent-active' : ''}" href="${resolvePageHref('goods/goods-list.html')}" aria-label="库存管理" title="库存管理" aria-expanded="${inventoryOpen}">
                 ${icons.inventory}<span>库存管理</span>${icons.down}
               </a>
               <div class="subnav"${inventoryOpen ? '' : ' hidden'}>
-                ${subLink('goods-list', '货物列表', 'goods-list.html')}
+                ${subLink('goods-list', '货物列表', 'goods/goods-list.html')}
                 ${subLink('stocktake', '库存盘点', '#')}
                 ${subLink('transfer', '仓库调拨', '#')}
                 ${subLink('flows', '出入库记录', '#')}
               </div>
-              <a class="side-link${foundationOpen ? ' parent-active' : ''}" href="goods-categories.html" aria-label="基础资料" title="基础资料" aria-expanded="${foundationOpen}"${current === 'foundation' ? ' aria-current="page"' : ''}>
+              <a class="side-link${foundationOpen ? ' parent-active' : ''}" href="${resolvePageHref('foundation/goods-categories.html')}" aria-label="基础资料" title="基础资料" aria-expanded="${foundationOpen}"${current === 'foundation' ? ' aria-current="page"' : ''}>
                 ${icons.foundation}<span>基础资料</span>${icons.down}
               </a>
               <div class="subnav"${foundationOpen ? '' : ' hidden'}>
-                ${subLink('goods-categories', '货物类目', 'goods-categories.html')}
-                ${subLink('brands', '品牌管理', 'brands.html')}
-                ${subLink('suppliers', '供应商管理', 'suppliers.html')}
+                ${subLink('goods-categories', '货物类目', 'foundation/goods-categories.html')}
+                ${subLink('brands', '品牌管理', 'foundation/brands.html')}
+                ${subLink('suppliers', '供应商管理', 'foundation/suppliers.html')}
               </div>
             </nav>
           </div>

@@ -86,9 +86,11 @@
 1. 在 `<head>` 中引入公共 CSS 和公共组件脚本：
 
    ```html
-   <link rel="stylesheet" href="css/common.css">
-   <script src="js/admin-shell.js" defer></script>
+   <link rel="stylesheet" href="../css/common.css">
+   <script src="../js/admin-shell.js" defer></script>
    ```
+
+   当前业务页面按一级目录组织：货物页面放在 `goods/`，基础资料页面放在 `foundation/`。以上路径以一级业务目录中的页面为例；新增页面应按实际目录深度调整相对路径。
 
 2. 为 `<body>` 添加 `admin-shell` 类。
 3. 在页面主要内容 `<main>` 之前放置公共组件：
@@ -108,7 +110,7 @@
 ### 7.3 组件配置约定
 
 - `admin-sidebar` 的 `active` 属性控制当前导航高亮。
-- 当前支持的导航标识包括：`overview`、`purchase`、`sales`、`goods-list`、`goods-detail`、`stocktake`、`transfer`、`flows`、`foundation`。
+- 当前支持的导航标识包括：`overview`、`purchase`、`sales`、`goods-list`、`goods-detail`、`stocktake`、`transfer`、`flows`、`foundation`、`goods-categories`、`brands`、`suppliers`。
 - 详情页使用 `active="goods-detail"`，侧边栏会关联高亮“货物列表”，但不会错误地把“货物列表”标记为当前页面。
 - `admin-topbar` 的 `trail` 属性使用半角竖线 `|` 分隔层级，最后一项自动作为当前页面。
 - `sync-text` 可覆盖顶部同步状态文案。
