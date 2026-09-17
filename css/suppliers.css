@@ -24,7 +24,7 @@
   stroke-linejoin: round;
 }
 
-.suppliers-page :is(button, a, input, select, textarea):focus-visible {
+.suppliers-page :is(button, a):focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 3px;
 }
@@ -162,9 +162,11 @@
   border-radius: 8px;
   font-size: 12px;
   font-weight: 550;
+  transition: color var(--motion-fast), background-color var(--motion-fast), transform 90ms ease-out;
 }
 
 .supplier-clear-button:hover { color: var(--red-dark); background: var(--red-soft); }
+.supplier-clear-button:active { transform: scale(.97); }
 .supplier-clear-button[hidden] { display: none; }
 
 .supplier-workspace {
@@ -261,7 +263,21 @@
 .supplier-table tbody tr:last-child > * { border-bottom: 0; }
 .supplier-table tbody tr:hover > * { background: #f7f7f9; }
 .supplier-identity { font-weight: 400; overflow-wrap: anywhere; }
-.supplier-name { display: block; color: var(--ink); font-size: 14px; line-height: 1.4; font-weight: 650; }
+.supplier-name {
+  width: max-content;
+  max-width: 100%;
+  display: block;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 650;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--motion-fast);
+}
+.supplier-name:hover { color: var(--red-dark); }
 .supplier-meta {
   margin-top: 5px;
   display: flex;
@@ -399,7 +415,10 @@
   border: 1px solid transparent;
   border-radius: 8px;
   font-size: 12px;
+  transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast), transform 90ms ease-out;
 }
+.supplier-page-button:not(:disabled, .is-current):hover { color: var(--ink); background: #f1f1f4; }
+.supplier-page-button:not(:disabled):active { transform: scale(.94); }
 .supplier-page-button.is-current { color: #fff; background: var(--red); border-color: var(--red); font-weight: 650; }
 .supplier-page-button:disabled { cursor: default; opacity: .36; }
 .supplier-page-button .supplier-icon { width: 15px; height: 15px; }

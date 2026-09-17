@@ -142,7 +142,7 @@
     return `
       <tr class="${supplier.enabled ? '' : 'is-disabled'}" data-supplier-id="${supplier.id}">
         <th class="supplier-identity" scope="row">
-          <span class="supplier-name">${escapeHtml(supplier.name)}</span>
+          <a class="supplier-name" href="supplier-detail.html?id=${escapeHtml(supplier.id)}" aria-label="查看${escapeHtml(supplier.name)}详情">${escapeHtml(supplier.name)}</a>
           <span class="supplier-meta">
             <span class="supplier-code">${escapeHtml(supplier.code)}</span>
             ${supplier.region ? `<span class="supplier-meta-separator" aria-hidden="true"></span><span class="supplier-region">${escapeHtml(supplier.region)}</span>` : ''}
