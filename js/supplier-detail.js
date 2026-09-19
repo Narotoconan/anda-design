@@ -3,11 +3,21 @@
   'use strict';
 
   const categories = {
-    all: { name: '全部供应货物', path: '全部类目' },
+    all: { name: '全部货物', path: '全部货物' },
     fe: { name: '灭火器材', path: '灭火器材' },
+    'fe-portable': { name: '手提式灭火器', path: '灭火器材 / 手提式灭火器' },
+    'fe-dry': { name: '干粉灭火器', path: '灭火器材 / 手提式灭火器 / 干粉灭火器' },
+    'fe-co2': { name: '二氧化碳灭火器', path: '灭火器材 / 手提式灭火器 / 二氧化碳灭火器' },
+    'fe-water': { name: '水基型灭火器', path: '灭火器材 / 手提式灭火器 / 水基型灭火器' },
+    'fe-trolley': { name: '推车式灭火器', path: '灭火器材 / 推车式灭火器' },
     hd: { name: '消防水带', path: '消防水带' },
+    'hd-lined': { name: '有衬里消防水带', path: '消防水带 / 有衬里消防水带' },
+    'hd-poly': { name: '聚氨酯消防水带', path: '消防水带 / 聚氨酯消防水带' },
     el: { name: '应急照明', path: '应急照明' },
+    'el-light': { name: '消防应急照明灯', path: '应急照明 / 消防应急照明灯' },
     'el-sign': { name: '疏散指示灯', path: '应急照明 / 疏散指示灯' },
+    'el-sign-exit': { name: '安全出口标志灯', path: '应急照明 / 疏散指示灯 / 安全出口标志灯' },
+    'el-sign-direction': { name: '疏散方向标志灯', path: '应急照明 / 疏散指示灯 / 疏散方向标志灯' },
     pj: { name: '配件', path: '配件' },
     'pj-extinguisher': { name: '灭火器配件', path: '配件 / 灭火器配件' },
     'pj-extinguisher-discharge': { name: '灭火器喷射组件及维修替换配件', path: '配件 / 灭火器配件 / 灭火器喷射组件及维修替换配件' },
@@ -16,17 +26,100 @@
   };
 
   const goods = [
-    { id: 'spu-001', code: 'SPU-FE-001', categoryName: '手提式干粉灭火器', brand: '淮海', category: '灭火器材 / 手提式干粉灭火器', branchIds: ['fe'], sku: 4, price: '¥62.00–86.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
-    { id: 'spu-002', code: 'SPU-FE-003', categoryName: '手提式二氧化碳灭火器', brand: '淮海', category: '灭火器材 / 手提式二氧化碳灭火器', branchIds: ['fe'], sku: 3, price: '¥128.00–196.00', status: 'stable', statusLabel: '稳定供货', lead: '5–7 天' },
-    { id: 'spu-003', code: 'SPU-FE-002', categoryName: '推车式干粉灭火器', brand: '沱雨', category: '灭火器材 / 推车式干粉灭火器', branchIds: ['fe'], sku: 2, price: '¥468.00–720.00', status: 'normal', statusLabel: '正常供货', lead: '7–10 天' },
-    { id: 'spu-004', code: 'SPU-FE-006', categoryName: '水基型灭火器', brand: '淮海', category: '灭火器材 / 水基型灭火器', branchIds: ['fe'], sku: 3, price: '¥76.00–118.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
-    { id: 'spu-005', code: 'SPU-HD-001', categoryName: '有衬里消防水带', brand: '沱雨', category: '消防水带 / 有衬里消防水带', branchIds: ['hd'], sku: 6, price: '¥92.00–168.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
-    { id: 'spu-006', code: 'SPU-HD-004', categoryName: '聚氨酯消防水带', brand: '沱雨', category: '消防水带 / 有衬里消防水带', branchIds: ['hd'], sku: 4, price: '¥138.00–236.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
-    { id: 'spu-007', code: 'SPU-EL-001', categoryName: '消防应急照明灯', brand: '敏华', category: '应急照明 / 消防应急照明灯', branchIds: ['el'], sku: 3, price: '¥38.00–66.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
-    { id: 'spu-008', code: 'SPU-EL-002', categoryName: '安全出口标志灯', brand: '敏华', category: '应急照明 / 疏散指示灯 / 安全出口标志灯', branchIds: ['el', 'el-sign'], sku: 4, price: '¥42.00–72.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
-    { id: 'spu-009', code: 'SPU-EL-003', categoryName: '疏散方向标志灯', brand: '敏华', category: '应急照明 / 疏散指示灯 / 疏散方向标志灯', branchIds: ['el', 'el-sign'], sku: 5, price: '¥39.00–69.00', status: 'paused', statusLabel: '临时停供', lead: '待确认' },
-    { id: 'spu-010', code: 'SPU-PJ-001', categoryName: '灭火器喷管', brand: '淮海', category: '配件 / 灭火器配件 / 灭火器喷射组件及维修替换配件 / 灭火器喷管', branchIds: ['pj', 'pj-extinguisher', 'pj-extinguisher-discharge'], sku: 2, price: '¥8.50–12.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
-    { id: 'spu-011', code: 'SPU-PJ-003', categoryName: '消防水带接口', brand: '沱雨', category: '配件 / 消防水带连接配件 / 水带接口与连接组件 / 消防水带接口', branchIds: ['pj', 'pj-water', 'pj-water-connectors'], sku: 3, price: '¥22.00–38.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' }
+    {
+      id: 'spu-001', code: 'SPU-FE-001', categoryName: '手提式干粉灭火器', brand: '淮海', category: '灭火器材 / 手提式灭火器 / 干粉灭火器', branchIds: ['fe', 'fe-portable', 'fe-dry'],
+      skus: [
+        { code: 'SKU-FE-001-01', spec: '1kg', model: 'MFZ/ABC1', price: '¥62.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-FE-001-02', spec: '2kg', model: 'MFZ/ABC2', price: '¥66.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-FE-001-04', spec: '4kg', model: 'MFZ/ABC4', price: '¥72.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-FE-001-08', spec: '8kg', model: 'MFZ/ABC8', price: '¥86.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' }
+      ]
+    },
+    {
+      id: 'spu-002', code: 'SPU-FE-003', categoryName: '手提式二氧化碳灭火器', brand: '淮海', category: '灭火器材 / 手提式灭火器 / 二氧化碳灭火器', branchIds: ['fe', 'fe-portable', 'fe-co2'],
+      skus: [
+        { code: 'SKU-FE-003-02', spec: '2kg', model: 'MT/2', price: '¥128.00', status: 'stable', statusLabel: '稳定供货', lead: '5–7 天' },
+        { code: 'SKU-FE-003-03', spec: '3kg', model: 'MT/3', price: '¥149.00', status: 'stable', statusLabel: '稳定供货', lead: '5–7 天' },
+        { code: 'SKU-FE-003-05', spec: '5kg', model: 'MT/5', price: '¥196.00', status: 'normal', statusLabel: '正常供货', lead: '7–10 天' }
+      ]
+    },
+    {
+      id: 'spu-003', code: 'SPU-FE-002', categoryName: '推车式干粉灭火器', brand: '沱雨', category: '灭火器材 / 推车式灭火器', branchIds: ['fe', 'fe-trolley'],
+      skus: [
+        { code: 'SKU-FE-002-35', spec: '35kg', model: 'MFTZ/ABC35', price: '¥468.00', status: 'normal', statusLabel: '正常供货', lead: '7–10 天' },
+        { code: 'SKU-FE-002-50', spec: '50kg', model: 'MFTZ/ABC50', price: '¥720.00', status: 'normal', statusLabel: '正常供货', lead: '7–10 天' }
+      ]
+    },
+    {
+      id: 'spu-004', code: 'SPU-FE-006', categoryName: '水基型灭火器', brand: '淮海', category: '灭火器材 / 手提式灭火器 / 水基型灭火器', branchIds: ['fe', 'fe-portable', 'fe-water'],
+      skus: [
+        { code: 'SKU-FE-006-02', spec: '2L', model: 'MSWZ/2', price: '¥76.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-FE-006-03', spec: '3L', model: 'MSWZ/3', price: '¥89.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-FE-006-06', spec: '6L', model: 'MSWZ/6', price: '¥118.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' }
+      ]
+    },
+    {
+      id: 'spu-005', code: 'SPU-HD-001', categoryName: '有衬里消防水带', brand: '沱雨', category: '消防水带 / 有衬里消防水带', branchIds: ['hd', 'hd-lined'],
+      skus: [
+        { code: 'SKU-HD-001-820', spec: '8-65-20m', model: '8型 DN65', price: '¥92.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-HD-001-825', spec: '8-65-25m', model: '8型 DN65', price: '¥108.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-HD-001-830', spec: '8-65-30m', model: '8型 DN65', price: '¥126.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-HD-001-1020', spec: '10-65-20m', model: '10型 DN65', price: '¥118.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-HD-001-1025', spec: '10-65-25m', model: '10型 DN65', price: '¥145.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-HD-001-1030', spec: '10-65-30m', model: '10型 DN65', price: '¥168.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' }
+      ]
+    },
+    {
+      id: 'spu-006', code: 'SPU-HD-004', categoryName: '聚氨酯消防水带', brand: '沱雨', category: '消防水带 / 聚氨酯消防水带', branchIds: ['hd', 'hd-poly'],
+      skus: [
+        { code: 'SKU-HD-004-1620', spec: '16-65-20m', model: '16型 DN65', price: '¥138.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-HD-004-1625', spec: '16-65-25m', model: '16型 DN65', price: '¥168.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-HD-004-1630', spec: '16-65-30m', model: '16型 DN65', price: '¥198.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-HD-004-8020', spec: '16-80-20m', model: '16型 DN80', price: '¥236.00', status: 'paused', statusLabel: '临时停供', lead: '待确认' }
+      ]
+    },
+    {
+      id: 'spu-007', code: 'SPU-EL-001', categoryName: '消防应急照明灯', brand: '敏华', category: '应急照明 / 消防应急照明灯', branchIds: ['el', 'el-light'],
+      skus: [
+        { code: 'SKU-EL-001-03', spec: '3W', model: 'M-ZFZD-E3W', price: '¥38.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-EL-001-05', spec: '5W', model: 'M-ZFZD-E5W', price: '¥49.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-EL-001-08', spec: '8W', model: 'M-ZFZD-E8W', price: '¥66.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' }
+      ]
+    },
+    {
+      id: 'spu-008', code: 'SPU-EL-002', categoryName: '安全出口标志灯', brand: '敏华', category: '应急照明 / 疏散指示灯 / 安全出口标志灯', branchIds: ['el', 'el-sign', 'el-sign-exit'],
+      skus: [
+        { code: 'SKU-EL-002-01', spec: '单面壁挂', model: 'M-BLZD-1LROE', price: '¥42.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-EL-002-02', spec: '双面吊装', model: 'M-BLZD-2LROE', price: '¥52.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-EL-002-03', spec: '嵌入式', model: 'M-BLJC-1LROE', price: '¥58.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-EL-002-04', spec: '防爆型', model: 'M-BLZD-FB', price: '¥72.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' }
+      ]
+    },
+    {
+      id: 'spu-009', code: 'SPU-EL-003', categoryName: '疏散方向标志灯', brand: '敏华', category: '应急照明 / 疏散指示灯 / 疏散方向标志灯', branchIds: ['el', 'el-sign', 'el-sign-direction'],
+      skus: [
+        { code: 'SKU-EL-003-L', spec: '左向', model: 'M-BLZD-I1L', price: '¥39.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-EL-003-R', spec: '右向', model: 'M-BLZD-I1R', price: '¥39.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-EL-003-B', spec: '双向', model: 'M-BLZD-I1B', price: '¥46.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-EL-003-F', spec: '楼层显示', model: 'M-BLZD-I1F', price: '¥55.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-EL-003-V', spec: '可变方向', model: 'M-BLJC-I1V', price: '¥69.00', status: 'paused', statusLabel: '临时停供', lead: '待确认' }
+      ]
+    },
+    {
+      id: 'spu-010', code: 'SPU-PJ-001', categoryName: '灭火器喷管', brand: '淮海', category: '配件 / 灭火器配件 / 灭火器喷射组件及维修替换配件', branchIds: ['pj', 'pj-extinguisher', 'pj-extinguisher-discharge'],
+      skus: [
+        { code: 'SKU-PJ-001-04', spec: '4kg 适用', model: 'PG-4', price: '¥8.50', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-PJ-001-08', spec: '8kg 适用', model: 'PG-8', price: '¥12.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' }
+      ]
+    },
+    {
+      id: 'spu-011', code: 'SPU-PJ-003', categoryName: '消防水带接口', brand: '沱雨', category: '配件 / 消防水带连接配件 / 水带接口与连接组件', branchIds: ['pj', 'pj-water', 'pj-water-connectors'],
+      skus: [
+        { code: 'SKU-PJ-003-KD', spec: 'KD65 内扣式', model: 'KD65', price: '¥22.00', status: 'stable', statusLabel: '稳定供货', lead: '3–5 天' },
+        { code: 'SKU-PJ-003-KN', spec: 'KN65 卡式', model: 'KN65', price: '¥29.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' },
+        { code: 'SKU-PJ-003-KJ', spec: 'KJ65 快速式', model: 'KJ65', price: '¥38.00', status: 'normal', statusLabel: '正常供货', lead: '5–7 天' }
+      ]
+    }
   ];
 
   let contacts = [
@@ -36,10 +129,15 @@
   ];
 
   const $ = (id) => document.getElementById(id);
-  const treeButtons = [...document.querySelectorAll('[data-category]')];
-  const spuBody = $('sd-spu-body');
+  const categoryButtons = [...document.querySelectorAll('[data-category-filter]')];
+  const treeToggleButtons = [...document.querySelectorAll('[data-tree-toggle]')];
+  const catalogGroups = $('sd-catalog-groups');
+  const catalogColumns = document.querySelector('.sd-sku-columns');
   const goodsEmpty = $('sd-goods-empty');
   const goodsSearch = $('sd-goods-search');
+  const categoryPanel = document.querySelector('.sd-category-panel');
+  const categoryMobileToggle = $('sd-category-mobile-toggle');
+  const expandAllButton = $('sd-expand-all');
   const basicDialog = $('sd-basic-dialog');
   const contactDialog = $('sd-contact-dialog');
   const basicForm = $('sd-basic-form');
@@ -49,6 +147,7 @@
   const toast = $('sd-toast');
   const openers = new WeakMap();
   let selectedCategory = 'all';
+  let groupsExpanded = true;
   let toastTimer = 0;
 
   function escapeHtml(value) {
@@ -66,54 +165,100 @@
     return goods.filter((item) => item.branchIds.includes(categoryId));
   }
 
-  function updateCategoryCounts() {
-    document.querySelectorAll('[data-category-count]').forEach((element) => {
-      element.textContent = String(categoryGoods(element.dataset.categoryCount).length);
-    });
-    $('sd-tree-total-count').textContent = String(goods.length);
+  function skuCount(items) {
+    return items.reduce((total, item) => total + item.skus.length, 0);
   }
 
-  function rowMarkup(item) {
-    const statusClass = item.status === 'stable' ? '' : ` is-${item.status}`;
+  function updateCategoryCounts() {
+    document.querySelectorAll('[data-category-count]').forEach((element) => {
+      element.textContent = String(skuCount(categoryGoods(element.dataset.categoryCount)));
+    });
+  }
+
+  function skuRowMarkup(product, sku) {
+    const statusClass = sku.status === 'stable' ? '' : ` is-${sku.status}`;
     return `
-      <div class="sd-spu-row" role="row" data-spu-id="${escapeHtml(item.id)}">
-        <div class="sd-spu-cell sd-spu-identity" role="cell">
-          <span class="sd-product-mark" aria-hidden="true">${icon('box')}</span>
-          <span class="sd-product-copy">
-            <strong class="sd-product-name"><span class="sd-product-brand">${escapeHtml(item.brand)}</span><span class="sd-product-separator" aria-hidden="true"> · </span>${escapeHtml(item.categoryName)}</strong>
-            <span class="sd-product-meta"><span class="sd-code">${escapeHtml(item.code)}</span><span class="sd-meta-dot" aria-hidden="true"></span><span title="${escapeHtml(item.category)}">${escapeHtml(item.category)}</span></span>
-          </span>
+      <article class="sd-sku-row" data-sku-code="${escapeHtml(sku.code)}">
+        <div class="sd-sku-cell sd-sku-identity">
+          <span class="sd-sku-mark" aria-hidden="true">${icon('box')}</span>
+          <strong><span>${escapeHtml(product.brand)}${escapeHtml(product.categoryName)}</span> <em>${escapeHtml(sku.spec)}</em></strong>
         </div>
-        <div class="sd-spu-cell" role="cell" data-label="规格与进价"><span class="sd-spec-copy"><strong>${item.sku} 个 SKU</strong><span>${escapeHtml(item.price)}</span></span></div>
-        <div class="sd-spu-cell" role="cell" data-label="供货状态"><span class="sd-supply-copy"><span class="sd-supply-status${statusClass}">${escapeHtml(item.statusLabel)}</span><small>${escapeHtml(item.lead)}</small></span></div>
-      </div>`;
+        <div class="sd-sku-cell sd-sku-code-cell" data-label="SKU 编码 / 型号"><span class="sd-code">${escapeHtml(sku.code)}</span><small>${escapeHtml(sku.model)}</small></div>
+        <div class="sd-sku-cell sd-price-cell" data-label="采购价"><strong>${escapeHtml(sku.price)}</strong><small>含税参考价</small></div>
+        <div class="sd-sku-cell sd-supply-cell" data-label="供货情况"><span class="sd-supply-status${statusClass}">${escapeHtml(sku.statusLabel)}</span><small>${escapeHtml(sku.lead)}</small></div>
+      </article>`;
+  }
+
+  function groupMarkup(product, skus) {
+    const panelId = `sd-sku-list-${product.id}`;
+    return `
+      <section class="sd-spu-group" data-spu-id="${escapeHtml(product.id)}">
+        <button class="sd-spu-group-toggle" type="button" data-spu-toggle aria-expanded="${String(groupsExpanded)}" aria-controls="${panelId}">
+          <span class="sd-group-chevron" aria-hidden="true">${icon('chevron')}</span>
+          <span class="sd-spu-mark" aria-hidden="true">${icon('box')}</span>
+          <span class="sd-spu-copy">
+            <span class="sd-spu-title"><strong>${escapeHtml(product.brand)}<span aria-hidden="true"> · </span>${escapeHtml(product.categoryName)}</strong><em>${skus.length} 个具体规格</em></span>
+            <span class="sd-spu-meta"><span title="${escapeHtml(product.category)}">${escapeHtml(product.category)}</span><span aria-hidden="true">·</span><span class="sd-code">${escapeHtml(product.code)}</span></span>
+          </span>
+        </button>
+        <div class="sd-sku-list" id="${panelId}"${groupsExpanded ? '' : ' hidden'}>${skus.map((sku) => skuRowMarkup(product, sku)).join('')}</div>
+      </section>`;
   }
 
   function renderGoods() {
     const query = goodsSearch.value.trim().toLocaleLowerCase('zh-CN');
-    const matches = categoryGoods(selectedCategory).filter((item) => {
-      const searchable = [item.brand, item.categoryName, item.code, item.category].join(' ').toLocaleLowerCase('zh-CN');
-      return !query || searchable.includes(query);
-    });
-    const category = categories[selectedCategory] || categories.all;
+    const matches = categoryGoods(selectedCategory).map((product) => {
+      const productText = [product.brand, product.categoryName, product.code, product.category].join(' ').toLocaleLowerCase('zh-CN');
+      const productMatched = query && productText.includes(query);
+      const skus = product.skus.filter((sku) => {
+        const skuText = [sku.spec, sku.model, sku.code, sku.price, sku.statusLabel].join(' ').toLocaleLowerCase('zh-CN');
+        return !query || productMatched || skuText.includes(query);
+      });
+      return { product, skus };
+    }).filter((entry) => entry.skus.length);
+    const totalSkus = matches.reduce((total, entry) => total + entry.skus.length, 0);
 
-    $('sd-category-path').textContent = category.path;
-    $('sd-goods-title').textContent = category.name;
     $('sd-goods-count').textContent = String(matches.length);
-    spuBody.innerHTML = matches.map(rowMarkup).join('');
-    document.querySelector('.sd-spu-list').hidden = matches.length === 0;
-    goodsEmpty.hidden = matches.length > 0;
+    $('sd-sku-count').textContent = String(totalSkus);
+    $('sd-result-summary').textContent = `${matches.length} 个产品系列 · ${totalSkus} 种具体货物`;
+    catalogGroups.innerHTML = matches.map((entry) => groupMarkup(entry.product, entry.skus)).join('');
+
+    const hasMatches = matches.length > 0;
+    catalogColumns.hidden = !hasMatches;
+    catalogGroups.hidden = !hasMatches;
+    expandAllButton.hidden = !hasMatches;
+    goodsEmpty.hidden = hasMatches;
+    syncExpandAllButton();
   }
 
-  function selectCategory(categoryId, focus = false) {
+  function selectCategory(categoryId) {
     selectedCategory = categories[categoryId] ? categoryId : 'all';
-    treeButtons.forEach((button) => {
-      const selected = button.dataset.category === selectedCategory;
-      button.classList.toggle('is-selected', selected);
-      button.setAttribute('aria-selected', String(selected));
-      if (selected && focus) button.focus({ preventScroll: true });
+    groupsExpanded = true;
+    categoryButtons.forEach((button) => {
+      const selected = button.dataset.categoryFilter === selectedCategory;
+      button.classList.toggle('is-active', selected);
+      if (selected) button.setAttribute('aria-current', 'true');
+      else button.removeAttribute('aria-current');
     });
+    $('sd-active-category').textContent = categories[selectedCategory].path;
+    $('sd-mobile-category-name').textContent = categories[selectedCategory].name;
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      categoryPanel.classList.remove('is-open');
+      categoryMobileToggle.setAttribute('aria-expanded', 'false');
+    }
     renderGoods();
+  }
+
+  function syncExpandAllButton() {
+    expandAllButton.classList.toggle('is-collapsed', !groupsExpanded);
+    expandAllButton.querySelector('span').textContent = groupsExpanded ? '收起全部' : '展开全部';
+  }
+
+  function setAllGroups(expanded) {
+    groupsExpanded = expanded;
+    catalogGroups.querySelectorAll('[data-spu-toggle]').forEach((button) => button.setAttribute('aria-expanded', String(expanded)));
+    catalogGroups.querySelectorAll('.sd-sku-list').forEach((list) => { list.hidden = !expanded; });
+    syncExpandAllButton();
   }
 
   function contactCardMarkup(contact, index) {
@@ -211,19 +356,37 @@
     headingPriority.innerHTML = `<span aria-hidden="true"></span>${priorityHeadings[priorityInput.value] || priorityLabel}`;
   }
 
-  treeButtons.forEach((button) => button.addEventListener('click', () => selectCategory(button.dataset.category)));
-  document.querySelectorAll('[data-tree-toggle]').forEach((button) => {
+  categoryButtons.forEach((button) => button.addEventListener('click', () => selectCategory(button.dataset.categoryFilter)));
+  treeToggleButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      const categoryId = button.dataset.treeToggle;
-      const group = $(`sd-tree-${categoryId}-children`);
+      const children = $(button.dataset.treeToggle);
       const expanded = button.getAttribute('aria-expanded') === 'true';
+      const label = button.parentElement.querySelector('[data-category-filter] .sd-tree-label')?.textContent || '类目';
       button.setAttribute('aria-expanded', String(!expanded));
-      button.setAttribute('aria-label', `${expanded ? '展开' : '收起'}${categories[categoryId].name}`);
-      group.hidden = expanded;
-      button.closest('.sd-tree-row').querySelector('[data-category]').setAttribute('aria-expanded', String(!expanded));
+      button.setAttribute('aria-label', `${expanded ? '展开' : '收起'}${label}`);
+      children.hidden = expanded;
     });
   });
-  goodsSearch.addEventListener('input', renderGoods);
+  categoryMobileToggle.addEventListener('click', () => {
+    const open = categoryPanel.classList.toggle('is-open');
+    categoryMobileToggle.setAttribute('aria-expanded', String(open));
+  });
+  expandAllButton.addEventListener('click', () => setAllGroups(!groupsExpanded));
+  catalogGroups.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-spu-toggle]');
+    if (!button) return;
+    const expanded = button.getAttribute('aria-expanded') === 'true';
+    const list = $(button.getAttribute('aria-controls'));
+    button.setAttribute('aria-expanded', String(!expanded));
+    list.hidden = expanded;
+    const groupButtons = [...catalogGroups.querySelectorAll('[data-spu-toggle]')];
+    groupsExpanded = groupButtons.every((groupButton) => groupButton.getAttribute('aria-expanded') === 'true');
+    syncExpandAllButton();
+  });
+  goodsSearch.addEventListener('input', () => {
+    groupsExpanded = true;
+    renderGoods();
+  });
 
   $('sd-edit-basic').addEventListener('click', (event) => {
     updateOnlineFields();

@@ -9,9 +9,9 @@
   <title>供应商详情 · 燧安进销存</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="../css/common.css">
-  <link rel="stylesheet" href="../css/supplier-detail.css?v=detail-5">
+  <link rel="stylesheet" href="../css/supplier-detail.css?v=sku-cards-1">
   <script src="../js/admin-shell.js" defer></script>
-  <script src="../js/supplier-detail.js?v=detail-5" defer></script>
+  <script src="../js/supplier-detail.js?v=sku-catalog-1" defer></script>
 </head>
 <body class="admin-shell supplier-detail-page">
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -102,158 +102,133 @@
       </section>
 
       <section class="sd-goods-section" aria-labelledby="sd-goods-section-title">
-        <header class="sd-section-heading">
-          <div>
-            <p class="sd-section-kicker">供应关系</p>
-            <h2 id="sd-goods-section-title">供应货物</h2>
+        <header class="sd-catalog-header">
+          <div class="sd-catalog-heading">
+            <p class="sd-section-kicker">供应目录</p>
+            <div class="sd-catalog-title-line">
+              <h2 id="sd-goods-section-title">供应货物</h2>
+              <span id="sd-goods-summary" aria-live="polite"><strong id="sd-sku-count">39</strong> 种具体货物 · <strong id="sd-goods-count">11</strong> 个产品系列</span>
+            </div>
           </div>
-          <p>按分类节点查看该供应商关联的 SPU。</p>
+          <div class="sd-search" role="search">
+            <svg class="sd-icon" aria-hidden="true"><use href="#sd-search"/></svg>
+            <label class="visually-hidden" for="sd-goods-search">搜索供应货物</label>
+            <input id="sd-goods-search" type="search" placeholder="搜索具体货物、规格、型号或 SKU 编码" autocomplete="off">
+          </div>
         </header>
 
-        <div class="sd-goods-browser">
-          <aside class="sd-card sd-tree-card" aria-labelledby="sd-tree-title">
-            <header class="sd-tree-header">
-              <div><h3 id="sd-tree-title">货物类目</h3><span>分类节点</span></div>
-              <span class="sd-tree-total"><strong id="sd-tree-total-count">11</strong> SPU</span>
-            </header>
-            <nav aria-label="供应货物类目">
-              <ul class="sd-tree" role="tree" aria-label="货物类目分类节点">
-                <li role="none">
-                  <button class="sd-tree-select is-selected" type="button" role="treeitem" aria-level="1" aria-selected="true" data-category="all" title="全部供应货物">
-                    <svg class="sd-icon" aria-hidden="true"><use href="#sd-layers"/></svg>
-                    <span class="sd-tree-name">全部供应货物</span><strong data-category-count="all">11</strong>
-                  </button>
-                </li>
-                <li role="none">
-                  <div class="sd-tree-row">
-                    <span class="sd-tree-toggle-space" aria-hidden="true"></span>
-                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-selected="false" data-category="fe" title="灭火器材">
-                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                      <span class="sd-tree-name">灭火器材</span><strong data-category-count="fe">0</strong>
-                    </button>
+        <div class="sd-goods-workspace">
+          <aside class="sd-category-panel sd-card" aria-labelledby="sd-category-panel-title">
+            <button class="sd-category-mobile-toggle" id="sd-category-mobile-toggle" type="button" aria-expanded="false" aria-controls="sd-category-panel-inner">
+              <span><svg class="sd-icon" aria-hidden="true"><use href="#sd-layers"/></svg><span><small>货物类目</small><strong id="sd-mobile-category-name">全部货物</strong></span></span>
+              <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
+            </button>
+
+            <div class="sd-category-panel-inner" id="sd-category-panel-inner">
+              <header class="sd-category-panel-head">
+                <div><h3 id="sd-category-panel-title">货物类目</h3><p>数量按具体货物统计</p></div>
+              </header>
+              <nav class="sd-category-tree" aria-label="按货物类目筛选">
+                <div class="sd-tree-row" data-level="0">
+                  <span class="sd-tree-indent" aria-hidden="true"></span>
+                  <button class="sd-tree-filter is-active" type="button" data-category-filter="all" aria-current="true"><span class="sd-tree-label">全部货物</span><span class="sd-tree-count" data-category-count="all">39</span></button>
+                </div>
+
+                <div class="sd-tree-branch">
+                  <div class="sd-tree-row" data-level="0">
+                    <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-fe" aria-expanded="true" aria-controls="tree-fe" aria-label="收起灭火器材"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                    <button class="sd-tree-filter" type="button" data-category-filter="fe"><span class="sd-tree-label" title="灭火器材">灭火器材</span><span class="sd-tree-count" data-category-count="fe">12</span></button>
                   </div>
-                </li>
-                <li role="none">
-                  <div class="sd-tree-row">
-                    <span class="sd-tree-toggle-space" aria-hidden="true"></span>
-                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-selected="false" data-category="hd" title="消防水带">
-                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                      <span class="sd-tree-name">消防水带</span><strong data-category-count="hd">0</strong>
-                    </button>
-                  </div>
-                </li>
-                <li role="none">
-                  <div class="sd-tree-row">
-                    <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-el-children" data-tree-toggle="el" aria-label="收起应急照明">
-                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
-                    </button>
-                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-expanded="true" aria-selected="false" data-category="el" title="应急照明">
-                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                      <span class="sd-tree-name">应急照明</span><strong data-category-count="el">0</strong>
-                    </button>
-                  </div>
-                  <ul class="sd-tree-group" id="sd-tree-el-children" role="group">
-                    <li role="none">
-                      <div class="sd-tree-row is-child">
-                        <span class="sd-tree-toggle-space" aria-hidden="true"></span>
-                        <button class="sd-tree-select" type="button" role="treeitem" aria-level="2" aria-selected="false" data-category="el-sign" title="疏散指示灯">
-                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                          <span class="sd-tree-name">疏散指示灯</span><strong data-category-count="el-sign">0</strong>
-                        </button>
+                  <div class="sd-tree-children" id="tree-fe">
+                    <div class="sd-tree-branch">
+                      <div class="sd-tree-row" data-level="1">
+                        <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-fe-portable" aria-expanded="true" aria-controls="tree-fe-portable" aria-label="收起手提式灭火器"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                        <button class="sd-tree-filter" type="button" data-category-filter="fe-portable"><span class="sd-tree-label" title="手提式灭火器">手提式灭火器</span><span class="sd-tree-count" data-category-count="fe-portable">10</span></button>
                       </div>
-                    </li>
-                  </ul>
-                </li>
-                <li role="none">
-                  <div class="sd-tree-row">
-                    <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-pj-children" data-tree-toggle="pj" aria-label="收起配件">
-                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
-                    </button>
-                    <button class="sd-tree-select" type="button" role="treeitem" aria-level="1" aria-expanded="true" aria-selected="false" data-category="pj" title="配件">
-                      <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                      <span class="sd-tree-name">配件</span><strong data-category-count="pj">0</strong>
-                    </button>
+                      <div class="sd-tree-children" id="tree-fe-portable">
+                        <div class="sd-tree-row" data-level="2"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="fe-dry"><span class="sd-tree-label" title="干粉灭火器">干粉灭火器</span><span class="sd-tree-count" data-category-count="fe-dry">4</span></button></div>
+                        <div class="sd-tree-row" data-level="2"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="fe-co2"><span class="sd-tree-label" title="二氧化碳灭火器">二氧化碳灭火器</span><span class="sd-tree-count" data-category-count="fe-co2">3</span></button></div>
+                        <div class="sd-tree-row" data-level="2"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="fe-water"><span class="sd-tree-label" title="水基型灭火器">水基型灭火器</span><span class="sd-tree-count" data-category-count="fe-water">3</span></button></div>
+                      </div>
+                    </div>
+                    <div class="sd-tree-row" data-level="1"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="fe-trolley"><span class="sd-tree-label" title="推车式灭火器">推车式灭火器</span><span class="sd-tree-count" data-category-count="fe-trolley">2</span></button></div>
                   </div>
-                  <ul class="sd-tree-group" id="sd-tree-pj-children" role="group">
-                    <li role="none">
-                      <div class="sd-tree-row is-child">
-                        <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-pj-extinguisher-children" data-tree-toggle="pj-extinguisher" aria-label="收起灭火器配件">
-                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
-                        </button>
-                        <button class="sd-tree-select" type="button" role="treeitem" aria-level="2" aria-expanded="true" aria-selected="false" data-category="pj-extinguisher" title="灭火器配件">
-                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                          <span class="sd-tree-name">灭火器配件</span><strong data-category-count="pj-extinguisher">0</strong>
-                        </button>
+                </div>
+
+                <div class="sd-tree-branch">
+                  <div class="sd-tree-row" data-level="0">
+                    <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-hd" aria-expanded="true" aria-controls="tree-hd" aria-label="收起消防水带"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                    <button class="sd-tree-filter" type="button" data-category-filter="hd"><span class="sd-tree-label" title="消防水带">消防水带</span><span class="sd-tree-count" data-category-count="hd">10</span></button>
+                  </div>
+                  <div class="sd-tree-children" id="tree-hd">
+                    <div class="sd-tree-row" data-level="1"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="hd-lined"><span class="sd-tree-label" title="有衬里消防水带">有衬里消防水带</span><span class="sd-tree-count" data-category-count="hd-lined">6</span></button></div>
+                    <div class="sd-tree-row" data-level="1"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="hd-poly"><span class="sd-tree-label" title="聚氨酯消防水带">聚氨酯消防水带</span><span class="sd-tree-count" data-category-count="hd-poly">4</span></button></div>
+                  </div>
+                </div>
+
+                <div class="sd-tree-branch">
+                  <div class="sd-tree-row" data-level="0">
+                    <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-el" aria-expanded="true" aria-controls="tree-el" aria-label="收起应急照明"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                    <button class="sd-tree-filter" type="button" data-category-filter="el"><span class="sd-tree-label" title="应急照明">应急照明</span><span class="sd-tree-count" data-category-count="el">12</span></button>
+                  </div>
+                  <div class="sd-tree-children" id="tree-el">
+                    <div class="sd-tree-row" data-level="1"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="el-light"><span class="sd-tree-label" title="消防应急照明灯">消防应急照明灯</span><span class="sd-tree-count" data-category-count="el-light">3</span></button></div>
+                    <div class="sd-tree-branch">
+                      <div class="sd-tree-row" data-level="1">
+                        <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-el-sign" aria-expanded="true" aria-controls="tree-el-sign" aria-label="收起疏散指示灯"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                        <button class="sd-tree-filter" type="button" data-category-filter="el-sign"><span class="sd-tree-label" title="疏散指示灯">疏散指示灯</span><span class="sd-tree-count" data-category-count="el-sign">9</span></button>
                       </div>
-                      <ul class="sd-tree-group" id="sd-tree-pj-extinguisher-children" role="group">
-                        <li role="none">
-                          <div class="sd-tree-row is-child">
-                            <span class="sd-tree-toggle-space" aria-hidden="true"></span>
-                            <button class="sd-tree-select" type="button" role="treeitem" aria-level="3" aria-selected="false" data-category="pj-extinguisher-discharge" title="灭火器喷射组件及维修替换配件">
-                              <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                              <span class="sd-tree-name">灭火器喷射组件及维修替换配件</span><strong data-category-count="pj-extinguisher-discharge">0</strong>
-                            </button>
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
-                    <li role="none">
-                      <div class="sd-tree-row is-child">
-                        <button class="sd-tree-toggle" type="button" aria-expanded="true" aria-controls="sd-tree-pj-water-children" data-tree-toggle="pj-water" aria-label="收起消防水带连接配件">
-                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg>
-                        </button>
-                        <button class="sd-tree-select" type="button" role="treeitem" aria-level="2" aria-expanded="true" aria-selected="false" data-category="pj-water" title="消防水带连接配件">
-                          <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                          <span class="sd-tree-name">消防水带连接配件</span><strong data-category-count="pj-water">0</strong>
-                        </button>
+                      <div class="sd-tree-children" id="tree-el-sign">
+                        <div class="sd-tree-row" data-level="2"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="el-sign-exit"><span class="sd-tree-label" title="安全出口标志灯">安全出口标志灯</span><span class="sd-tree-count" data-category-count="el-sign-exit">4</span></button></div>
+                        <div class="sd-tree-row" data-level="2"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="el-sign-direction"><span class="sd-tree-label" title="疏散方向标志灯">疏散方向标志灯</span><span class="sd-tree-count" data-category-count="el-sign-direction">5</span></button></div>
                       </div>
-                      <ul class="sd-tree-group" id="sd-tree-pj-water-children" role="group">
-                        <li role="none">
-                          <div class="sd-tree-row is-child">
-                            <span class="sd-tree-toggle-space" aria-hidden="true"></span>
-                            <button class="sd-tree-select" type="button" role="treeitem" aria-level="3" aria-selected="false" data-category="pj-water-connectors" title="水带接口与连接组件">
-                              <svg class="sd-icon" aria-hidden="true"><use href="#sd-folder"/></svg>
-                              <span class="sd-tree-name">水带接口与连接组件</span><strong data-category-count="pj-water-connectors">0</strong>
-                            </button>
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </nav>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sd-tree-branch">
+                  <div class="sd-tree-row" data-level="0">
+                    <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-pj" aria-expanded="true" aria-controls="tree-pj" aria-label="收起配件"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                    <button class="sd-tree-filter" type="button" data-category-filter="pj"><span class="sd-tree-label" title="配件">配件</span><span class="sd-tree-count" data-category-count="pj">5</span></button>
+                  </div>
+                  <div class="sd-tree-children" id="tree-pj">
+                    <div class="sd-tree-branch">
+                      <div class="sd-tree-row" data-level="1">
+                        <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-pj-extinguisher" aria-expanded="true" aria-controls="tree-pj-extinguisher" aria-label="收起灭火器配件"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                        <button class="sd-tree-filter" type="button" data-category-filter="pj-extinguisher"><span class="sd-tree-label" title="灭火器配件">灭火器配件</span><span class="sd-tree-count" data-category-count="pj-extinguisher">2</span></button>
+                      </div>
+                      <div class="sd-tree-children" id="tree-pj-extinguisher">
+                        <div class="sd-tree-row" data-level="2"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="pj-extinguisher-discharge"><span class="sd-tree-label" title="灭火器喷射组件及维修替换配件">灭火器喷射组件及维修替换配件</span><span class="sd-tree-count" data-category-count="pj-extinguisher-discharge">2</span></button></div>
+                      </div>
+                    </div>
+                    <div class="sd-tree-branch">
+                      <div class="sd-tree-row" data-level="1">
+                        <button class="sd-tree-disclosure" type="button" data-tree-toggle="tree-pj-water" aria-expanded="true" aria-controls="tree-pj-water" aria-label="收起消防水带连接配件"><svg class="sd-icon" aria-hidden="true"><use href="#sd-chevron"/></svg></button>
+                        <button class="sd-tree-filter" type="button" data-category-filter="pj-water"><span class="sd-tree-label" title="消防水带连接配件">消防水带连接配件</span><span class="sd-tree-count" data-category-count="pj-water">3</span></button>
+                      </div>
+                      <div class="sd-tree-children" id="tree-pj-water">
+                        <div class="sd-tree-row" data-level="2"><span class="sd-tree-indent" aria-hidden="true"></span><button class="sd-tree-filter" type="button" data-category-filter="pj-water-connectors"><span class="sd-tree-label" title="水带接口与连接组件">水带接口与连接组件</span><span class="sd-tree-count" data-category-count="pj-water-connectors">3</span></button></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </div>
           </aside>
 
-          <div class="sd-card sd-goods-card">
-            <header class="sd-goods-header">
-              <div class="sd-goods-heading-copy">
-                <p id="sd-category-path">全部类目</p>
-                <h3 id="sd-goods-title">全部供应货物</h3>
-                <span>共 <strong id="sd-goods-count">11</strong> 个 SPU</span>
-              </div>
-              <div class="sd-search" role="search">
-                <svg class="sd-icon" aria-hidden="true"><use href="#sd-search"/></svg>
-                <label class="visually-hidden" for="sd-goods-search">搜索供应货物</label>
-                <input id="sd-goods-search" type="search" placeholder="搜索名称、编码或品牌" autocomplete="off">
-              </div>
+          <section class="sd-sku-catalog sd-card" aria-labelledby="sd-active-category">
+            <header class="sd-results-toolbar">
+              <div><span>当前范围</span><strong id="sd-active-category">全部货物</strong><small id="sd-result-summary">11 个产品系列 · 39 种具体货物</small></div>
+              <button class="sd-expand-all" id="sd-expand-all" type="button"><svg class="sd-icon" aria-hidden="true"><use href="#sd-down"/></svg><span>收起全部</span></button>
             </header>
-
-            <div class="sd-spu-list" role="table" aria-label="供应商关联的 SPU 列表" aria-colcount="3">
-              <div class="sd-spu-head" role="row">
-                <span role="columnheader">SPU 信息</span>
-                <span role="columnheader">规格与进价</span>
-                <span role="columnheader">供货状态</span>
-              </div>
-              <div id="sd-spu-body" role="rowgroup"></div>
-            </div>
-
+            <div class="sd-sku-columns" aria-hidden="true"><span>具体货物</span><span>SKU 编码 / 型号</span><span>采购价</span><span>供货情况</span></div>
+            <div class="sd-catalog-groups" id="sd-catalog-groups" aria-label="供应商供应的具体货物"></div>
             <div class="sd-empty-state" id="sd-goods-empty" hidden>
               <span aria-hidden="true"><svg class="sd-icon"><use href="#sd-box"/></svg></span>
-              <strong>当前类目暂无供应货物</strong>
-              <p>可选择其他分类节点继续查看。</p>
+              <strong>没有找到匹配的具体货物</strong>
+              <p>可更换规格、型号、编码或货物类目后再试。</p>
             </div>
-          </div>
+          </section>
         </div>
       </section>
     </div>
