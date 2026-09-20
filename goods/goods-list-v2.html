@@ -26,7 +26,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(30px, 3vw, 36px);
+      font-size: var(--type-display);
       line-height: 1.1;
       font-weight: 720;
       letter-spacing: -.04em;
@@ -295,7 +295,7 @@
       display: block;
       margin-bottom: 6px;
       color: var(--ink-3);
-      font-size: 12px;
+      font-size: var(--type-caption);
       line-height: 1.2;
       font-weight: 560;
     }
@@ -388,7 +388,7 @@
       border: 1px solid rgba(60,60,67,.055);
       border-radius: 7px;
       box-shadow: 0 .5px 0 rgba(255,255,255,.8) inset;
-      font-size: 11px;
+      font-size: var(--type-caption);
       line-height: 1;
       font-weight: 620;
       font-variant-numeric: tabular-nums;
@@ -406,7 +406,7 @@
       letter-spacing: .04em;
     }
 
-    .stock-value { font-size: 18px; }
+    .stock-value { font-size: var(--type-emphasis); }
     .status-value { align-items: center; }
 
     .status-pill,
@@ -667,7 +667,7 @@
     .create-dialog-form { display: flex; max-height: calc(100dvh - 28px); flex-direction: column; }
     .create-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 22px 24px 18px; border-bottom: 1px solid var(--line); }
     .create-dialog-head p { margin: 0 0 4px; color: var(--ink-3); font-size: var(--type-base); }
-    .create-dialog-head h2 { margin: 0; font-size: 21px; line-height: 1.25; letter-spacing: -.025em; }
+    .create-dialog-head h2 { margin: 0; font-size: var(--type-section); line-height: 1.25; letter-spacing: -.025em; }
     .create-dialog-close { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; color: var(--ink-2); background: var(--surface-soft); border: 0; border-radius: 50%; }
     .create-dialog-close:hover { color: var(--ink); background: #ececef; }
     .create-dialog-close:focus-visible { outline: none; box-shadow: var(--focus); }
@@ -677,20 +677,20 @@
     .create-field + .create-field { margin-top: 15px; }
     .create-field label { display: block; margin-bottom: 7px; color: #414149; font-size: var(--type-base); font-weight: 650; }
     .create-field label span { color: var(--red); }
-    .create-select { width: 100%; height: 46px; padding: 0 40px 0 12px; color: var(--ink); background: #f7f7f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d7d85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 13px center; border: 1px solid #dddde3; border-radius: 9px; appearance: none; font: inherit; font-size: 14px; }
+    .create-select { width: 100%; height: 46px; padding: 0 40px 0 12px; color: var(--ink); background: #f7f7f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d7d85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 13px center; border: 1px solid #dddde3; border-radius: 9px; appearance: none; font: inherit; font-size: var(--type-base); }
     .create-select:focus-visible { outline: none; border-color: rgba(216,50,41,.48); box-shadow: var(--focus); }
     .create-selection-preview { display: flex; align-items: flex-start; gap: 12px; margin-top: 20px; padding: 14px; background: #f6f8fb; border: 1px solid #e1e7ef; border-radius: 12px; }
     .create-preview-icon { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; color: #4d657d; background: #fff; border: 1px solid #dfe6ed; border-radius: 9px; }
     .create-preview-icon svg { width: 19px; height: 19px; }
     .create-preview-copy { min-width: 0; }
-    .create-preview-copy > span { display: block; color: var(--ink-3); font-size: 11px; }
-    .create-preview-copy strong { display: block; margin-top: 3px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
-    .create-preview-copy small { display: block; margin-top: 4px; color: var(--ink-2); font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+    .create-preview-copy > span { display: block; color: var(--ink-3); font-size: var(--type-caption); }
+    .create-preview-copy strong { display: block; margin-top: 3px; font-size: var(--type-emphasis); line-height: 1.5; overflow-wrap: anywhere; }
+    .create-preview-copy small { display: block; margin-top: 4px; color: var(--ink-2); font-size: var(--type-caption); line-height: 1.55; overflow-wrap: anywhere; }
     .create-selection-preview.is-empty { color: var(--ink-3); background: #fafafb; border-style: dashed; }
-    .create-selection-preview.is-empty .create-preview-copy strong { color: var(--ink-2); font-size: 13px; font-weight: 550; }
+    .create-selection-preview.is-empty .create-preview-copy strong { color: var(--ink-2); font-size: var(--type-base); font-weight: 550; }
     .create-selection-preview.has-error { background: #fff7f5; border-color: rgba(216,50,41,.25); border-style: solid; }
     .create-selection-preview.has-error .create-preview-copy small { color: var(--red-dark); }
-    .create-dialog-note { margin: 13px 2px 0; color: var(--ink-3); font-size: 11px; line-height: 1.6; }
+    .create-dialog-note { margin: 13px 2px 0; color: var(--ink-3); font-size: var(--type-caption); line-height: 1.6; }
     .create-dialog-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 15px 24px; background: rgba(250,250,251,.92); border-top: 1px solid var(--line); }
     .create-dialog-action { min-height: 42px; padding: 0 17px; border-radius: 10px; font: inherit; font-size: var(--type-base); font-weight: 650; }
     .create-dialog-cancel { color: var(--ink); background: #fff; border: 1px solid #d9d9df; }
@@ -737,7 +737,7 @@
 
     @media (max-width: 840px) {
       .page-head { margin-bottom: 18px; }
-      h1 { font-size: 30px; }
+      h1 { font-size: var(--type-display); }
 
       .sku-panel { padding: 0 10px 10px; }
       .sku-panel-inner { padding: 12px; }
@@ -823,7 +823,7 @@
       .create-dialog-body { padding: 19px 18px 18px; }
       .create-dialog-footer { padding: 13px 18px; }
       .create-dialog-action { flex: 1; min-height: 44px; }
-      .create-select { height: 46px; font-size: 16px; }
+      .create-select { height: 46px; font-size: var(--type-emphasis); }
     }
 
     @media (prefers-reduced-transparency: reduce) {

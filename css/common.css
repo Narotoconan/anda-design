@@ -51,6 +51,7 @@
   --ease-spring: cubic-bezier(0.22, 0.82, 0.23, 1);
 
   /* Typography scale: 14px is the admin UI readability baseline */
+  --type-caption: 12px;
   --type-base: 14px;
   --type-emphasis: 16px;
   --type-section: 20px;
@@ -79,7 +80,7 @@ body {
   color: var(--ink);
   background: var(--bg);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-size: 16px;
+  font-size: var(--type-base);
   line-height: 1.5;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
@@ -184,7 +185,7 @@ main {
   margin-left: 4px;
   padding-left: 15px;
   color: var(--ink-2);
-  font-size: 14px;
+  font-size: var(--type-base);
   border-left: 1px solid var(--line-strong);
 }
 
@@ -268,7 +269,7 @@ admin-topbar { display: contents; }
 
 .admin-shell .side-brand-name {
   display: block;
-  font-size: 15px;
+  font-size: var(--type-emphasis);
   line-height: 1.2;
   font-weight: 680;
   letter-spacing: -0.025em;

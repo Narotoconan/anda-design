@@ -23,7 +23,7 @@
       gap: 8px;
       margin: 0 0 8px;
       color: var(--red-dark);
-      font-size: 12px;
+      font-size: var(--type-caption);
       font-weight: 700;
       letter-spacing: 0.11em;
       text-transform: uppercase;
@@ -39,7 +39,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(34px, 4vw, 48px);
+      font-size: var(--type-display);
       line-height: 1.08;
       letter-spacing: -0.045em;
       font-weight: 720;
@@ -49,7 +49,7 @@
       max-width: 650px;
       margin: 13px 0 0;
       color: var(--ink-2);
-      font-size: 15px;
+      font-size: var(--type-emphasis);
     }
 
     .summary-note {
@@ -63,7 +63,7 @@
 
     .summary-note strong {
       display: block;
-      font-size: 22px;
+      font-size: var(--type-section);
       line-height: 1.2;
       letter-spacing: -0.03em;
       font-variant-numeric: tabular-nums;
@@ -73,7 +73,7 @@
       display: block;
       margin-top: 5px;
       color: var(--ink-2);
-      font-size: 12px;
+      font-size: var(--type-caption);
     }
 
     .search-card {
@@ -101,7 +101,7 @@
       top: 7px;
       z-index: 1;
       color: var(--ink-3);
-      font-size: 10px;
+      font-size: var(--type-caption);
       font-weight: 600;
       letter-spacing: .04em;
       pointer-events: none;
@@ -156,7 +156,7 @@
       background: var(--ink);
       border: 0;
       border-radius: var(--radius-md);
-      font-size: 14px;
+      font-size: var(--type-base);
       font-weight: 650;
       transition: transform 100ms ease-out, background-color var(--motion-fast), box-shadow var(--motion-fast);
     }
@@ -174,7 +174,7 @@
       gap: 18px;
     }
 
-    .result-copy { color: var(--ink-2); font-size: 13px; }
+    .result-copy { color: var(--ink-2); font-size: var(--type-base); }
     .result-copy strong { color: var(--ink); font-weight: 650; font-variant-numeric: tabular-nums; }
 
     .reset-button {
@@ -188,7 +188,7 @@
       background: transparent;
       border: 0;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: var(--type-base);
       white-space: nowrap;
       transition: background-color var(--motion-fast), color var(--motion-fast), transform 100ms ease-out;
     }
@@ -253,7 +253,7 @@
     .goods-name {
       margin: 0;
       overflow-wrap: anywhere;
-      font-size: 17px;
+      font-size: var(--type-emphasis);
       line-height: 1.35;
       font-weight: 680;
       letter-spacing: -0.02em;
@@ -266,7 +266,7 @@
       align-items: center;
       gap: 6px;
       color: var(--ink-3);
-      font-size: 12px;
+      font-size: var(--type-caption);
     }
 
     .meta-divider { color: #c6c6cb; }
@@ -275,14 +275,14 @@
       display: block;
       margin-bottom: 6px;
       color: var(--ink-3);
-      font-size: 12px;
+      font-size: var(--type-caption);
       font-weight: 600;
       letter-spacing: .04em;
     }
 
     .metric-value {
       display: block;
-      font-size: 16px;
+      font-size: var(--type-emphasis);
       line-height: 1.3;
       font-weight: 650;
       font-variant-numeric: tabular-nums;
@@ -292,7 +292,7 @@
       display: block;
       margin-top: 5px;
       color: var(--ink-3);
-      font-size: 12px;
+      font-size: var(--type-caption);
     }
 
     .stock-row {
@@ -307,7 +307,7 @@
       align-items: center;
       gap: 5px;
       color: var(--status-color, var(--green));
-      font-size: 11px;
+      font-size: var(--type-caption);
       font-weight: 650;
     }
 
@@ -357,8 +357,8 @@
       gap: 16px;
     }
 
-    .detail-title { margin: 0; font-size: 13px; font-weight: 680; }
-    .detail-hint { color: var(--ink-3); font-size: 12px; }
+    .detail-title { margin: 0; font-size: var(--type-base); font-weight: 680; }
+    .detail-hint { color: var(--ink-3); font-size: var(--type-caption); }
 
     .brand-table { width: 100%; }
 
@@ -373,7 +373,7 @@
     .table-head {
       padding: 0 14px 9px;
       color: var(--ink-3);
-      font-size: 10px;
+      font-size: var(--type-caption);
       font-weight: 650;
       letter-spacing: .04em;
     }
@@ -387,14 +387,14 @@
     .table-body .table-row {
       min-height: 58px;
       padding: 10px 14px;
-      font-size: 12px;
+      font-size: var(--type-caption);
       border-bottom: 1px solid var(--line);
     }
 
     .table-body .table-row:last-child { border-bottom: 0; }
     .table-cell { min-width: 0; overflow-wrap: anywhere; }
-    .table-cell strong { font-size: 13px; font-weight: 650; }
-    .table-cell .subline { display: block; margin-top: 2px; color: var(--ink-3); font-size: 10px; }
+    .table-cell strong { font-size: var(--type-base); font-weight: 650; }
+    .table-cell .subline { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--type-caption); }
     .number { font-variant-numeric: tabular-nums; }
 
     .stock-count { font-weight: 680; }
@@ -411,7 +411,7 @@
       color: var(--green);
       background: var(--green-soft);
       border-radius: 999px;
-      font-size: 10px;
+      font-size: var(--type-caption);
       font-weight: 650;
       white-space: nowrap;
     }
@@ -431,8 +431,8 @@
 
     .empty-state[hidden] { display: none; }
     .empty-state svg { width: 34px; height: 34px; margin: 0 auto 15px; color: var(--ink-3); }
-    .empty-state h2 { margin: 0 0 6px; font-size: 17px; }
-    .empty-state p { margin: 0; color: var(--ink-2); font-size: 13px; }
+    .empty-state h2 { margin: 0 0 6px; font-size: var(--type-emphasis); }
+    .empty-state p { margin: 0; color: var(--ink-2); font-size: var(--type-base); }
 
     .pagination {
       margin-top: 28px;
@@ -447,7 +447,7 @@
       box-shadow: var(--shadow-sm);
     }
 
-    .pagination-info { color: var(--ink-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .pagination-info { color: var(--ink-2); font-size: var(--type-caption); font-variant-numeric: tabular-nums; }
 
     .page-controls { display: flex; align-items: center; gap: 5px; }
 
@@ -461,7 +461,7 @@
       background: transparent;
       border: 0;
       border-radius: 11px;
-      font-size: 12px;
+      font-size: var(--type-caption);
       font-weight: 600;
       transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
     }
@@ -485,7 +485,7 @@
 
     @media (max-width: 760px) {
       .page-head { align-items: flex-start; margin-bottom: 24px; flex-direction: column; gap: 18px; }
-      h1 { font-size: 36px; }
+      h1 { font-size: var(--type-display); }
       .summary-note { width: 100%; display: flex; align-items: center; justify-content: space-between; }
       .summary-note span { margin: 0; }
       .search-card { grid-template-columns: 1fr 1fr; }
@@ -527,7 +527,7 @@
         display: block;
         margin-bottom: 3px;
         color: var(--ink-3);
-        font-size: 9px;
+        font-size: var(--type-caption);
         font-weight: 650;
         letter-spacing: .04em;
       }
@@ -545,7 +545,7 @@
       .goods-identity { grid-template-columns: 46px minmax(0,1fr); gap: 12px; }
       .goods-icon { width: 46px; height: 46px; border-radius: 14px; }
       .chevron { top: 18px; right: 16px; }
-      .panel-trigger .metric-value { font-size: 15px; }
+      .panel-trigger .metric-value { font-size: var(--type-emphasis); }
       .panel-body { margin: 0 16px 16px; }
       .table-body .table-row { grid-template-columns: 1fr 1fr; padding: 13px; }
       .page-button { min-width: 38px; }
@@ -567,12 +567,12 @@
       --radius-md: 9px;
     }
 
-    body { background: var(--bg); font-size: 14px; }
+    body { background: var(--bg); font-size: var(--type-base); }
 
     .page-head { align-items: center; gap: 24px; margin-bottom: 16px; }
     .eyebrow { display: none; }
-    h1 { font-size: 25px; line-height: 1.2; letter-spacing: -.025em; font-weight: 700; }
-    .head-copy { margin: 4px 0 0; font-size: 12px; line-height: 1.45; }
+    h1 { font-size: var(--type-title); line-height: 1.2; letter-spacing: -.025em; font-weight: 700; }
+    .head-copy { margin: 4px 0 0; font-size: var(--type-caption); line-height: 1.45; }
 
     .summary-note {
       min-width: auto;
@@ -586,8 +586,8 @@
       box-shadow: none;
     }
 
-    .summary-note strong { font-size: 15px; letter-spacing: -.01em; }
-    .summary-note span { margin: 0; padding-left: 10px; border-left: 1px solid var(--line-strong); font-size: 11px; }
+    .summary-note strong { font-size: var(--type-emphasis); letter-spacing: -.01em; }
+    .summary-note span { margin: 0; padding-left: 10px; border-left: 1px solid var(--line-strong); font-size: var(--type-caption); }
 
     .search-card {
       padding: 10px;
@@ -603,15 +603,15 @@
     }
 
     .control { height: 44px; border-radius: 8px; }
-    .field-label { left: 39px; top: 5px; font-size: 9px; }
+    .field-label { left: 39px; top: 5px; font-size: var(--type-caption); }
     .field-label.select-label { left: 12px; }
     .field-icon { left: 12px; width: 16px; height: 16px; }
     input.control { padding: 17px 12px 3px 39px; }
     select.control { padding: 17px 32px 3px 12px; background-position: right 10px center; }
-    .search-action { min-width: 94px; height: 44px; padding: 0 16px; border-radius: 8px; font-size: 12px; }
+    .search-action { min-width: 94px; height: 44px; padding: 0 16px; border-radius: 8px; font-size: var(--type-caption); }
 
     .result-bar { min-height: 34px; margin-bottom: 7px; }
-    .result-copy, .reset-button { font-size: 11px; }
+    .result-copy, .reset-button { font-size: var(--type-caption); }
     .reset-button { min-height: 34px; }
 
     .goods-list { gap: 8px; }
@@ -629,24 +629,24 @@
     .goods-identity { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; }
     .goods-icon { width: 40px; height: 40px; border-radius: 11px; }
     .goods-icon svg { width: 21px; height: 21px; }
-    .goods-name { font-size: 14px; line-height: 1.25; }
-    .goods-meta { margin-top: 4px; font-size: 10px; }
-    .metric-label { margin-bottom: 3px; font-size: 9px; }
-    .metric-value { font-size: 13px; }
-    .metric-sub { margin-top: 3px; font-size: 10px; }
-    .status-text { font-size: 9px; }
+    .goods-name { font-size: var(--type-base); line-height: 1.25; }
+    .goods-meta { margin-top: 4px; font-size: var(--type-caption); }
+    .metric-label { margin-bottom: 3px; font-size: var(--type-caption); }
+    .metric-value { font-size: var(--type-base); }
+    .metric-sub { margin-top: 3px; font-size: var(--type-caption); }
+    .status-text { font-size: var(--type-caption); }
     .chevron { width: 30px; height: 30px; }
 
     .panel-body { margin: 0 16px 13px; padding-top: 12px; }
     .detail-head { margin-bottom: 8px; }
-    .detail-title { font-size: 12px; }
-    .detail-hint { font-size: 10px; }
-    .table-head { padding: 0 12px 6px; font-size: 9px; }
+    .detail-title { font-size: var(--type-caption); }
+    .detail-hint { font-size: var(--type-caption); }
+    .table-head { padding: 0 12px 6px; font-size: var(--type-caption); }
     .table-body { border: 1px solid rgba(29,29,31,.05); border-radius: 9px; }
-    .table-body .table-row { min-height: 46px; padding: 7px 12px; font-size: 11px; }
-    .table-cell strong { font-size: 12px; }
-    .table-cell .subline { margin-top: 0; font-size: 9px; }
-    .badge { min-height: 22px; padding: 2px 7px; font-size: 9px; }
+    .table-body .table-row { min-height: 46px; padding: 7px 12px; font-size: var(--type-caption); }
+    .table-cell strong { font-size: var(--type-caption); }
+    .table-cell .subline { margin-top: 0; font-size: var(--type-caption); }
+    .badge { min-height: 22px; padding: 2px 7px; font-size: var(--type-caption); }
 
     .pagination {
       margin-top: 14px;
@@ -675,16 +675,16 @@
     }
 
     @media (max-width: 760px) {
-      body { font-size: 14px; }
+      body { font-size: var(--type-base); }
       .page-head { align-items: flex-start; margin-bottom: 14px; gap: 12px; }
-      h1 { font-size: 22px; }
+      h1 { font-size: var(--type-section); }
       .head-copy { max-width: 250px; }
       .summary-note { align-self: flex-end; }
       .search-card { grid-template-columns: 1fr 1fr; padding: 8px; }
       .search-card .field:first-child { grid-column: 1 / -1; }
       .search-card .field:nth-of-type(4) { grid-column: auto; }
       .search-action { grid-column: 1 / -1; }
-      .control { font-size: 16px; }
+      .control { font-size: var(--type-emphasis); }
       .panel-trigger { min-height: 0; padding: 13px 14px; gap: 13px 10px; }
       .goods-identity { grid-template-columns: 38px minmax(0,1fr); padding-right: 42px; }
       .goods-icon { width: 38px; height: 38px; }
@@ -835,7 +835,7 @@
       min-height: 21px;
       padding: 2px 7px;
       flex: 0 0 auto;
-      font-size: 13px;
+      font-size: var(--type-base);
       line-height: 1;
       font-weight: 600;
       letter-spacing: 0;
@@ -875,17 +875,7 @@
       .panel-trigger > .metric-stock { grid-area: stock; padding-left: 0; border-left: 0; }
       .panel-trigger > .metric-price { grid-area: price; }
       .panel-trigger > .chevron { grid-area: auto; }
-      .status-text { font-size: 13px; }
-    }
-
-    /* Readable 14px type scale */
-    :root {
-      --type-caption: 12px;
-      --type-small: 13px;
-      --type-base: 14px;
-      --type-medium: 15px;
-      --type-title: 16px;
-      --type-page: 28px;
+      .status-text { font-size: var(--type-base); }
     }
 
     html { font-size: var(--type-base); }
@@ -896,7 +886,7 @@
     }
 
     h1 {
-      font-size: var(--type-page);
+      font-size: var(--type-title);
       line-height: 1.16;
     }
 
@@ -905,9 +895,9 @@
       line-height: 1.5;
     }
 
-    .summary-note strong { font-size: 17px; }
-    .summary-note span { font-size: var(--type-small); }
-    .summary-note small { font-size: var(--type-small) !important; }
+    .summary-note strong { font-size: var(--type-emphasis); }
+    .summary-note span { font-size: var(--type-caption); }
+    .summary-note small { font-size: var(--type-caption) !important; }
 
     .field-label {
       top: 6px;
@@ -924,7 +914,7 @@
     select.control { padding: 22px 32px 4px 12px; }
     .search-action { height: 48px; font-size: var(--type-base); }
     .result-copy,
-    .reset-button { font-size: var(--type-small); }
+    .reset-button { font-size: var(--type-caption); }
 
     .panel-trigger { min-height: 88px; }
     .goods-name {
@@ -938,12 +928,12 @@
     }
 
     .metric-label { font-size: var(--type-caption); }
-    .metric-value { font-size: var(--type-medium); }
+    .metric-value { font-size: var(--type-emphasis); }
     .metric-sub { font-size: var(--type-caption); }
     .status-text {
       min-height: 25px;
       padding: 3px 8px;
-      font-size: var(--type-medium);
+      font-size: var(--type-emphasis);
     }
 
     .detail-title { font-size: var(--type-base); }
@@ -962,13 +952,13 @@
     }
 
     .pagination-info,
-    .page-button { font-size: var(--type-small); }
+    .page-button { font-size: var(--type-caption); }
     .empty-state p { font-size: var(--type-base); }
 
     @media (max-width: 760px) {
-      .control { font-size: 16px; }
-      .goods-meta { font-size: var(--type-small); }
-      .status-text { font-size: var(--type-medium); }
+      .control { font-size: var(--type-emphasis); }
+      .goods-meta { font-size: var(--type-caption); }
+      .status-text { font-size: var(--type-emphasis); }
     }
 
     /* Inventory and price summary group */
@@ -1091,7 +1081,7 @@
       .panel-summary { width: 100%; }
       .panel-summary .metric-stock,
       .panel-summary .metric-price { padding: 8px 10px; }
-      .panel-summary .status-text { font-size: var(--type-small); }
+      .panel-summary .status-text { font-size: var(--type-caption); }
     }
 
     @media (max-width: 430px) {
@@ -1121,7 +1111,7 @@
         <p class="head-copy">集中查看消防器材的规格、各品牌库存与价格，让每一次补货判断都有清晰依据。</p>
       </div>
       <div class="summary-note" aria-label="货物统计">
-        <strong>128 <small style="font-size:12px;font-weight:600;color:var(--ink-3)">类</small></strong>
+        <strong>128 <small style="font-size:var(--type-caption);font-weight:600;color:var(--ink-3)">类</small></strong>
         <span>更新于今天 09:42</span>
       </div>
     </section>

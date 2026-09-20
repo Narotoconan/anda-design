@@ -60,7 +60,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(var(--type-title), 3vw, var(--type-display));
+      font-size: var(--type-title);
       line-height: 1.08;
       letter-spacing: -0.045em;
       font-weight: 720;
@@ -275,7 +275,7 @@
     .price-metric strong {
       margin-top: 5px;
       color: var(--ink);
-      font-size: 22px;
+      font-size: var(--type-section);
       line-height: 1;
       letter-spacing: -.025em;
       font-weight: 710;
@@ -507,7 +507,7 @@
       border: 0;
       border-radius: 10px;
       outline: none;
-      font-size: 0;
+      font-size: var(--type-caption);
       font-weight: 620;
       white-space: nowrap;
       transition: color var(--motion-fast), background-color var(--motion-fast), transform 100ms ease-out;
@@ -696,12 +696,12 @@
     }
 
     .certificate-brand { color: var(--red-deep); text-align: center; font-size: var(--type-base); font-weight: 700; letter-spacing: .14em; }
-    .certificate-sheet h3 { margin: 22px 0 38px; text-align: center; font-size: 32px; line-height: 1.15; letter-spacing: .16em; font-weight: 720; }
+    .certificate-sheet h3 { margin: 22px 0 38px; text-align: center; font-size: var(--type-display); line-height: 1.15; letter-spacing: .16em; font-weight: 720; }
     .certificate-fields { position: relative; display: grid; gap: 0; border-top: 1px solid rgba(60,60,67,.16); }
     .certificate-field { min-height: 52px; display: grid; grid-template-columns: 112px minmax(0,1fr); align-items: center; gap: 16px; border-bottom: 1px solid rgba(60,60,67,.13); }
     .certificate-field span { color: rgba(60,60,67,.62); font-size: var(--type-base); }
     .certificate-field strong { font-size: var(--type-emphasis); font-weight: 650; }
-    .certificate-result { margin-top: 34px; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--green); font-size: 22px; font-weight: 700; }
+    .certificate-result { margin-top: 34px; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--green); font-size: var(--type-section); font-weight: 700; }
     .certificate-signature { margin-top: 48px; color: rgba(60,60,67,.62); text-align: right; font-size: var(--type-base); line-height: 1.8; }
     .certificate-stamp { width: 92px; height: 92px; position: absolute; right: 58px; bottom: 44px; display: grid; place-items: center; color: rgba(190,34,28,.76); border: 4px double rgba(190,34,28,.7); border-radius: 50%; font-size: var(--type-base); line-height: 1.25; text-align: center; font-weight: 700; transform: rotate(-10deg); }
 
@@ -1139,7 +1139,7 @@
 
     .dialog-head h2 {
       margin: 0;
-      font-size: 24px;
+      font-size: var(--type-section);
       line-height: 1.2;
       letter-spacing: -.03em;
       font-weight: 700;
@@ -1328,7 +1328,7 @@
       .preview-body { padding: 10px; }
       .certificate-sheet { min-height: 600px; padding: 42px 30px 36px; }
       .certificate-sheet::before { inset: 15px; }
-      .certificate-sheet h3 { margin-bottom: 30px; font-size: 26px; }
+      .certificate-sheet h3 { margin-bottom: 30px; font-size: var(--type-title); }
       .certificate-field { grid-template-columns: 88px minmax(0, 1fr); gap: 10px; }
       .certificate-stamp { right: 35px; bottom: 38px; }
       .attachment-toast { right: 12px; bottom: 12px; left: 12px; justify-content: center; }
@@ -1343,7 +1343,7 @@
       .flow-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
       .dialog-shell { max-height: calc(100dvh - 20px); border-radius: 20px; }
       .dialog-head { padding: 19px 18px 16px; }
-      .dialog-head h2 { font-size: 20px; }
+      .dialog-head h2 { font-size: var(--type-section); }
       .dialog-toolbar { padding: 12px 14px; gap: 12px; }
       .flow-filters { width: 100%; }
       .filter-button { min-width: 0; flex: 1; padding-inline: 7px; }
@@ -1488,15 +1488,15 @@
           <div class="attachment-actions" aria-label="淮海_MFZ-ABC4_产品合格证.pdf 操作">
             <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
-              预览
+              <span class="visually-hidden">预览</span>
             </button>
             <button class="file-action" type="button" data-file-action="download">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
-              下载
+              <span class="visually-hidden">下载</span>
             </button>
             <button class="file-action delete" type="button" data-file-action="delete">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>
-              删除
+              <span class="visually-hidden">删除</span>
             </button>
           </div>
         </article>
@@ -1514,15 +1514,15 @@
           <div class="attachment-actions" aria-label="MFZ-ABC4_检验合格证_正面.jpg 操作">
             <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
-              预览
+              <span class="visually-hidden">预览</span>
             </button>
             <button class="file-action" type="button" data-file-action="download">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
-              下载
+              <span class="visually-hidden">下载</span>
             </button>
             <button class="file-action delete" type="button" data-file-action="delete">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>
-              删除
+              <span class="visually-hidden">删除</span>
             </button>
           </div>
         </article>
@@ -1540,15 +1540,15 @@
           <div class="attachment-actions" aria-label="MFZ-ABC4_出厂检验报告.pdf 操作">
             <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
-              预览
+              <span class="visually-hidden">预览</span>
             </button>
             <button class="file-action" type="button" data-file-action="download">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
-              下载
+              <span class="visually-hidden">下载</span>
             </button>
             <button class="file-action delete" type="button" data-file-action="delete">
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"></path><path d="M9 7V4h6v3M7 7l1 13h8l1-13"></path><path d="M10 11v5M14 11v5"></path></svg>
-              删除
+              <span class="visually-hidden">删除</span>
             </button>
           </div>
         </article>
@@ -1907,9 +1907,9 @@
           </div>
         </div>
         <div class="attachment-actions" aria-label="${name} 操作">
-          <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">${attachmentActionIcons.preview}预览</button>
-          <button class="file-action" type="button" data-file-action="download">${attachmentActionIcons.download}下载</button>
-          <button class="file-action delete" type="button" data-file-action="delete">${attachmentActionIcons.delete}删除</button>
+          <button class="file-action" type="button" data-file-action="preview" aria-haspopup="dialog">${attachmentActionIcons.preview}<span class="visually-hidden">预览</span></button>
+          <button class="file-action" type="button" data-file-action="download">${attachmentActionIcons.download}<span class="visually-hidden">下载</span></button>
+          <button class="file-action delete" type="button" data-file-action="delete">${attachmentActionIcons.delete}<span class="visually-hidden">删除</span></button>
         </div>`;
       return row;
     }
