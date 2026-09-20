@@ -82,11 +82,11 @@
               ${sideLink('overview', '经营概览', '#', icons.overview)}
               ${sideLink('purchase', '采购管理', '#', icons.purchase)}
               ${sideLink('sales', '销售管理', '#', icons.sales)}
-              <a class="side-link${inventoryOpen ? ' parent-active' : ''}" href="${resolvePageHref('goods/goods-list.html')}" aria-label="库存管理" title="库存管理" aria-expanded="${inventoryOpen}">
+              <a class="side-link${inventoryOpen ? ' parent-active' : ''}" href="${resolvePageHref('goods/v1/goods-list.html')}" aria-label="库存管理" title="库存管理" aria-expanded="${inventoryOpen}">
                 ${icons.inventory}<span>库存管理</span>${icons.down}
               </a>
               <div class="subnav"${inventoryOpen ? '' : ' hidden'}>
-                ${subLink('goods-list', '货物列表', 'goods/goods-list.html')}
+                ${subLink('goods-list', '货物列表', 'goods/v1/goods-list.html')}
                 ${subLink('stocktake', '库存盘点', '#')}
                 ${subLink('transfer', '仓库调拨', '#')}
                 ${subLink('flows', '出入库记录', '#')}
