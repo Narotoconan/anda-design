@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>货物列表 V3 · 燧安进销存</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23d83229'/%3E%3Cpath d='M16 7c3 3.8 5.5 6.4 5.5 10a5.5 5.5 0 1 1-11 0c0-2.7 1.4-5.1 3-6.8.3 2.1 1.1 3.2 2 3.8.8-2.7.4-4.7.5-7Z' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../../css/common.css">
+  <script src="../../js/admin-shell.js?v=20260920" defer></script>
+  <style>
+    #main-content > * {
+      width: 100%;
+      max-width: 1440px;
+      margin-inline: auto;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: var(--type-display);
+      line-height: 1.1;
+      font-weight: 720;
+      letter-spacing: -.04em;
+    }
+
+    .create-goods-button {
+      flex: 0 0 auto;
+      min-height: 46px;
+      padding: 0 17px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      background: linear-gradient(180deg, #e54138 0%, var(--red) 100%);
+      border: 0;
+      border-radius: 12px;
+      box-shadow: 0 1px 1px rgba(255,255,255,.22) inset, 0 4px 12px rgba(173,33,27,.2);
+      font: inherit;
+      font-size: var(--type-base);
+      font-weight: 680;
+      white-space: nowrap;
+      transition: transform 90ms ease-out, filter var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    .create-goods-button svg { width: 17px; height: 17px; }
+    .create-goods-button:hover { filter: brightness(.97); box-shadow: 0 1px 1px rgba(255,255,255,.22) inset, 0 6px 16px rgba(173,33,27,.24); }
+    .create-goods-button:active { transform: scale(.97); }
+    .create-goods-button:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(216,50,41,.2); }
+
+    .filter-panel {
+      padding: 9px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: minmax(250px, 1.4fr) repeat(3, minmax(125px, .62fr)) auto;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,.92);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(22px) saturate(170%);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+    }
+
+    .field { position: relative; min-width: 0; }
+
+    .field-label {
+      position: absolute;
+      top: 6px;
+      left: 14px;
+      z-index: 1;
+      color: var(--ink-3);
+      font-size: var(--type-base);
+      line-height: 1;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .field.has-icon .field-label { left: 43px; }
+
+    .field-icon {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      width: 18px;
+      height: 18px;
+      color: var(--ink-3);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .control {
+      width: 100%;
+      height: 56px;
+      color: var(--ink);
+      background-color: var(--surface-soft);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      outline: none;
+      font-size: var(--type-base);
+      transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    input.control { padding: 23px 14px 5px 43px; }
+    select.control {
+      padding: 23px 36px 5px 14px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d7d85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+    }
+
+    .control::placeholder { color: rgba(60,60,67,.45); }
+    .control:hover { background-color: #f1f1f3; }
+    .control:focus-visible { border-color: rgba(216,50,41,.42); box-shadow: var(--focus); }
+
+    .search-action {
+      min-width: 112px;
+      min-height: 56px;
+      padding: 0 19px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      background: linear-gradient(180deg, #e54138 0%, var(--red) 100%);
+      border: 0;
+      border-radius: var(--radius-md);
+      box-shadow: 0 1px 1px rgba(255,255,255,.2) inset, 0 3px 8px rgba(173,33,27,.18);
+      font-size: var(--type-base);
+      font-weight: 650;
+      transition: transform 90ms ease-out, filter var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    .search-action:hover { filter: brightness(.97); box-shadow: 0 1px 1px rgba(255,255,255,.2) inset, 0 5px 12px rgba(173,33,27,.22); }
+    .search-action:active { transform: scale(.97); filter: brightness(.92); }
+    .search-action:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(216,50,41,.2); }
+
+    .result-bar {
+      min-height: 48px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .result-copy { color: var(--ink-2); font-size: var(--type-base); }
+    .result-copy strong { color: var(--ink); font-weight: 680; font-variant-numeric: tabular-nums; }
+
+    .result-actions { display: flex; align-items: center; gap: 4px; }
+
+    .quiet-button {
+      min-height: 44px;
+      padding: 0 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 11px;
+      font-size: var(--type-base);
+      white-space: nowrap;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 90ms ease-out;
+    }
+
+    .quiet-button svg { width: 17px; height: 17px; transition: transform var(--motion-normal) var(--ease-spring); }
+    .quiet-button:hover { color: var(--ink); background: rgba(255,255,255,.72); }
+    .quiet-button:active { transform: scale(.97); }
+    .quiet-button:focus-visible { outline: none; box-shadow: var(--focus); }
+    .quiet-button:disabled { opacity: .42; cursor: default; transform: none; }
+    .quiet-button[data-all-open="true"] svg { transform: rotate(180deg); }
+
+    .spu-list { display: grid; gap: 8px; }
+
+    .spu-card {
+      --card-accent: var(--red);
+      --card-accent-soft: rgba(216,50,41,.09);
+      overflow: hidden;
+      background: rgba(255,255,255,.93);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.95) inset, 0 1px 3px rgba(0,0,0,.025);
+      transition: border-color var(--motion-fast), box-shadow var(--motion-normal), transform var(--motion-fast);
+    }
+
+    .spu-card:hover { border-color: rgba(60,60,67,.16); box-shadow: 0 .5px 0 rgba(255,255,255,.95) inset, 0 4px 15px rgba(0,0,0,.045); }
+    .spu-card.is-open { background: #fff; border-color: rgba(60,60,67,.14); box-shadow: var(--shadow-md); }
+
+    .spu-trigger {
+      width: 100%;
+      min-height: 88px;
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: minmax(430px, 1fr) minmax(340px, 360px) 40px;
+      gap: 10px;
+      align-items: center;
+      color: inherit;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      transition: background-color var(--motion-fast), transform 90ms ease-out;
+    }
+
+    .spu-trigger:hover { background: rgba(247,247,249,.64); }
+    .spu-trigger:active { transform: scale(.997); background: rgba(242,242,244,.76); }
+    .spu-trigger:focus-visible { position: relative; z-index: 2; outline: none; box-shadow: var(--focus); }
+
+    .spu-identity {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      align-items: center;
+      gap: 11px;
+    }
+
+    .goods-symbol {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      color: var(--card-accent);
+      background: linear-gradient(145deg, var(--card-accent-soft), rgba(255,255,255,.82));
+      border: 1px solid rgba(216,50,41,.08);
+      border-radius: 12px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.9) inset;
+    }
+
+    .goods-symbol svg { width: 21px; height: 21px; }
+    .identity-copy {
+      min-width: 0;
+      display: grid;
+      gap: 5px;
+    }
+
+    .spu-title {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      font-size: var(--type-emphasis);
+      line-height: 1.5;
+      font-weight: 680;
+      letter-spacing: -.018em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .spu-title .brand-name { font-weight: 720; }
+
+    .identity-category {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0 6px;
+      color: var(--ink-3);
+      font-size: var(--type-caption);
+      line-height: 1.5;
+    }
+
+    .identity-category-value {
+      min-width: 0;
+      color: var(--ink-2);
+      font-weight: 560;
+      overflow-wrap: anywhere;
+    }
+
+    .spu-facts {
+      width: 100%;
+      max-width: 360px;
+      min-width: 0;
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: minmax(126px, 1.12fr) minmax(108px, .96fr) minmax(82px, .72fr);
+      align-items: stretch;
+      justify-self: end;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(248,248,250,.94) 0%, rgba(243,243,246,.88) 100%);
+      border: 1px solid rgba(60,60,67,.075);
+      border-radius: 12px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.96) inset, 0 1px 2px rgba(0,0,0,.018);
+      transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+    }
+
+    .spu-trigger:hover .spu-facts {
+      background: linear-gradient(180deg, rgba(250,250,251,.98) 0%, rgba(245,245,247,.94) 100%);
+      border-color: rgba(60,60,67,.11);
+      box-shadow: 0 .5px 0 rgba(255,255,255,.98) inset, 0 2px 7px rgba(0,0,0,.028);
+    }
+
+    .spu-card.is-open .spu-facts {
+      background: linear-gradient(180deg, rgba(248,248,250,.98) 0%, rgba(244,244,247,.94) 100%);
+      border-color: rgba(60,60,67,.1);
+    }
+
+    .fact-item {
+      min-width: 0;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .fact-item + .fact-item { border-left: 1px solid rgba(60,60,67,.085); }
+
+    .fact-label {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--ink-3);
+      font-size: var(--type-caption);
+      line-height: 1.5;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .fact-value {
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      color: var(--ink);
+      font-size: var(--type-emphasis);
+      line-height: 1.5;
+      font-weight: 680;
+      letter-spacing: -.015em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .stock-value { font-size: var(--type-emphasis); }
+    .status-value { align-items: center; }
+
+    .status-pill,
+    .sku-status {
+      --status-color: #0a6f3c;
+      --status-bg: var(--green-soft);
+      --status-border: rgba(19,138,82,.18);
+      min-height: 26px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--status-color);
+      background: var(--status-bg);
+      border: 1px solid var(--status-border);
+      border-radius: 8px;
+      box-shadow: 0 .5px 0 rgba(255,255,255,.88) inset;
+      font-size: var(--type-base);
+      line-height: 1.5;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      min-height: 24px;
+      padding-inline: 7px;
+      border-radius: 7px;
+      font-size: var(--type-caption);
+    }
+
+    .status-pill.warning,
+    .sku-status.warning {
+      --status-color: #8a4a08;
+      --status-bg: var(--amber-soft);
+      --status-border: rgba(173,92,12,.2);
+    }
+    .status-pill.danger,
+    .sku-status.danger {
+      --status-color: var(--red-dark);
+      --status-bg: var(--red-soft);
+      --status-border: rgba(216,50,41,.2);
+    }
+    .sku-status.info {
+      --status-color: #1d61b6;
+      --status-bg: var(--blue-soft);
+      --status-border: rgba(38,117,216,.18);
+    }
+
+    .chevron {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      justify-self: end;
+      color: var(--ink-3);
+      background: rgba(118,118,128,.075);
+      border-radius: 50%;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .spu-trigger:hover .chevron { color: var(--ink-2); background: rgba(118,118,128,.12); }
+    .spu-card.is-open .chevron { color: var(--red); background: var(--red-soft); transform: rotate(180deg); }
+    .chevron svg { width: 16px; height: 16px; }
+
+    .spu-collapse {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows var(--motion-normal) var(--ease-spring), opacity 180ms ease-out;
+    }
+
+    .spu-card.is-open .spu-collapse { grid-template-rows: 1fr; opacity: 1; }
+    .collapse-inner { min-height: 0; overflow: hidden; }
+
+    .sku-panel {
+      padding: 0 12px 12px;
+      transform: translateY(-5px);
+      transition: transform var(--motion-normal) var(--ease-spring);
+    }
+
+    .spu-card.is-open .sku-panel { transform: translateY(0); }
+
+    .sku-panel-inner {
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(247,247,249,.92) 0%, rgba(250,250,251,.76) 100%);
+      border: 1px solid rgba(60,60,67,.07);
+      border-radius: 12px;
+    }
+
+    .sku-list-view { display: block; }
+
+    .dimension-panel {
+      animation: dimension-enter 210ms var(--ease-spring) both;
+    }
+    .dimension-panel[hidden] { display: none; }
+    @keyframes dimension-enter {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dimension-table { width: 100%; }
+    .dimension-row {
+      display: grid;
+      grid-template-columns: minmax(360px,2fr) minmax(120px,.72fr) minmax(120px,.72fr) minmax(96px,.56fr);
+      gap: 12px;
+      align-items: center;
+    }
+
+    .dimension-table-head {
+      min-height: 30px;
+      padding: 0 12px;
+      color: var(--ink-3);
+      font-size: var(--type-caption);
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .dimension-table-body {
+      overflow: hidden;
+      background: rgba(255,255,255,.8);
+      border: 1px solid rgba(60,60,67,.075);
+      border-radius: 10px;
+    }
+
+    .dimension-table-body .dimension-row {
+      min-height: 48px;
+      padding: 6px 12px;
+      color: var(--ink-2);
+      border-bottom: 1px solid rgba(60,60,67,.07);
+      font-size: var(--type-base);
+      line-height: 1.5;
+      transition: background-color var(--motion-fast);
+    }
+    .dimension-table-body .dimension-row:last-child { border-bottom: 0; }
+    .dimension-table-body .dimension-row:hover { background: rgba(255,255,255,.96); }
+    .dimension-cell { min-width: 0; overflow-wrap: anywhere; }
+    .sku-combination {
+      color: var(--ink);
+      font-size: var(--type-emphasis);
+      line-height: 1.5;
+      font-weight: 680;
+      letter-spacing: -.012em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dimension-number { color: var(--ink); font-weight: 620; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .stock-low { color: var(--amber); }
+    .stock-out { color: var(--red); }
+
+    .empty-state {
+      padding: 56px 24px;
+      color: var(--ink-2);
+      text-align: center;
+      background: rgba(255,255,255,.7);
+      border: 1px solid var(--line);
+      border-radius: 17px;
+    }
+
+    .empty-state svg { width: 34px; height: 34px; margin: 0 auto 12px; color: var(--ink-3); }
+    .empty-state h2 { margin: 0; color: var(--ink); font-size: var(--type-section); }
+    .empty-state p { margin: 7px 0 0; font-size: var(--type-base); }
+
+    .pagination {
+      min-height: 62px;
+      margin-top: 14px;
+      padding: 8px 12px 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 15px;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+    }
+
+    .pagination-info { color: var(--ink-2); font-size: var(--type-base); font-variant-numeric: tabular-nums; }
+    .page-controls { display: flex; align-items: center; gap: 5px; }
+
+    .page-button {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-2);
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      font-size: var(--type-base);
+      font-weight: 620;
+      transition: color var(--motion-fast), background-color var(--motion-fast), transform 90ms ease-out;
+    }
+
+    .page-button:hover:not(:disabled) { color: var(--ink); background: rgba(118,118,128,.09); }
+    .page-button:active:not(:disabled) { transform: scale(.94); }
+    .page-button:focus-visible { outline: none; box-shadow: var(--focus); }
+    .page-button[aria-current="page"] { color: #fff; background: var(--ink); }
+    .page-button:disabled { color: rgba(60,60,67,.25); cursor: default; }
+    .page-button svg { width: 17px; height: 17px; }
+    .page-ellipsis { min-width: 25px; color: var(--ink-3); text-align: center; }
+
+    .spu-card[hidden],
+    .empty-state[hidden],
+    .pagination[hidden] { display: none !important; }
+
+    .create-goods-dialog {
+      width: min(536px, calc(100% - 28px));
+      max-height: calc(100dvh - 28px);
+      padding: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: rgba(255,255,255,.97);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 20px;
+      box-shadow: 0 26px 70px rgba(0,0,0,.22), 0 1px 0 rgba(255,255,255,.9) inset;
+    }
+
+    .create-goods-dialog::backdrop {
+      background: rgba(30,30,34,.3);
+      backdrop-filter: blur(8px) saturate(115%);
+      -webkit-backdrop-filter: blur(8px) saturate(115%);
+    }
+
+    .create-dialog-form { display: flex; max-height: calc(100dvh - 28px); flex-direction: column; }
+    .create-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 22px 24px 18px; border-bottom: 1px solid var(--line); }
+    .create-dialog-head p { margin: 0 0 4px; color: var(--ink-3); font-size: var(--type-base); }
+    .create-dialog-head h2 { margin: 0; font-size: var(--type-section); line-height: 1.25; letter-spacing: -.025em; }
+    .create-dialog-close { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; color: var(--ink-2); background: var(--surface-soft); border: 0; border-radius: 50%; }
+    .create-dialog-close:hover { color: var(--ink); background: #ececef; }
+    .create-dialog-close:focus-visible { outline: none; box-shadow: var(--focus); }
+    .create-dialog-close svg { width: 16px; height: 16px; }
+    .create-dialog-body { min-height: 0; padding: 22px 24px 20px; overflow-y: auto; }
+    .create-intro { margin: 0 0 19px; color: var(--ink-2); font-size: var(--type-base); line-height: 1.65; }
+    .create-field + .create-field { margin-top: 15px; }
+    .create-field label { display: block; margin-bottom: 7px; color: #414149; font-size: var(--type-base); font-weight: 650; }
+    .create-field label span { color: var(--red); }
+    .create-select { width: 100%; height: 46px; padding: 0 40px 0 12px; color: var(--ink); background: #f7f7f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237d7d85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 13px center; border: 1px solid #dddde3; border-radius: 9px; appearance: none; font: inherit; font-size: var(--type-base); }
+    .create-select:focus-visible { outline: none; border-color: rgba(216,50,41,.48); box-shadow: var(--focus); }
+    .create-selection-preview { display: flex; align-items: flex-start; gap: 12px; margin-top: 20px; padding: 14px; background: #f6f8fb; border: 1px solid #e1e7ef; border-radius: 12px; }
+    .create-preview-icon { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; color: #4d657d; background: #fff; border: 1px solid #dfe6ed; border-radius: 9px; }
+    .create-preview-icon svg { width: 19px; height: 19px; }
+    .create-preview-copy { min-width: 0; }
+    .create-preview-copy > span { display: block; color: var(--ink-3); font-size: var(--type-caption); }
+    .create-preview-copy strong { display: block; margin-top: 3px; font-size: var(--type-emphasis); line-height: 1.5; overflow-wrap: anywhere; }
+    .create-preview-copy small { display: block; margin-top: 4px; color: var(--ink-2); font-size: var(--type-caption); line-height: 1.55; overflow-wrap: anywhere; }
+    .create-selection-preview.is-empty { color: var(--ink-3); background: #fafafb; border-style: dashed; }
+    .create-selection-preview.is-empty .create-preview-copy strong { color: var(--ink-2); font-size: var(--type-base); font-weight: 550; }
+    .create-selection-preview.has-error { background: #fff7f5; border-color: rgba(216,50,41,.25); border-style: solid; }
+    .create-selection-preview.has-error .create-preview-copy small { color: var(--red-dark); }
+    .create-dialog-note { margin: 13px 2px 0; color: var(--ink-3); font-size: var(--type-caption); line-height: 1.6; }
+    .create-dialog-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 15px 24px; background: rgba(250,250,251,.92); border-top: 1px solid var(--line); }
+    .create-dialog-action { min-height: 42px; padding: 0 17px; border-radius: 10px; font: inherit; font-size: var(--type-base); font-weight: 650; }
+    .create-dialog-cancel { color: var(--ink); background: #fff; border: 1px solid #d9d9df; }
+    .create-dialog-submit { color: #fff; background: var(--red); border: 1px solid var(--red); box-shadow: 0 2px 7px rgba(173,33,27,.18); }
+    .create-dialog-submit:disabled { color: #9999a1; background: #e9e9ed; border-color: #e9e9ed; box-shadow: none; cursor: default; }
+    .create-dialog-action:focus-visible { outline: none; box-shadow: var(--focus); }
+    .create-goods-toast { position: fixed; z-index: 80; left: 50%; bottom: 24px; display: flex; align-items: center; gap: 8px; max-width: calc(100% - 32px); padding: 11px 16px; color: #fff; background: #2d2e33; border-radius: 11px; box-shadow: 0 10px 30px rgba(0,0,0,.2); font-size: var(--type-base); transform: translateX(-50%); }
+    .create-goods-toast[hidden] { display: none; }
+    .create-goods-toast svg { width: 16px; height: 16px; color: #83dba5; }
+
+    @media (max-width: 1240px) {
+      .spu-trigger { grid-template-columns: minmax(390px, 1fr) minmax(325px, 350px) 44px; gap: 10px; }
+      .spu-facts { max-width: none; }
+
+      .dimension-row { grid-template-columns: minmax(300px,1.8fr) minmax(110px,.7fr) minmax(110px,.7fr) minmax(88px,.55fr); gap: 11px; }
+    }
+
+    @media (max-width: 1140px) {
+      .spu-trigger {
+        position: relative;
+        min-height: 104px;
+        padding-right: 68px;
+        grid-template-columns: minmax(190px, .62fr) minmax(325px, 1fr);
+        grid-template-areas: "identity facts";
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .spu-identity { grid-area: identity; }
+      .spu-facts { grid-area: facts; }
+      .chevron { position: absolute; top: 18px; right: 18px; }
+    }
+
+    @media (max-width: 920px) {
+      .page-head { align-items: flex-start; }
+      .filter-panel { grid-template-columns: 1fr 1fr; }
+      .filter-panel .field:first-child,
+      .filter-panel .stock-field { grid-column: 1 / -1; }
+      .search-action { grid-column: 1 / -1; }
+
+      .dimension-row { grid-template-columns: minmax(260px,1.6fr) minmax(100px,.7fr) minmax(105px,.72fr) minmax(84px,.55fr); }
+    }
+
+    @media (max-width: 840px) {
+      .page-head { margin-bottom: 18px; }
+      h1 { font-size: var(--type-display); }
+
+      .sku-panel { padding: 0 10px 10px; }
+      .sku-panel-inner { padding: 12px; }
+      .dimension-table-head { display: none; }
+      .dimension-table-body { display: grid; gap: 8px; background: transparent; border: 0; border-radius: 0; }
+      .dimension-table-body .dimension-row {
+        min-height: 0;
+        padding: 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px 16px;
+        background: rgba(255,255,255,.86);
+        border: 1px solid rgba(60,60,67,.075);
+        border-radius: 10px;
+      }
+      .sku-combination { grid-column: 1 / -1; padding-bottom: 3px; }
+      .dimension-cell::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 3px;
+        color: var(--ink-3);
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: var(--type-base);
+        line-height: 1.2;
+        font-weight: 600;
+      }
+      .sku-combination::before { display: none; }
+
+      .pagination { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 620px) {
+      .spu-trigger {
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "identity" "facts";
+        justify-content: stretch;
+      }
+      .spu-facts { justify-self: start; }
+    }
+
+    @media (max-width: 560px) {
+      .page-head { flex-direction: column; }
+      .create-goods-button { width: 100%; min-height: 48px; }
+      .filter-panel { grid-template-columns: 1fr; }
+      .filter-panel .field,
+      .filter-panel .field:first-child,
+      .search-action { grid-column: 1; }
+
+      .result-bar { align-items: flex-start; flex-direction: column; gap: 3px; }
+      .result-actions { width: 100%; justify-content: flex-end; }
+
+      .spu-trigger {
+        min-height: 0;
+        padding: 14px 58px 14px 14px;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .spu-identity { grid-template-columns: 44px minmax(0,1fr); gap: 11px; }
+      .goods-symbol { width: 44px; height: 44px; border-radius: 13px; }
+      .spu-title { white-space: normal; }
+      .spu-facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-radius: 12px; }
+      .fact-item { min-height: 66px; padding: 9px 10px; }
+      .fact-item:nth-child(odd) { border-left: 0; }
+      .fact-item:nth-child(n+3) { border-top: 1px solid rgba(60,60,67,.085); }
+      .fact-item:last-child { grid-column: 1 / -1; }
+      .fact-label { margin-bottom: 5px; }
+      .stock-value { font-size: var(--type-emphasis); }
+      .chevron { top: 15px; right: 14px; }
+
+      .dimension-table-body .dimension-row { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+      .sku-combination { grid-column: 1 / -1; }
+
+      .pagination { padding: 12px; }
+      .page-controls { width: 100%; justify-content: space-between; }
+      .page-button { min-width: 44px; }
+      .hide-phone { display: none; }
+
+      .create-dialog-head { padding: 19px 18px 16px; }
+      .create-dialog-body { padding: 19px 18px 18px; }
+      .create-dialog-footer { padding: 13px 18px; }
+      .create-dialog-action { flex: 1; min-height: 44px; }
+      .create-select { height: 46px; font-size: var(--type-emphasis); }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .filter-panel,
+      .pagination,
+      .create-goods-dialog { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .create-goods-dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .spu-card { background: #fff; }
+      .spu-facts { background: #f5f5f7; }
+    }
+
+    @media (prefers-contrast: more) {
+      .filter-panel,
+      .spu-card,
+      .spu-facts,
+      .sku-panel-inner,
+      .dimension-table-body,
+      .pagination { border-color: rgba(29,29,31,.32); }
+      .fact-item + .fact-item { border-color: rgba(29,29,31,.26); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spu-card,
+      .spu-trigger,
+      .spu-facts,
+      .chevron,
+      .spu-collapse,
+      .sku-panel,
+      .dimension-panel,
+      .quiet-button,
+      .page-button,
+      .create-goods-button { transition: none !important; }
+      .dimension-panel { animation: none !important; }
+    }
+
+  </style>
+</head>
+<body class="admin-shell">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+
+  <admin-sidebar active="goods-list"></admin-sidebar>
+  <admin-topbar trail="库存管理|货物列表|SPU / SKU 视图"></admin-topbar>
+
+  <main id="main-content" tabindex="-1">
+    <section class="page-head" aria-labelledby="page-title">
+      <h1 id="page-title">货物列表</h1>
+      <button class="create-goods-button" id="create-goods-button" type="button">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+        新增货物
+      </button>
+    </section>
+
+    <form class="filter-panel" id="filter-form" aria-label="货物搜索与筛选">
+      <div class="field has-icon">
+        <label class="field-label" for="keyword">搜索 SPU / SKU</label>
+        <svg class="field-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input class="control" id="keyword" type="search" autocomplete="off" placeholder="品牌、货物、SKU 维度或规格值">
+      </div>
+      <div class="field">
+        <label class="field-label" for="category">货物类目</label>
+        <select class="control" id="category">
+          <option value="">全部类目</option>
+          <option value="灭火器材">灭火器材</option>
+          <option value="消防水带">消防水带</option>
+          <option value="报警设备">报警设备</option>
+          <option value="应急照明">应急照明</option>
+          <option value="消防防护">消防防护</option>
+        </select>
+      </div>
+      <div class="field brand-field">
+        <label class="field-label" for="brand">品牌</label>
+        <select class="control" id="brand">
+          <option value="">全部品牌</option>
+          <option value="淮海">淮海</option>
+          <option value="桂安">桂安</option>
+          <option value="沱雨">沱雨</option>
+          <option value="海湾">海湾</option>
+          <option value="敏华">敏华</option>
+          <option value="东安">东安</option>
+        </select>
+      </div>
+      <div class="field stock-field">
+        <label class="field-label" for="stock">库存状态</label>
+        <select class="control" id="stock">
+          <option value="">全部状态</option>
+          <option value="充足">库存充足</option>
+          <option value="偏低">库存偏低</option>
+          <option value="缺货">库存缺货</option>
+        </select>
+      </div>
+      <button class="search-action" type="submit">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        查询货物
+      </button>
+    </form>
+
+    <div class="result-bar">
+      <div class="result-copy" aria-live="polite">当前显示 <strong id="spu-result-count">6</strong> 个 SPU · 包含 <strong id="sku-result-count">28</strong> 个 SKU</div>
+      <div class="result-actions">
+        <button class="quiet-button" id="toggle-all" type="button" data-all-open="false">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+          <span>全部展开</span>
+        </button>
+        <button class="quiet-button" id="reset-button" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
+          重置筛选
+        </button>
+      </div>
+    </div>
+
+    <section class="spu-list" id="spu-list" aria-label="SPU 货物列表">
+      <article class="spu-card" data-category="灭火器材" data-brand="淮海" data-stock="充足" data-sku-count="5" data-keywords="淮海 手提式干粉灭火器 容量 1kg 2kg 4kg 5kg 8kg">
+        <button class="spu-trigger" id="spu-trigger-1" type="button" aria-expanded="false" aria-controls="spu-panel-1">
+          <div class="spu-identity">
+            <span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span>
+            <span class="identity-copy">
+              <span class="spu-title"><span class="brand-name">淮海</span> · 手提式干粉灭火器</span>
+              <span class="identity-category" aria-label="类目：灭火器材"><span class="identity-category-value" title="灭火器材">灭火器材</span></span>
+            </span>
+          </div>
+          <div class="spu-facts">
+            <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥52–138</span></div>
+            <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">1,286 具</span></div>
+            <div class="fact-item"><span class="fact-label">库存状态</span><span class="fact-value status-value"><span class="status-pill">充足</span></span></div>
+          </div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-1" role="region" aria-labelledby="spu-trigger-1" aria-hidden="true">
+          <div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner"><div class="sku-list-view" data-product="huaihai"></div></div></div></div>
+        </div>
+      </article>
+
+      <article class="spu-card" data-category="灭火器材" data-brand="桂安" data-stock="充足" data-sku-count="4" data-keywords="桂安 手提式干粉灭火器 容量 1kg 2kg 4kg 5kg">
+        <button class="spu-trigger" id="spu-trigger-2" type="button" aria-expanded="false" aria-controls="spu-panel-2">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6v3H9z"></path><path d="M12 4V2"></path><path d="M15 5h2a2 2 0 0 1 2 2v1"></path><rect x="7" y="7" width="10" height="14" rx="3"></rect><path d="M10 11h4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">桂安</span> · 手提式干粉灭火器</span><span class="identity-category" aria-label="类目：灭火器材"><span class="identity-category-value" title="灭火器材">灭火器材</span></span></span></div>
+          <div class="spu-facts">
+            <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥48–96</span></div>
+            <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">604 具</span></div>
+            <div class="fact-item"><span class="fact-label">库存状态</span><span class="fact-value status-value"><span class="status-pill">充足</span></span></div>
+          </div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-2" role="region" aria-labelledby="spu-trigger-2" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner"><div class="sku-list-view" data-product="guian"></div></div></div></div></div>
+      </article>
+
+      <article class="spu-card is-open" data-category="消防水带" data-brand="沱雨" data-stock="偏低" data-sku-count="8" data-keywords="沱雨 有衬里消防水带 压力 口径 长度 衬里 0.8mpa 1.0mpa dn50 dn65 20m 25m 30m 聚氨酯 水带">
+        <button class="spu-trigger" id="spu-trigger-3" type="button" aria-expanded="true" aria-controls="spu-panel-3">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="12" r="8"></circle><circle cx="11" cy="12" r="4"></circle><path d="M19 12h3v5h-5"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">沱雨</span> · 有衬里消防水带</span><span class="identity-category" aria-label="类目：消防水带"><span class="identity-category-value" title="消防水带">消防水带</span></span></span></div>
+          <div class="spu-facts">
+            <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥168–228</span></div>
+            <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">347 盘</span></div>
+            <div class="fact-item"><span class="fact-label">库存状态</span><span class="fact-value status-value"><span class="status-pill warning">偏低</span></span></div>
+          </div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-3" role="region" aria-labelledby="spu-trigger-3" aria-hidden="false"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner"><div class="sku-list-view" data-product="tuoyu"></div>
+        </div></div></div></div>
+      </article>
+
+      <article class="spu-card" data-category="报警设备" data-brand="海湾" data-stock="充足" data-sku-count="3" data-keywords="海湾 点型光电感烟火灾探测器 烟感 类型 通讯 安装 独立式 编码型 隔爆型 二总线 吸顶">
+        <button class="spu-trigger" id="spu-trigger-4" type="button" aria-expanded="false" aria-controls="spu-panel-4">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16h14l-1.4-7.2A4 4 0 0 0 13.7 5h-3.4a4 4 0 0 0-3.9 3.8L5 16Z"></path><path d="M3 16h18"></path><path d="M9 20h6"></path><path d="M12 2v1"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">海湾</span> · 点型光电感烟火灾探测器</span><span class="identity-category" aria-label="类目：报警设备 / 火灾探测器"><span class="identity-category-value" title="报警设备 / 火灾探测器">报警设备 / 火灾探测器</span></span></span></div>
+          <div class="spu-facts">
+            <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥98–286</span></div>
+            <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">926 只</span></div>
+            <div class="fact-item"><span class="fact-label">库存状态</span><span class="fact-value status-value"><span class="status-pill">充足</span></span></div>
+          </div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-4" role="region" aria-labelledby="spu-trigger-4" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner"><div class="sku-list-view" data-product="haiwan"></div></div></div></div></div>
+      </article>
+
+      <article class="spu-card" data-category="应急照明" data-brand="敏华" data-stock="缺货" data-sku-count="4" data-keywords="敏华 消防应急照明灯 款式 安装 功率 供电 双头 条形 圆盘 壁挂 吸顶 3w 5w 8w 自带电源 集中电源 led">
+        <button class="spu-trigger" id="spu-trigger-5" type="button" aria-expanded="false" aria-controls="spu-panel-5">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9h10v11H7z"></path><path d="m8 9-3-4 3-2 3 6"></path><path d="m16 9 3-4-3-2-3 6"></path><path d="M10 13h4"></path><path d="M12 13v4"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">敏华</span> · 消防应急照明灯</span><span class="identity-category" aria-label="类目：应急照明"><span class="identity-category-value" title="应急照明">应急照明</span></span></span></div>
+          <div class="spu-facts">
+            <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥75–268</span></div>
+            <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">86 台</span></div>
+            <div class="fact-item"><span class="fact-label">库存状态</span><span class="fact-value status-value"><span class="status-pill danger">缺货</span></span></div>
+          </div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-5" role="region" aria-labelledby="spu-trigger-5" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner"><div class="sku-list-view" data-product="minhua"></div></div></div></div></div>
+      </article>
+
+      <article class="spu-card" data-category="消防防护" data-brand="东安" data-stock="偏低" data-sku-count="4" data-keywords="东安 消防员灭火防护服 尺码 适配身高 s m l xl 165cm 170cm 175cm 180cm 阻燃 防护服">
+        <button class="spu-trigger" id="spu-trigger-6" type="button" aria-expanded="false" aria-controls="spu-panel-6">
+          <div class="spu-identity"><span class="goods-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-5 3 3 5 2-1v11h6V10l2 1 3-5-5-3c0 1.7-1.3 3-3 3S9 4.7 9 3Z"></path><path d="M9 14h6"></path></svg></span><span class="identity-copy"><span class="spu-title"><span class="brand-name">东安</span> · 消防员灭火防护服</span><span class="identity-category" aria-label="类目：消防防护"><span class="identity-category-value" title="消防防护">消防防护</span></span></span></div>
+          <div class="spu-facts">
+            <div class="fact-item"><span class="fact-label">销售价区间</span><span class="fact-value">¥1,760–1,980</span></div>
+            <div class="fact-item"><span class="fact-label">可用库存</span><span class="fact-value stock-value">132 套</span></div>
+            <div class="fact-item"><span class="fact-label">库存状态</span><span class="fact-value status-value"><span class="status-pill warning">偏低</span></span></div>
+          </div>
+          <span class="chevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"></path></svg></span>
+        </button>
+        <div class="spu-collapse" id="spu-panel-6" role="region" aria-labelledby="spu-trigger-6" aria-hidden="true"><div class="collapse-inner"><div class="sku-panel"><div class="sku-panel-inner"><div class="sku-list-view" data-product="dongan"></div></div></div></div></div>
+      </article>
+    </section>
+
+    <section class="empty-state" id="empty-state" hidden aria-live="polite">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path><path d="M8.5 11h5"></path></svg>
+      <h2>没有找到匹配的货物</h2>
+      <p>尝试更换品牌、类目或关键词，也可以重置筛选条件。</p>
+    </section>
+
+    <nav class="pagination" aria-label="货物列表分页">
+      <div class="pagination-info">第 <span id="current-page-label">1</span> / 7 页 · 每页 8 个 SPU · 共 52 个</div>
+      <div class="page-controls">
+        <button class="page-button" id="prev-page" type="button" aria-label="上一页" disabled><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"></path></svg></button>
+        <button class="page-button page-number" type="button" aria-current="page" data-page="1">1</button>
+        <button class="page-button page-number" type="button" data-page="2">2</button>
+        <button class="page-button page-number" type="button" data-page="3">3</button>
+        <button class="page-button page-number hide-phone" type="button" data-page="4">4</button>
+        <span class="page-ellipsis" aria-hidden="true">…</span>
+        <button class="page-button page-number" type="button" data-page="7">7</button>
+        <button class="page-button" id="next-page" type="button" aria-label="下一页"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg></button>
+      </div>
+    </nav>
+  </main>
+
+  <dialog class="create-goods-dialog" id="create-goods-dialog" aria-labelledby="create-goods-title">
+    <form class="create-dialog-form" id="create-goods-form" method="dialog" novalidate>
+      <header class="create-dialog-head">
+        <div><p>货物建档</p><h2 id="create-goods-title">新增货物</h2></div>
+        <button class="create-dialog-close" type="button" data-create-close aria-label="关闭新增货物弹窗">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+      <div class="create-dialog-body">
+        <p class="create-intro">选择品牌和建档类目，即可创建一个新的 SPU。</p>
+        <div class="create-field">
+          <label for="create-brand">品牌 <span>*</span></label>
+          <select class="create-select" id="create-brand" required>
+            <option value="">请选择品牌</option>
+            <option>淮海</option><option>桂安</option><option>沱雨</option><option>海湾</option><option>敏华</option><option>东安</option>
+          </select>
+        </div>
+        <div class="create-field">
+          <label for="create-category">货物类目 <span>*</span></label>
+          <select class="create-select" id="create-category" required>
+            <option value="">请选择可建 SPU 的类目</option>
+            <optgroup label="灭火器材">
+              <option value="手提式干粉灭火器" data-path="灭火器材 / 手提式干粉灭火器" data-unit="具" data-default-sku="2">手提式干粉灭火器</option>
+              <option value="手提式二氧化碳灭火器" data-path="灭火器材 / 手提式二氧化碳灭火器" data-unit="具">手提式二氧化碳灭火器</option>
+              <option value="推车式干粉灭火器" data-path="灭火器材 / 推车式干粉灭火器" data-unit="台">推车式干粉灭火器</option>
+            </optgroup>
+            <optgroup label="消防水带">
+              <option value="有衬里消防水带" data-path="消防水带 / 有衬里消防水带" data-unit="盘">有衬里消防水带</option>
+            </optgroup>
+            <optgroup label="应急照明">
+              <option value="消防应急照明灯" data-path="应急照明 / 消防应急照明灯" data-unit="台">消防应急照明灯</option>
+              <option value="安全出口标志灯" data-path="应急照明 / 疏散指示灯 / 安全出口标志灯" data-unit="台">安全出口标志灯</option>
+              <option value="疏散方向标志灯" data-path="应急照明 / 疏散指示灯 / 疏散方向标志灯" data-unit="台">疏散方向标志灯</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="create-selection-preview is-empty" id="create-selection-preview" aria-live="polite">
+          <span class="create-preview-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 7 8-4 8 4-8 4-8-4Z"></path><path d="m4 7 8 4 8-4v10l-8 4-8-4V7Z"></path><path d="M12 11v10"></path></svg></span>
+          <span class="create-preview-copy"><span>即将创建</span><strong id="create-preview-name">请选择品牌和类目</strong><small id="create-preview-meta">选择完成后显示 SPU 信息</small></span>
+        </div>
+        <p class="create-dialog-note">新增后可在货物详情中继续维护 SKU、价格和库存资料。</p>
+      </div>
+      <footer class="create-dialog-footer">
+        <button class="create-dialog-action create-dialog-cancel" type="button" data-create-close>取消</button>
+        <button class="create-dialog-action create-dialog-submit" id="create-goods-submit" type="submit" disabled>新增货物</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="create-goods-toast" id="create-goods-toast" role="status" hidden>
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></svg>
+    <span></span>
+  </div>
+
+  <script>
+    const cards = [...document.querySelectorAll('.spu-card')];
+    const filterForm = document.getElementById('filter-form');
+    const keywordInput = document.getElementById('keyword');
+    const categorySelect = document.getElementById('category');
+    const brandSelect = document.getElementById('brand');
+    const stockSelect = document.getElementById('stock');
+    const spuResultCount = document.getElementById('spu-result-count');
+    const skuResultCount = document.getElementById('sku-result-count');
+    const emptyState = document.getElementById('empty-state');
+    const pagination = document.querySelector('.pagination');
+    const toggleAllButton = document.getElementById('toggle-all');
+    const toggleAllLabel = toggleAllButton.querySelector('span');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const createGoodsButton = document.getElementById('create-goods-button');
+    const createGoodsDialog = document.getElementById('create-goods-dialog');
+    const createGoodsForm = document.getElementById('create-goods-form');
+    const createBrand = document.getElementById('create-brand');
+    const createCategory = document.getElementById('create-category');
+    const createGoodsSubmit = document.getElementById('create-goods-submit');
+    const createSelectionPreview = document.getElementById('create-selection-preview');
+    const createPreviewName = document.getElementById('create-preview-name');
+    const createPreviewMeta = document.getElementById('create-preview-meta');
+    const createGoodsToast = document.getElementById('create-goods-toast');
+    let createDialogOpener = null;
+    let createToastTimer = 0;
+
+    function createSelectionState() {
+      const brand = createBrand.value;
+      const category = createCategory.value;
+      const option = createCategory.selectedOptions[0];
+      const duplicate = Boolean(brand && category && cards.some((card) => {
+        const title = card.querySelector('.spu-title')?.textContent || '';
+        return card.dataset.brand === brand && title.includes(category);
+      }));
+      return { brand, category, option, duplicate };
+    }
+
+    function updateCreatePreview() {
+      const { brand, category, option, duplicate } = createSelectionState();
+      const complete = Boolean(brand && category);
+      createSelectionPreview.classList.toggle('is-empty', !complete);
+      createSelectionPreview.classList.toggle('has-error', duplicate);
+      createPreviewName.textContent = complete ? `${brand} · ${category}` : brand ? `${brand} · 请选择类目` : category ? `请选择品牌 · ${category}` : '请选择品牌和类目';
+      if (duplicate) {
+        createPreviewMeta.textContent = '该品牌与类目已存在，无需重复新增。';
+      } else if (complete) {
+        const defaultSku = Number(option.dataset.defaultSku || 0);
+        createPreviewMeta.textContent = `${option.dataset.path} · 默认单位：${option.dataset.unit}${defaultSku ? ` · 带入 ${defaultSku} 条默认 SKU` : ''}`;
+      } else {
+        createPreviewMeta.textContent = '选择完成后显示 SPU 信息';
+      }
+      createGoodsSubmit.disabled = !complete || duplicate;
+    }
+
+    function closeCreateGoodsDialog() {
+      if (createGoodsDialog.open) createGoodsDialog.close();
+    }
+
+    function showCreateToast(message) {
+      clearTimeout(createToastTimer);
+      createGoodsToast.querySelector('span').textContent = message;
+      createGoodsToast.hidden = false;
+      createToastTimer = setTimeout(() => { createGoodsToast.hidden = true; }, 2800);
+    }
+
+    createGoodsButton.addEventListener('click', () => {
+      createDialogOpener = createGoodsButton;
+      createGoodsForm.reset();
+      updateCreatePreview();
+      createGoodsDialog.showModal();
+      createBrand.focus();
+    });
+
+    [createBrand, createCategory].forEach((select) => select.addEventListener('change', updateCreatePreview));
+    document.querySelectorAll('[data-create-close]').forEach((button) => button.addEventListener('click', closeCreateGoodsDialog));
+    createGoodsDialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      closeCreateGoodsDialog();
+    });
+    createGoodsDialog.addEventListener('close', () => createDialogOpener?.focus());
+    let createOutsideStart = false;
+    createGoodsDialog.addEventListener('pointerdown', (event) => { createOutsideStart = event.target === createGoodsDialog; });
+    createGoodsDialog.addEventListener('click', (event) => {
+      if (createOutsideStart && event.target === createGoodsDialog) closeCreateGoodsDialog();
+      createOutsideStart = false;
+    });
+    createGoodsForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const { brand, category, duplicate } = createSelectionState();
+      if (!brand || !category || duplicate) return;
+      closeCreateGoodsDialog();
+      showCreateToast(`已新增“${brand} · ${category}”`);
+    });
+
+    function setCardOpen(card, open) {
+      const trigger = card.querySelector('.spu-trigger');
+      const panel = card.querySelector('.spu-collapse');
+      card.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+      panel.setAttribute('aria-hidden', String(!open));
+    }
+
+    function updateToggleAllState() {
+      const visibleCards = cards.filter((card) => !card.hidden);
+      const allOpen = visibleCards.length > 0 && visibleCards.every((card) => card.classList.contains('is-open'));
+      toggleAllButton.dataset.allOpen = String(allOpen);
+      toggleAllLabel.textContent = allOpen ? '全部收起' : '全部展开';
+      toggleAllButton.disabled = visibleCards.length === 0;
+    }
+
+    cards.forEach((card) => {
+      const trigger = card.querySelector('.spu-trigger');
+      trigger.addEventListener('click', () => {
+        setCardOpen(card, !card.classList.contains('is-open'));
+        updateToggleAllState();
+      });
+    });
+
+    const skuData = {
+      huaihai: {
+        skuCount: 5,
+        dimensionLabel: '容量',
+        rows: [
+          ['1kg', '236 具', '¥52', '正常', ''],
+          ['2kg', '318 具', '¥65', '正常', ''],
+          ['4kg', '412 具', '¥88', '正常', ''],
+          ['5kg', '246 具', '¥102', '项目预留', 'info'],
+          ['8kg', '74 具', '¥138', '偏低', 'warning']
+        ]
+      },
+      guian: {
+        skuCount: 4,
+        dimensionLabel: '容量',
+        rows: [
+          ['1kg', '118 具', '¥48', '正常', ''],
+          ['2kg', '166 具', '¥59', '正常', ''],
+          ['4kg', '228 具', '¥78', '正常', ''],
+          ['5kg', '92 具', '¥96', '正常', '']
+        ]
+      },
+      tuoyu: {
+        skuCount: 8,
+        dimensionLabel: '额定工作压力 · 公称口径 · 水带长度',
+        rows: [
+          ['0.8 MPa · DN50 · 20米', '70 盘', '¥168', '正常', ''],
+          ['0.8 MPa · DN50 · 25米', '69 盘', '¥182', '正常', ''],
+          ['0.8 MPa · DN65 · 20米', '61 盘', '¥178', '正常', ''],
+          ['0.8 MPa · DN65 · 25米', '31 盘', '¥198', '偏低', 'warning'],
+          ['1.0 MPa · DN50 · 20米', '20 盘', '¥206', '需补货', 'warning'],
+          ['1.0 MPa · DN65 · 20米', '25 盘', '¥214', '偏低', 'warning'],
+          ['1.0 MPa · DN65 · 25米', '35 盘', '¥220', '偏低', 'warning'],
+          ['1.0 MPa · DN65 · 30米', '36 盘', '¥228', '需补货', 'warning']
+        ]
+      },
+      haiwan: {
+        skuCount: 3,
+        dimensionLabel: '产品类型 · 通讯方式 · 安装方式',
+        rows: [
+          ['独立式 · 独立通讯 · 吸顶安装', '346 只', '¥98', '正常', ''],
+          ['编码型 · 二总线 · 吸顶安装', '436 只', '¥168', '正常', ''],
+          ['隔爆型 · 二总线 · 吸顶安装', '144 只', '¥286', '项目预留', 'info']
+        ]
+      },
+      minhua: {
+        skuCount: 4,
+        dimensionLabel: '灯具款式 · 安装方式 · 额定功率 · 供电方式',
+        rows: [
+          ['条形 · 壁挂安装 · 3W · 自带电源', '18 台', '¥82', '偏低', 'warning'],
+          ['双头 · 壁挂安装 · 5W · 自带电源', '42 台', '¥75', '偏低', 'warning'],
+          ['圆盘 · 吸顶安装 · 5W · 自带电源', '26 台', '¥136', '偏低', 'warning'],
+          ['双头 · 壁挂安装 · 8W · 集中电源', '0 台', '¥268', '缺货', 'danger']
+        ]
+      },
+      dongan: {
+        skuCount: 4,
+        dimensionLabel: '服装尺码 · 适配身高',
+        rows: [
+          ['S · 165cm', '18 套', '¥1,760', '偏低', 'warning'],
+          ['M · 170cm', '48 套', '¥1,820', '正常', ''],
+          ['L · 175cm', '44 套', '¥1,880', '正常', ''],
+          ['XL · 180cm', '22 套', '¥1,980', '需补货', 'warning']
+        ]
+      }
+    };
+
+    function renderSkuList(view) {
+      const product = skuData[view.dataset.product];
+      if (!product) return;
+
+      const rows = product.rows.map(([combination, stock, price, status, tone]) => {
+        const stockTone = tone === 'danger' ? ' stock-out' : tone === 'warning' ? ' stock-low' : '';
+        return `<div class="dimension-row" role="row"><span class="dimension-cell sku-combination" role="cell" data-label="${product.dimensionLabel}" title="${combination}">${combination}</span><span class="dimension-cell dimension-number${stockTone}" role="cell" data-label="库存">${stock}</span><span class="dimension-cell dimension-number" role="cell" data-label="销售价">${price}</span><span class="dimension-cell" role="cell" data-label="状态"><span class="sku-status ${tone}">${status}</span></span></div>`;
+      }).join('');
+
+      view.innerHTML = `<section class="dimension-panel" aria-label="SKU 明细，共 ${product.skuCount} 个"><div class="dimension-table" role="table" aria-label="SKU 维度组合：${product.dimensionLabel}"><div class="dimension-row dimension-table-head" role="row"><span role="columnheader">${product.dimensionLabel}</span><span role="columnheader">库存</span><span role="columnheader">销售价</span><span role="columnheader">状态</span></div><div class="dimension-table-body" role="rowgroup">${rows}</div></div></section>`;
+    }
+
+    document.querySelectorAll('.sku-list-view').forEach(renderSkuList);
+
+    function applyFilters() {
+      const keyword = keywordInput.value.trim().toLowerCase();
+      const category = categorySelect.value;
+      const brand = brandSelect.value;
+      const stock = stockSelect.value;
+      let visibleSpu = 0;
+      let visibleSku = 0;
+
+      cards.forEach((card) => {
+        const searchable = `${card.dataset.keywords} ${card.textContent}`.toLowerCase();
+        const matches = (!keyword || searchable.includes(keyword)) &&
+          (!category || card.dataset.category === category) &&
+          (!brand || card.dataset.brand === brand) &&
+          (!stock || card.dataset.stock === stock);
+        card.hidden = !matches;
+        if (matches) {
+          visibleSpu += 1;
+          visibleSku += Number(card.dataset.skuCount || 0);
+        }
+      });
+
+      spuResultCount.textContent = visibleSpu;
+      skuResultCount.textContent = visibleSku;
+      emptyState.hidden = visibleSpu !== 0;
+      pagination.hidden = visibleSpu === 0;
+      updateToggleAllState();
+    }
+
+    filterForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      applyFilters();
+      document.getElementById('spu-list').scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    document.getElementById('reset-button').addEventListener('click', () => {
+      filterForm.reset();
+      applyFilters();
+      keywordInput.focus();
+    });
+
+    toggleAllButton.addEventListener('click', () => {
+      const shouldOpen = toggleAllButton.dataset.allOpen !== 'true';
+      cards.filter((card) => !card.hidden).forEach((card) => setCardOpen(card, shouldOpen));
+      updateToggleAllState();
+    });
+
+    let currentPage = 1;
+    const pageButtons = [...document.querySelectorAll('.page-number')];
+    const currentPageLabel = document.getElementById('current-page-label');
+    const prevPage = document.getElementById('prev-page');
+    const nextPage = document.getElementById('next-page');
+
+    function setPage(page) {
+      currentPage = Math.max(1, Math.min(7, page));
+      currentPageLabel.textContent = currentPage;
+      pageButtons.forEach((button) => {
+        const isCurrent = Number(button.dataset.page) === currentPage;
+        if (isCurrent) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
+      prevPage.disabled = currentPage === 1;
+      nextPage.disabled = currentPage === 7;
+      document.getElementById('spu-list').scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+
+    pageButtons.forEach((button) => button.addEventListener('click', () => setPage(Number(button.dataset.page))));
+    prevPage.addEventListener('click', () => setPage(currentPage - 1));
+    nextPage.addEventListener('click', () => setPage(currentPage + 1));
+
+    updateToggleAllState();
+  </script>
+</body>
+</html>
