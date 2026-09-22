@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <meta name="description" content="统一维护货物品牌及其使用状态。">
+  <title>品牌管理 · 燧安进销存</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../css/brands.css">
+  <script src="../../js/admin-shell.js?v=20260920" defer></script>
+  <script src="../../js/brands.js" defer></script>
+</head>
+<body class="admin-shell brands-page">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <admin-sidebar active="brands"></admin-sidebar>
+  <admin-topbar trail="基础资料|品牌管理"></admin-topbar>
+
+  <svg class="brand-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="brand-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="brand-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="brand-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="brand-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5m4-5v5"/></symbol>
+    <symbol id="brand-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="brand-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="brand-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  </svg>
+
+  <main id="main-content" class="brand-main" tabindex="-1">
+    <div class="brand-content">
+      <header class="brand-page-heading">
+        <div class="brand-heading-copy">
+          <h1>品牌管理</h1>
+          <p>统一维护货物品牌，便于建档与筛选。</p>
+        </div>
+        <button class="brand-primary-button" id="brand-create" type="button" aria-haspopup="dialog" aria-controls="brand-editor">
+          <svg class="brand-icon" aria-hidden="true"><use href="#brand-plus"/></svg>
+          新建品牌
+        </button>
+      </header>
+
+      <div class="brand-search-panel" role="search" aria-label="搜索品牌">
+        <svg class="brand-icon" aria-hidden="true"><use href="#brand-search"/></svg>
+        <label class="visually-hidden" for="brand-keyword">搜索品牌名称或编码</label>
+        <input id="brand-keyword" type="search" placeholder="搜索品牌名称或编码" autocomplete="off">
+      </div>
+
+      <section class="brand-workspace" aria-label="品牌列表">
+        <div class="brand-list-toolbar">
+          <div class="brand-status-filter" role="group" aria-label="品牌状态分类">
+            <span class="brand-filter-label">状态分类</span>
+            <button class="brand-filter-button is-active" type="button" aria-pressed="true">全部 <span id="brand-all-count">28</span></button>
+            <button class="brand-filter-button" type="button" aria-pressed="false">启用 <span id="brand-active-count">26</span></button>
+            <button class="brand-filter-button" type="button" aria-pressed="false">已停用 <span id="brand-inactive-count">2</span></button>
+          </div>
+          <p class="brand-count">共 <strong id="brand-total-count">28</strong> 个品牌</p>
+        </div>
+
+        <div class="brand-table-wrap">
+          <table class="brand-table">
+            <caption class="visually-hidden">货物品牌及关联 SPU 列表</caption>
+            <colgroup>
+              <col class="brand-name-column">
+              <col class="brand-spu-column">
+              <col class="brand-status-column">
+              <col class="brand-note-column">
+              <col class="brand-action-column">
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">品牌信息</th>
+                <th scope="col">关联 SPU</th>
+                <th scope="col">状态</th>
+                <th scope="col">备注</th>
+                <th scope="col">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-brand-id="brand-001" data-brand-name="淮海" data-brand-code="BR-001" data-brand-spu="1" data-brand-enabled="true" data-brand-remark="">
+                <th class="brand-identity" scope="row"><span class="brand-name">淮海</span><span class="brand-code">BR-001</span></th>
+                <td class="brand-spu" data-label="关联 SPU"><span>1</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-active"><span aria-hidden="true"></span>启用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-empty-value" aria-label="未填写">—</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-001" aria-label="查看淮海品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑淮海品牌">编辑</button></div></td>
+              </tr>
+              <tr data-brand-id="brand-002" data-brand-name="桂安" data-brand-code="BR-002" data-brand-spu="1" data-brand-enabled="true" data-brand-remark="">
+                <th class="brand-identity" scope="row"><span class="brand-name">桂安</span><span class="brand-code">BR-002</span></th>
+                <td class="brand-spu" data-label="关联 SPU"><span>1</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-active"><span aria-hidden="true"></span>启用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-empty-value" aria-label="未填写">—</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-002" aria-label="查看桂安品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑桂安品牌">编辑</button></div></td>
+              </tr>
+              <tr data-brand-id="brand-003" data-brand-name="沱雨" data-brand-code="BR-003" data-brand-spu="1" data-brand-enabled="true" data-brand-remark="水带类常用品牌">
+                <th class="brand-identity" scope="row"><span class="brand-name">沱雨</span><span class="brand-code">BR-003</span></th>
+                <td class="brand-spu" data-label="关联 SPU"><span>1</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-active"><span aria-hidden="true"></span>启用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-note-text">水带类常用品牌</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-003" aria-label="查看沱雨品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑沱雨品牌">编辑</button></div></td>
+              </tr>
+              <tr data-brand-id="brand-004" data-brand-name="海湾" data-brand-code="BR-004" data-brand-spu="1" data-brand-enabled="true" data-brand-remark="报警设备常用品牌">
+                <th class="brand-identity" scope="row"><span class="brand-name">海湾</span><span class="brand-code">BR-004</span></th>
+                <td class="brand-spu" data-label="关联 SPU"><span>1</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-active"><span aria-hidden="true"></span>启用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-note-text">报警设备常用品牌</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-004" aria-label="查看海湾品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑海湾品牌">编辑</button></div></td>
+              </tr>
+              <tr data-brand-id="brand-005" data-brand-name="敏华" data-brand-code="BR-005" data-brand-spu="1" data-brand-enabled="true" data-brand-remark="">
+                <th class="brand-identity" scope="row"><span class="brand-name">敏华</span><span class="brand-code">BR-005</span></th>
+                <td class="brand-spu" data-label="关联 SPU"><span>1</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-active"><span aria-hidden="true"></span>启用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-empty-value" aria-label="未填写">—</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-005" aria-label="查看敏华品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑敏华品牌">编辑</button></div></td>
+              </tr>
+              <tr data-brand-id="brand-006" data-brand-name="东安" data-brand-code="BR-006" data-brand-spu="1" data-brand-enabled="true" data-brand-remark="">
+                <th class="brand-identity" scope="row"><span class="brand-name">东安</span><span class="brand-code">BR-006</span></th>
+                <td class="brand-spu" data-label="关联 SPU"><span>1</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-active"><span aria-hidden="true"></span>启用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-empty-value" aria-label="未填写">—</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-006" aria-label="查看东安品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑东安品牌">编辑</button></div></td>
+              </tr>
+              <tr data-brand-id="brand-007" data-brand-name="三江" data-brand-code="BR-007" data-brand-spu="0" data-brand-enabled="true" data-brand-remark="待关联货物">
+                <th class="brand-identity" scope="row"><span class="brand-name">三江</span><span class="brand-code">BR-007</span></th>
+                <td class="brand-spu is-empty" data-label="关联 SPU"><span>0</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-active"><span aria-hidden="true"></span>启用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-note-text">待关联货物</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-007" aria-label="查看三江品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑三江品牌">编辑</button></div></td>
+              </tr>
+              <tr class="is-disabled" data-brand-id="brand-008" data-brand-name="劳士" data-brand-code="BR-008" data-brand-spu="0" data-brand-enabled="false" data-brand-remark="暂停新增货物">
+                <th class="brand-identity" scope="row"><span class="brand-name">劳士</span><span class="brand-code">BR-008</span></th>
+                <td class="brand-spu is-empty" data-label="关联 SPU"><span>0</span></td>
+                <td class="brand-status-cell" data-label="状态"><span class="brand-status is-inactive"><span aria-hidden="true"></span>已停用</span></td>
+                <td class="brand-note" data-label="备注"><span class="brand-note-text">暂停新增货物</span></td>
+                <td class="brand-action" data-label="操作"><div class="brand-actions"><a class="brand-detail-link" href="brand-detail.html?id=brand-008" aria-label="查看劳士品牌详情">查看详情</a><button class="brand-edit-button" type="button" aria-label="编辑劳士品牌">编辑</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <footer class="brand-pagination" aria-label="品牌列表分页">
+          <p id="brand-page-summary">第 1–8 条，共 28 条</p>
+          <nav class="brand-page-controls" aria-label="分页">
+            <button class="brand-page-button is-arrow" type="button" aria-label="上一页" disabled><svg class="brand-icon" aria-hidden="true"><use href="#brand-left"/></svg></button>
+            <button class="brand-page-button is-current" type="button" aria-current="page">1</button>
+            <button class="brand-page-button" type="button">2</button>
+            <button class="brand-page-button" type="button">3</button>
+            <button class="brand-page-button" type="button">4</button>
+            <button class="brand-page-button is-arrow" type="button" aria-label="下一页"><svg class="brand-icon" aria-hidden="true"><use href="#brand-right"/></svg></button>
+          </nav>
+        </footer>
+      </section>
+    </div>
+  </main>
+
+  <dialog class="brand-dialog brand-editor-dialog" id="brand-editor" aria-labelledby="brand-editor-title">
+    <form class="brand-dialog-shell" id="brand-form" novalidate>
+      <header class="brand-dialog-header">
+        <h2 id="brand-editor-title">新建品牌</h2>
+        <button class="brand-icon-button" type="button" data-close-editor aria-label="关闭品牌表单"><svg class="brand-icon" aria-hidden="true"><use href="#brand-close"/></svg></button>
+      </header>
+      <div class="brand-dialog-body">
+        <div class="brand-form-field">
+          <label for="brand-name-input">品牌名称 <span>*</span></label>
+          <input id="brand-name-input" name="brand-name" maxlength="40" placeholder="例如：淮海" autocomplete="off" aria-describedby="brand-name-error" required>
+          <small class="brand-field-error" id="brand-name-error" role="alert" hidden></small>
+        </div>
+        <div class="brand-form-field">
+          <label for="brand-code-input">品牌编码</label>
+          <input id="brand-code-input" class="brand-code-input" value="保存后自动生成" readonly>
+        </div>
+        <div class="brand-form-field">
+          <label for="brand-remark-input">备注</label>
+          <textarea id="brand-remark-input" maxlength="200" rows="3" placeholder="补充品牌说明（选填）"></textarea>
+          <small class="brand-character-count"><span id="brand-remark-count">0</span> / 200</small>
+        </div>
+        <label class="brand-status-setting">
+          <span><strong>启用品牌</strong><small>启用后可在新建货物时选择。</small></span>
+          <span class="brand-switch"><input id="brand-enabled-input" type="checkbox" checked><span aria-hidden="true"></span></span>
+        </label>
+      </div>
+      <footer class="brand-dialog-footer">
+        <div class="brand-delete-area" id="brand-delete-area" hidden>
+          <button class="brand-delete-button" id="brand-delete" type="button"><svg class="brand-icon" aria-hidden="true"><use href="#brand-trash"/></svg>删除品牌</button>
+          <small id="brand-delete-help"></small>
+        </div>
+        <div class="brand-dialog-actions">
+          <button class="brand-secondary-button" type="button" data-close-editor>取消</button>
+          <button class="brand-save-button" id="brand-save" type="submit">保存品牌</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="brand-dialog brand-confirm-dialog" id="brand-delete-confirm" aria-labelledby="brand-delete-title">
+    <div class="brand-dialog-shell">
+      <div class="brand-confirm-body">
+        <span class="brand-confirm-icon"><svg class="brand-icon" aria-hidden="true"><use href="#brand-trash"/></svg></span>
+        <h2 id="brand-delete-title">删除这个品牌？</h2>
+        <p id="brand-delete-copy"></p>
+      </div>
+      <footer class="brand-dialog-footer brand-confirm-actions">
+        <button class="brand-secondary-button" type="button" data-close-confirm>取消</button>
+        <button class="brand-save-button is-danger" id="brand-confirm-delete" type="button">删除品牌</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <div class="brand-toast" id="brand-toast" role="status" hidden>
+    <svg class="brand-icon" aria-hidden="true"><use href="#brand-check"/></svg>
+    <span></span>
+  </div>
+</body>
+</html>

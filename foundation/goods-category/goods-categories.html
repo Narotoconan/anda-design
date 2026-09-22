@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="按多级树形结构管理货物类目，使用末级建档类目与品牌组成 SPU。">
+  <title>货物类目 · 燧安进销存</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../css/goods-categories-v2.css?v=parent-lock-1">
+  <script src="../../js/admin-shell.js?v=20260920" defer></script>
+  <script src="../../js/goods-categories.js?v=parent-lock-1" defer></script>
+</head>
+<body class="admin-shell category-tree-page">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <admin-sidebar active="goods-categories"></admin-sidebar>
+  <admin-topbar trail="基础资料|货物类目"></admin-topbar>
+  <svg class="ct-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="ct-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="ct-search-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="ct-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="ct-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="ct-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="ct-folder" viewBox="0 0 24 24"><path d="M3 8V6a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/><path d="M3 9h18"/></symbol>
+    <symbol id="ct-box" viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4Z"/><path d="M4 7v10l8 4 8-4V7M12 11v10m-4-6 8 4"/></symbol>
+    <symbol id="ct-tree" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="5" rx="1.5"/><rect x="14" y="10" width="7" height="5" rx="1.5"/><rect x="14" y="18" width="7" height="4" rx="1.5"/><path d="M6 8v12h8M6 12.5h8"/></symbol>
+    <symbol id="ct-edit" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z"/></symbol>
+    <symbol id="ct-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="ct-expand" viewBox="0 0 24 24"><path d="m8 8 4-4 4 4m-8 8 4 4 4-4M5 12h14"/></symbol>
+    <symbol id="ct-collapse" viewBox="0 0 24 24"><path d="m8 4 4 4 4-4m-8 16 4-4 4 4M5 12h14"/></symbol>
+    <symbol id="ct-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+    <symbol id="ct-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="ct-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5m4-5v5"/></symbol>
+  </svg>
+
+  <main id="main-content" class="ct-main" tabindex="-1">
+    <div class="ct-content">
+      <header class="ct-page-heading">
+        <div>
+          <p class="ct-eyebrow">货物资料 / CATEGORIES</p>
+          <h1>货物类目</h1>
+          <p class="ct-subtitle">按层级组织货物，让每一种货物都有准确的归属。</p>
+        </div>
+        <div class="ct-heading-actions">
+          <a href="../../goods/v2/goods-list-v2.html" class="ct-link">货物列表<svg class="ct-icon" aria-hidden="true"><use href="#ct-arrow"/></svg></a>
+          <button id="ct-create-root" class="ct-button ct-primary" type="button"><svg class="ct-icon" aria-hidden="true"><use href="#ct-plus"/></svg>新建一级类目</button>
+        </div>
+      </header>
+
+      <section class="ct-workspace" aria-labelledby="ct-structure-title">
+        <header class="ct-workspace-heading">
+          <div class="ct-workspace-title"><span class="ct-workspace-icon"><svg class="ct-icon" aria-hidden="true"><use href="#ct-tree"/></svg></span><div><h2 id="ct-structure-title">类目结构</h2><p id="ct-summary">按分类逐级展开</p></div></div>
+          <div class="ct-legend"><span><svg class="ct-icon ct-folder-color" aria-hidden="true"><use href="#ct-folder"/></svg>分类节点</span><span><svg class="ct-icon ct-product-color" aria-hidden="true"><use href="#ct-box"/></svg>建档类目</span></div>
+        </header>
+
+        <div class="ct-toolbar">
+          <div class="ct-search">
+            <svg class="ct-icon" aria-hidden="true"><use href="#ct-search-icon"/></svg>
+            <label class="visually-hidden" for="ct-search">搜索类目名称或编码</label>
+            <input type="search" id="ct-search" placeholder="搜索类目名称或编码" autocomplete="off">
+          </div>
+          <label class="ct-select-filter"><span class="visually-hidden">类目用途</span><select id="ct-kind-filter"><option value="all">全部类目</option><option value="product">可建 SPU 的类目</option></select><svg class="ct-icon" aria-hidden="true"><use href="#ct-down"/></svg></label>
+          <div class="ct-expand-actions"><button class="ct-quiet" id="ct-expand-all" type="button"><svg class="ct-icon" aria-hidden="true"><use href="#ct-expand"/></svg>全部展开</button><button class="ct-quiet" id="ct-collapse-all" type="button"><svg class="ct-icon" aria-hidden="true"><use href="#ct-collapse"/></svg>全部收起</button></div>
+        </div>
+        <div class="ct-search-result" id="ct-search-result" hidden><span id="ct-match-copy"></span><button class="ct-text-button" type="button" id="ct-reset-search">清除筛选</button></div>
+
+        <div class="ct-tree-surface">
+          <table class="ct-tree-table" role="treegrid" aria-label="货物类目层级" aria-describedby="ct-keyboard-help" aria-colcount="5">
+            <colgroup><col class="ct-name-col"><col class="ct-type-col"><col class="ct-spu-col"><col class="ct-state-col"><col class="ct-action-col"></colgroup>
+            <thead><tr role="row"><th scope="col">类目名称</th><th scope="col">用途</th><th scope="col" class="ct-numeric">关联 SPU</th><th scope="col">状态</th><th scope="col" class="ct-align-end">操作</th></tr></thead>
+            <tbody id="ct-tree-body"></tbody>
+          </table>
+          <div class="ct-empty" id="ct-empty" hidden><span><svg class="ct-icon" aria-hidden="true"><use href="#ct-search-icon"/></svg></span><h3>没有找到匹配的类目</h3><p>试试更简短的名称，或清除筛选查看完整结构。</p><button class="ct-button ct-secondary" type="button" id="ct-empty-reset">查看全部类目</button></div>
+          <noscript><p class="ct-noscript">请启用 JavaScript 以查看类目树和弹窗。</p></noscript>
+        </div>
+        <footer class="ct-workspace-footer"><span id="ct-tree-count"></span><span>按上级类目及组内顺序排列</span></footer>
+      </section>
+
+      <div class="ct-bottom-note">
+        <div><svg class="ct-icon" aria-hidden="true"><use href="#ct-info"/></svg><p>分类节点可继续添加下级；<strong>建档类目与品牌组成 SPU</strong>，位于第几层由实际分类决定。</p></div>
+        <span class="ct-key-hint" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd>切换 <kbd>←</kbd><kbd>→</kbd>展开 / 收起</span>
+      </div>
+      <p class="visually-hidden" id="ct-keyboard-help">使用上下方向键切换类目，右键展开，左键收起或返回上级，回车查看详情。Tab 键可访问行内操作。</p>
+      <div class="visually-hidden" id="ct-announcement" role="status" aria-live="polite"></div>
+    </div>
+  </main>
+
+  <dialog class="ct-dialog" id="ct-detail" aria-labelledby="ct-detail-title">
+    <div class="ct-dialog-shell">
+      <header class="ct-dialog-header"><div><p>货物类目</p><h2 id="ct-detail-title">类目详情</h2></div><button class="ct-icon-button" type="button" data-close aria-label="关闭类目详情"><svg class="ct-icon" aria-hidden="true"><use href="#ct-close"/></svg></button></header>
+      <div class="ct-dialog-body" id="ct-detail-body"></div>
+      <footer class="ct-dialog-footer"><div class="ct-delete-area"><button class="ct-text-button ct-danger" type="button" id="ct-delete">删除类目</button><small id="ct-delete-help"></small></div><div><button class="ct-button ct-secondary" type="button" data-close>关闭</button><button class="ct-button ct-primary" type="button" id="ct-detail-edit">编辑类目</button></div></footer>
+    </div>
+  </dialog>
+
+  <dialog class="ct-dialog ct-edit-dialog" id="ct-editor" aria-labelledby="ct-editor-title">
+    <form class="ct-dialog-shell" id="ct-form" novalidate>
+      <header class="ct-dialog-header"><div><p>货物类目</p><h2 id="ct-editor-title">新建类目</h2></div><button class="ct-icon-button" type="button" data-close aria-label="关闭类目表单"><svg class="ct-icon" aria-hidden="true"><use href="#ct-close"/></svg></button></header>
+      <div class="ct-editor-tabs" id="ct-editor-tabs" role="tablist" aria-label="类目设置" hidden>
+        <button type="button" role="tab" id="ct-basic-tab" aria-controls="ct-basic-panel" aria-selected="true">基本信息</button>
+        <button type="button" role="tab" id="ct-default-tab" aria-controls="ct-default-panel" aria-selected="false" tabindex="-1">默认 SKU</button>
+      </div>
+      <div class="ct-dialog-body">
+        <section id="ct-basic-panel" role="tabpanel" aria-labelledby="ct-basic-tab">
+        <div class="ct-field"><span class="ct-field-label" id="ct-parent-label">上级类目</span><input id="ct-parent" type="hidden"><div class="ct-parent-readonly" aria-labelledby="ct-parent-label"><svg class="ct-icon" aria-hidden="true"><use href="#ct-folder"/></svg><span><strong id="ct-parent-name"></strong><small id="ct-placement"></small></span></div><small id="ct-parent-help">创建位置由入口自动确定。</small></div>
+        <fieldset class="ct-kind-fieldset" id="ct-kind-fieldset"><legend>类目用途 <span>*</span></legend><div class="ct-kind-options">
+          <label><input type="radio" name="kind" value="branch"><span class="ct-kind-card"><svg class="ct-icon ct-folder-color" aria-hidden="true"><use href="#ct-folder"/></svg><span><strong>分类节点</strong><small>继续细分，添加下级类目</small></span></span></label>
+          <label><input type="radio" name="kind" value="product"><span class="ct-kind-card"><svg class="ct-icon ct-product-color" aria-hidden="true"><use href="#ct-box"/></svg><span><strong>建档类目</strong><small>分类终点，可与品牌组成 SPU</small></span></span></label>
+        </div></fieldset>
+        <p class="ct-field-hint" id="ct-kind-lock" hidden>已有下级类目或关联 SPU，用途不可变更。</p>
+        <div class="ct-form-grid">
+          <div class="ct-field ct-span-two"><label for="ct-name">类目名称 <span>*</span></label><input id="ct-name" required maxlength="40" placeholder="例如：手提式干粉灭火器" autocomplete="off" aria-describedby="ct-name-error"><small class="ct-error" id="ct-name-error" hidden></small></div>
+          <div class="ct-field"><label for="ct-code">类目编码</label><input id="ct-code" readonly><small>创建后保持不变。</small></div>
+          <div class="ct-field"><label for="ct-order">同级排序</label><input id="ct-order" type="number" value="10" min="0" max="9999" step="1" required><small>数值越小越靠前。</small></div>
+          <div class="ct-field ct-span-two" id="ct-unit-field"><label for="ct-unit">默认单位 <span>*</span></label><select id="ct-unit"><option value="">请选择单位</option><option>具</option><option>台</option><option>盘</option><option>只</option><option>套</option><option>根</option><option>个</option></select><small id="ct-unit-help">用于该类目下的货物建档。</small></div>
+        </div>
+        <label class="ct-status-setting"><span><strong>启用类目</strong><small id="ct-status-help">停用后不再用于新建 SPU，已有记录保留。</small></span><span class="ct-switch"><input type="checkbox" id="ct-enabled" checked><span aria-hidden="true"></span></span></label>
+        </section>
+        <section id="ct-default-panel" class="ct-default-panel" role="tabpanel" aria-labelledby="ct-default-tab" hidden>
+          <div class="ct-sku-context"><span class="ct-node-icon is-product"><svg class="ct-icon" aria-hidden="true"><use href="#ct-box"/></svg></span><div><span>当前建档类目</span><strong id="ct-sku-category-name"></strong></div></div>
+          <label class="ct-sku-toggle"><span><strong>启用默认 SKU</strong><small>新建 SPU 时带入一组常用 SKU，可在建档时调整。</small></span><span class="ct-switch"><input type="checkbox" id="ct-sku-enabled" aria-controls="ct-sku-fields"><span aria-hidden="true"></span></span></label>
+          <p class="ct-sku-off" id="ct-sku-off">未设置默认 SKU，建档时自行添加规格。</p>
+          <fieldset class="ct-sku-fields" id="ct-sku-fields" disabled hidden>
+            <legend class="visually-hidden">默认 SKU 维度配置</legend>
+            <div class="ct-sku-builder">
+              <aside class="ct-sku-dimension-sidebar" aria-label="默认 SKU 维度列表">
+                <div class="ct-sku-dimension-sidebar-head"><span>维度列表</span><button class="ct-text-button" id="ct-sku-add-dimension" type="button"><svg class="ct-icon" aria-hidden="true"><use href="#ct-plus"/></svg>新增</button></div>
+                <div class="ct-sku-dimension-tabs" id="ct-sku-dimension-tabs" role="tablist" aria-label="选择要编辑的默认 SKU 维度"></div>
+              </aside>
+              <section class="ct-sku-dimension-editor" id="ct-sku-dimension-editor" aria-live="polite"></section>
+            </div>
+            <div class="ct-sku-preview" aria-label="默认 SKU 组合预览">
+              <div class="ct-sku-preview-head"><div><span class="ct-sku-preview-label">新建 SPU 时的预览</span><strong id="ct-sku-preview-spu"></strong></div><span id="ct-sku-preview-count"></span></div>
+              <div class="ct-sku-combinations" id="ct-sku-combinations"></div>
+            </div>
+          </fieldset>
+          <div class="ct-sku-policy"><svg class="ct-icon" aria-hidden="true"><use href="#ct-info"/></svg><p>仅作为新建时的默认配置，不改变已有 SPU / SKU。型号、价格与库存由具体货物维护。</p></div>
+        </section>
+        <p class="ct-error" id="ct-form-error" role="alert" hidden></p>
+      </div>
+      <footer class="ct-dialog-footer ct-end"><button class="ct-button ct-secondary" type="button" data-close>取消</button><button class="ct-button ct-primary" id="ct-save" type="submit">保存类目</button></footer>
+    </form>
+  </dialog>
+  <dialog class="ct-dialog ct-confirm-dialog" id="ct-confirm" aria-labelledby="ct-confirm-title">
+    <div class="ct-dialog-shell"><div class="ct-dialog-body"><span class="ct-confirm-icon"><svg class="ct-icon" aria-hidden="true"><use href="#ct-trash"/></svg></span><h2 id="ct-confirm-title">删除这个类目？</h2><p id="ct-confirm-copy"></p></div><footer class="ct-dialog-footer ct-end"><button class="ct-button ct-secondary" type="button" data-close autofocus>取消</button><button class="ct-button ct-primary" type="button" id="ct-confirm-delete">删除类目</button></footer></div>
+  </dialog>
+  <div class="ct-toast" id="ct-toast" role="status" hidden><svg class="ct-icon" aria-hidden="true"><use href="#ct-check"/></svg><span></span></div>
+</body>
+</html>
