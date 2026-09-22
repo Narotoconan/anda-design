@@ -91,13 +91,13 @@
                 ${subLink('transfer', '仓库调拨', '#')}
                 ${subLink('flows', '出入库记录', '#')}
               </div>
-              <a class="side-link${foundationOpen ? ' parent-active' : ''}" href="${resolvePageHref('foundation/goods-categories.html')}" aria-label="基础资料" title="基础资料" aria-expanded="${foundationOpen}"${current === 'foundation' ? ' aria-current="page"' : ''}>
+              <a class="side-link${foundationOpen ? ' parent-active' : ''}" href="${resolvePageHref('foundation/goods-category/goods-categories.html')}" aria-label="基础资料" title="基础资料" aria-expanded="${foundationOpen}"${current === 'foundation' ? ' aria-current="page"' : ''}>
                 ${icons.foundation}<span>基础资料</span>${icons.down}
               </a>
               <div class="subnav"${foundationOpen ? '' : ' hidden'}>
-                ${subLink('goods-categories', '货物类目', 'foundation/goods-categories.html')}
-                ${subLink('brands', '品牌管理', 'foundation/brands.html')}
-                ${subLink('suppliers', '供应商管理', 'foundation/suppliers.html')}
+                ${subLink('goods-categories', '货物类目', 'foundation/goods-category/goods-categories.html')}
+                ${subLink('brands', '品牌管理', 'foundation/brand/brands.html')}
+                ${subLink('suppliers', '供应商管理', 'foundation/supplier/suppliers.html')}
               </div>
             </nav>
           </div>
