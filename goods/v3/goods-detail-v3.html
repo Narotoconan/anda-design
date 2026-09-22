@@ -1296,57 +1296,88 @@
     }
 
     .attachment-sku-heading .field-label { margin: 0; }
-    .attachment-sku-heading span:last-child { color: var(--ink-3); font-size: var(--type-caption); }
-    .attachment-sku-dimensions { padding: 0 13px; }
-
-    .attachment-dimension-row {
-      min-width: 0;
-      margin: 0;
-      padding: 11px 0;
-      display: grid;
-      grid-template-columns: 124px minmax(0, 1fr);
+    .attachment-sku-heading-meta {
+      display: flex;
       align-items: center;
-      gap: 12px;
-      border: 0;
-      border-bottom: 1px solid rgba(60, 60, 67, .09);
+      gap: 8px;
+      color: var(--ink-3);
+      font-size: var(--type-caption);
     }
 
-    .attachment-dimension-row:last-child { border-bottom: 0; }
-    .attachment-dimension-label {
-      min-width: 0;
-      padding: 0;
-      color: var(--ink-2);
-      font-size: var(--type-base);
-      line-height: 1.35;
+    .attachment-sku-select-all {
+      min-height: 30px;
+      padding: 0 8px;
+      color: var(--red-deep);
+      background: transparent;
+      border: 0;
+      border-radius: 7px;
+      outline: none;
+      font-size: var(--type-caption);
       font-weight: 660;
     }
 
-    .attachment-dimension-options { min-width: 0; display: flex; flex-wrap: wrap; gap: 7px; }
-    .attachment-dimension-option {
-      min-height: 36px;
-      padding: 0 12px;
+    .attachment-sku-select-all:hover { background: rgba(216, 50, 41, .06); }
+    .attachment-sku-select-all:focus-visible { box-shadow: var(--focus); }
+
+    .attachment-sku-options {
+      max-height: 246px;
+      padding: 11px 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      overflow-y: auto;
+      scrollbar-color: rgba(60, 60, 67, .2) transparent;
+      scrollbar-width: thin;
+    }
+
+    .attachment-sku-option {
+      min-width: 0;
+      min-height: 56px;
+      padding: 8px 10px 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
       color: var(--ink-2);
-      background: rgba(255, 255, 255, .9);
+      text-align: left;
+      background: #fff;
       border: 1px solid var(--line-strong);
-      border-radius: 9px;
+      border-radius: 10px;
       outline: none;
-      font-size: var(--type-base);
-      font-weight: 620;
-      white-space: nowrap;
       box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .9);
       transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast), transform 100ms ease-out;
     }
 
-    .attachment-dimension-option:hover:not(:disabled) { color: var(--ink); border-color: rgba(60, 60, 67, .28); }
-    .attachment-dimension-option[aria-pressed="true"] {
+    .attachment-sku-option:hover { color: var(--ink); border-color: rgba(60, 60, 67, .28); }
+    .attachment-sku-option[aria-pressed="true"] {
       color: var(--red-deep);
       background: rgba(216, 50, 41, .09);
       border-color: rgba(216, 50, 41, .3);
       box-shadow: inset 0 0 0 .5px rgba(216, 50, 41, .06);
     }
-    .attachment-dimension-option:disabled { color: rgba(60, 60, 67, .38); background: rgba(255, 255, 255, .48); cursor: not-allowed; }
-    .attachment-dimension-option:active:not(:disabled) { transform: scale(.97); }
-    .attachment-dimension-option:focus-visible { box-shadow: var(--focus); }
+    .attachment-sku-option:active { transform: scale(.98); }
+    .attachment-sku-option:focus-visible { box-shadow: var(--focus); }
+
+    .attachment-sku-option-copy { min-width: 0; }
+    .attachment-sku-option-copy strong,
+    .attachment-sku-option-copy small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .attachment-sku-option-copy strong { color: var(--ink); font-size: var(--type-base); line-height: 1.45; font-weight: 650; }
+    .attachment-sku-option-copy small { margin-top: 2px; color: var(--ink-3); font-size: var(--type-caption); line-height: 1.35; font-weight: 560; }
+
+    .attachment-sku-check {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: transparent;
+      background: #fff;
+      border: 1px solid rgba(60, 60, 67, .2);
+      border-radius: 6px;
+      transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast);
+    }
+
+    .attachment-sku-option[aria-pressed="true"] .attachment-sku-check { color: #fff; background: var(--red); border-color: var(--red); }
 
     .attachment-sku-status {
       min-height: 42px;
@@ -1454,7 +1485,7 @@
 
     .attachment-card {
       min-width: 0;
-      min-height: 72px;
+      min-height: 64px;
       padding: 9px 12px;
       display: grid;
       grid-template-columns: 38px minmax(210px, 1fr) 72px auto;
@@ -1481,7 +1512,7 @@
       border-radius: 10px;
     }
 
-    .file-copy { min-width: 0; }
+    .file-copy { min-width: 0; min-height: 38px; display: flex; align-items: center; }
     .attachment-status-cell { display: flex; align-items: center; justify-content: center; }
     .attachment-status { display: inline-flex; align-items: center; gap: 4px; flex: 0 0 auto; padding: 3px 7px; color: #27633e; background: #edf7ef; border: 1px solid #d5e8da; border-radius: 6px; font-size: var(--type-caption); font-weight: 650; line-height: 1.4; white-space: nowrap; }
     .attachment-status::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
@@ -1495,17 +1526,6 @@
       font-size: var(--type-base);
       line-height: var(--leading-compact);
       font-weight: 650;
-    }
-
-    .file-sku-summary {
-      display: block;
-      margin-top: 5px;
-      overflow: hidden;
-      color: var(--ink-3);
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: var(--type-caption);
-      font-variant-numeric: tabular-nums;
     }
 
     .file-actions { display: grid; grid-template-columns: repeat(4, 64px); align-items: center; gap: 6px; }
@@ -2116,8 +2136,8 @@
       .attachment-picker-copy span { white-space: normal; line-height: 1.4; }
       .attachment-file-button { grid-column: 1 / -1; min-height: 42px; }
       .attachment-sku-heading { align-items: flex-start; padding-block: 10px; flex-direction: column; gap: 3px; }
-      .attachment-dimension-row { grid-template-columns: minmax(0, 1fr); gap: 7px; }
-      .attachment-dimension-option { min-height: 44px; }
+      .attachment-sku-options { grid-template-columns: minmax(0, 1fr); max-height: 280px; }
+      .attachment-sku-option { min-height: 56px; }
       .attachment-status-choice span { min-height: 44px; }
       .attachment-form-actions { padding-inline: 14px; }
       .attachment-form-actions > button { min-width: 0; flex: 1; }
@@ -2178,7 +2198,8 @@
       .flow-filter-button,
       .upload-button,
       .manage-dimensions-button,
-      .attachment-dimension-option,
+      .attachment-sku-option,
+      .attachment-sku-select-all,
       .attachment-action-button,
       .attachment-file-button { min-height: 44px; }
     }
@@ -2192,7 +2213,7 @@
       .combination-remove-button:active,
       .dialog,
       .attachment-card.is-removing,
-      .attachment-dimension-option:active { transform: none !important; }
+      .attachment-sku-option:active { transform: none !important; }
     }
 
     @media (prefers-reduced-transparency: reduce) {
@@ -2388,7 +2409,7 @@
             <h2 id="attachment-title">附件资料</h2>
             <span class="count-badge" id="attachment-count" aria-live="polite">5 个附件</span>
           </div>
-          <p>附件列表随上方 SKU 选择同步，新增或编辑时可设置关联 SKU。</p>
+          <p>附件列表随上方 SKU 选择同步，新增或编辑时可多选关联 SKU 组合。</p>
         </div>
         <div class="attachment-heading-actions">
           <span class="scope-note" id="attachment-scope">当前范围：全部 8 个 SKU</span>
@@ -2562,7 +2583,7 @@
   <dialog class="dialog attachment-form-dialog" id="attachment-form-dialog" aria-labelledby="attachment-form-title" aria-describedby="attachment-form-copy">
     <div class="dialog-shell">
       <header class="dialog-head">
-        <div><h2 id="attachment-form-title">新增附件</h2><p id="attachment-form-copy">选择文件，并按规格关联到具体 SKU。</p></div>
+        <div><h2 id="attachment-form-title">新增附件</h2><p id="attachment-form-copy">选择文件，并关联一个或多个 SKU 组合。</p></div>
         <button class="icon-button" type="button" data-close-dialog="attachment-form-dialog" aria-label="关闭附件表单">
           <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
         </button>
@@ -2591,11 +2612,11 @@
 
           <div class="attachment-form-field attachment-sku-section" aria-labelledby="attachment-sku-label">
             <div class="attachment-sku-heading">
-              <span class="field-label" id="attachment-sku-label">关联 SKU<span class="field-required" aria-hidden="true">*</span></span>
-              <span>按规格逐项选择</span>
+              <span class="field-label" id="attachment-sku-label">关联 SKU 组合<span class="field-required" aria-hidden="true">*</span></span>
+              <span class="attachment-sku-heading-meta"><span>可多选</span><button class="attachment-sku-select-all" id="toggle-all-attachment-skus" type="button">全选</button></span>
             </div>
-            <div class="attachment-sku-dimensions" id="attachment-sku-dimensions"></div>
-            <div class="attachment-sku-status" id="attachment-sku-status" aria-live="polite">请选择完整规格</div>
+            <div class="attachment-sku-options" id="attachment-sku-options" aria-label="选择关联的 SKU 组合"></div>
+            <div class="attachment-sku-status" id="attachment-sku-status" aria-live="polite">请选择至少 1 个 SKU 组合</div>
           </div>
         </div>
         <footer class="attachment-form-actions">
@@ -2621,7 +2642,7 @@
   <dialog class="dialog confirm-dialog" id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description">
     <div class="dialog-shell">
       <header class="dialog-head">
-        <div><h2 id="delete-title">删除这个附件？</h2><p>删除后将从对应 SKU 的附件资料中移除。</p></div>
+        <div><h2 id="delete-title">删除这个附件？</h2><p>删除后将从关联的 SKU 组合中移除。</p></div>
         <button class="icon-button" type="button" data-close-dialog="delete-dialog" aria-label="关闭删除确认">
           <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
         </button>
@@ -2666,7 +2687,7 @@
       var editingAttachmentId = '';
       var pendingAttachmentFile = null;
       var attachmentSkuCandidates = [];
-      var attachmentSkuDraft = {};
+      var attachmentSkuDraftIds = [];
       var toastTimer = 0;
       var activeFlowRows = [];
       var activeFlowFilter = 'all';
@@ -2713,11 +2734,11 @@
       };
 
       var attachments = [
-        { id: 'file-001', skuId: 'HD-TY-08-50-20-PU', name: '沱雨_0.8MPa_DN50_20m_技术参数表.pdf', kind: 'pdf', size: '2.4 MB', date: '2026-08-18', status: 'valid' },
-        { id: 'file-002', skuId: 'HD-TY-08-50-25-PU', name: 'TY_DN50_25m_包装照片.jpg', kind: 'image', size: '1.8 MB', date: '2026-08-16', status: 'valid' },
-        { id: 'file-003', skuId: 'HD-TY-08-65-20-PU', name: 'TY_0.8_DN65_20m_检测报告.pdf', kind: 'pdf', size: '2.1 MB', date: '2026-08-15', status: 'expired' },
-        { id: 'file-004', skuId: 'HD-TY-10-50-20-PU', name: '沱雨_1.0MPa_DN50_随货清单.xlsx', kind: 'spreadsheet', size: '3.0 MB', date: '2026-08-12', status: 'valid' },
-        { id: 'file-005', skuId: 'HD-TY-10-65-25-PU', name: 'TY_1.0_DN65_25m_产品说明.docx', kind: 'document', size: '1.3 MB', date: '2026-08-09', status: 'valid' }
+        { id: 'file-001', skuIds: ['HD-TY-08-50-20-PU', 'HD-TY-08-50-25-PU'], name: '沱雨_0.8MPa_DN50_20m_技术参数表.pdf', kind: 'pdf', size: '2.4 MB', date: '2026-08-18', status: 'valid' },
+        { id: 'file-002', skuIds: ['HD-TY-08-50-25-PU'], name: 'TY_DN50_25m_包装照片.jpg', kind: 'image', size: '1.8 MB', date: '2026-08-16', status: 'valid' },
+        { id: 'file-003', skuIds: ['HD-TY-08-65-20-PU'], name: 'TY_0.8_DN65_20m_检测报告.pdf', kind: 'pdf', size: '2.1 MB', date: '2026-08-15', status: 'expired' },
+        { id: 'file-004', skuIds: ['HD-TY-10-50-20-PU', 'HD-TY-10-65-20-PU'], name: '沱雨_1.0MPa_DN50_随货清单.xlsx', kind: 'spreadsheet', size: '3.0 MB', date: '2026-08-12', status: 'valid' },
+        { id: 'file-005', skuIds: ['HD-TY-10-65-25-PU', 'HD-TY-10-65-30-PU'], name: 'TY_1.0_DN65_25m_产品说明.docx', kind: 'document', size: '1.3 MB', date: '2026-08-09', status: 'valid' }
       ];
 
       var icons = {
@@ -3327,62 +3348,46 @@
         openDialog(document.getElementById('month-dialog'), card);
       }
 
-      function createAttachmentSkuDraft(candidates, file) {
-        var draft = {};
-        var currentSku = file && skus.find(function (sku) { return sku.id === file.skuId; });
-        dimensionConfigs.forEach(function (dimension) {
-          var values = Array.from(new Set(candidates.map(function (sku) { return sku[dimension.key]; }).filter(Boolean)));
-          if (currentSku && values.includes(currentSku[dimension.key])) draft[dimension.key] = currentSku[dimension.key];
-          else if (filterState[dimension.key] && values.includes(filterState[dimension.key])) draft[dimension.key] = filterState[dimension.key];
-          else draft[dimension.key] = values.length === 1 ? values[0] : '';
-        });
-        return draft;
+      function attachmentSkuIds(file) {
+        if (Array.isArray(file.skuIds)) return file.skuIds.slice();
+        return file.skuId ? [file.skuId] : [];
       }
 
-      function attachmentSkuMatches(sku, ignoredDimension) {
-        return dimensionConfigs.every(function (dimension) {
-          var selected = attachmentSkuDraft[dimension.key];
-          return dimension.key === ignoredDimension || !selected || sku[dimension.key] === selected;
-        });
-      }
-
-      function resolvedAttachmentSku() {
-        var complete = dimensionConfigs.every(function (dimension) { return Boolean(attachmentSkuDraft[dimension.key]); });
-        if (!complete) return null;
-        var matches = attachmentSkuCandidates.filter(function (sku) { return attachmentSkuMatches(sku); });
-        return matches.length === 1 ? matches[0] : null;
+      function createAttachmentSkuDraft(candidates, file, currentScope) {
+        var candidateIds = new Set(candidates.map(function (sku) { return sku.id; }));
+        if (file) {
+          return attachmentSkuIds(file).filter(function (skuId) { return candidateIds.has(skuId); });
+        }
+        if (currentScope.length && currentScope.length < skus.length) {
+          return currentScope.map(function (sku) { return sku.id; }).filter(function (skuId) { return candidateIds.has(skuId); });
+        }
+        return [];
       }
 
       function updateAttachmentSaveState() {
         var fileReady = Boolean(editingAttachmentId || pendingAttachmentFile);
-        document.getElementById('save-attachment').disabled = !(fileReady && resolvedAttachmentSku());
+        document.getElementById('save-attachment').disabled = !(fileReady && attachmentSkuDraftIds.length);
       }
 
       function renderAttachmentSkuSelector() {
-        var host = document.getElementById('attachment-sku-dimensions');
-        host.innerHTML = dimensionConfigs.map(function (dimension) {
-          var values = Array.from(new Set(attachmentSkuCandidates.map(function (sku) { return sku[dimension.key]; }).filter(Boolean)));
-          return '<div class="attachment-dimension-row" role="group" aria-labelledby="attachment-dimension-label-' + escapeHtml(dimension.key) + '" data-attachment-dimension-row="' + escapeHtml(dimension.key) + '">' +
-            '<span class="attachment-dimension-label" id="attachment-dimension-label-' + escapeHtml(dimension.key) + '">' + escapeHtml(dimension.name) + '</span>' +
-            '<div class="attachment-dimension-options">' +
-              values.map(function (value) {
-                var available = attachmentSkuCandidates.some(function (sku) {
-                  return sku[dimension.key] === value && attachmentSkuMatches(sku, dimension.key);
-                });
-                var selected = attachmentSkuDraft[dimension.key] === value;
-                return '<button class="attachment-dimension-option" type="button" data-attachment-dimension="' + escapeHtml(dimension.key) + '" data-attachment-value="' + escapeHtml(value) + '" aria-pressed="' + selected + '"' + (available || selected ? '' : ' disabled') + '>' + escapeHtml(value) + '</button>';
-              }).join('') +
-            '</div>' +
-          '</div>';
+        var selectedIds = new Set(attachmentSkuDraftIds);
+        var host = document.getElementById('attachment-sku-options');
+        host.innerHTML = attachmentSkuCandidates.map(function (sku) {
+          var label = skuCombinationLabel(sku);
+          var selected = selectedIds.has(sku.id);
+          return '<button class="attachment-sku-option" type="button" data-attachment-sku-id="' + escapeHtml(sku.id) + '" aria-pressed="' + String(selected) + '" aria-label="' + (selected ? '取消关联：' : '关联：') + escapeHtml(label) + '">' +
+            '<span class="attachment-sku-option-copy"><strong title="' + escapeHtml(label) + '">' + escapeHtml(label) + '</strong><small>' + escapeHtml(sku.code) + '</small></span>' +
+            '<span class="attachment-sku-check" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"></path></svg></span>' +
+          '</button>';
         }).join('');
 
-        var selectedCount = dimensionConfigs.filter(function (dimension) { return Boolean(attachmentSkuDraft[dimension.key]); }).length;
-        var resolved = resolvedAttachmentSku();
+        var selectedCount = attachmentSkuDraftIds.length;
         var status = document.getElementById('attachment-sku-status');
-        status.classList.toggle('is-resolved', Boolean(resolved));
-        status.textContent = resolved
-          ? '已定位唯一 SKU：' + resolved.code
-          : '已选择 ' + selectedCount + ' / ' + dimensionConfigs.length + ' 项规格，请继续选择';
+        status.classList.toggle('is-resolved', selectedCount > 0);
+        status.textContent = selectedCount
+          ? '已选择 ' + selectedCount + ' 个 SKU 组合'
+          : '请选择至少 1 个 SKU 组合';
+        document.getElementById('toggle-all-attachment-skus').textContent = selectedCount === attachmentSkuCandidates.length ? '取消全选' : '全选';
         updateAttachmentSaveState();
       }
 
@@ -3400,7 +3405,9 @@
 
       function renderAttachments(matched) {
         var matchedIds = new Set(matched.map(function (sku) { return sku.id; }));
-        var visibleFiles = attachments.filter(function (file) { return matchedIds.has(file.skuId); });
+        var visibleFiles = attachments.filter(function (file) {
+          return attachmentSkuIds(file).some(function (skuId) { return matchedIds.has(skuId); });
+        });
         document.getElementById('attachment-count').textContent = visibleFiles.length + ' 个附件';
         document.getElementById('attachment-scope').textContent = scopeLabel(matched, '当前范围');
         document.getElementById('file-scope-copy').textContent = matched.length === 1
@@ -3411,11 +3418,9 @@
         list.hidden = visibleFiles.length === 0;
         empty.hidden = visibleFiles.length !== 0;
         list.innerHTML = visibleFiles.map(function (file) {
-          var sku = skus.find(function (item) { return item.id === file.skuId; });
-          var skuSummary = dimensionConfigs.map(function (dimension) { return sku[dimension.key] || '—'; }).join(' · ');
           return '<article class="attachment-card" data-file-id="' + file.id + '">' +
             '<span class="file-icon' + (file.kind === 'image' ? ' image' : '') + '" aria-hidden="true">' + (file.kind === 'image' ? icons.image : icons.file) + '</span>' +
-            '<span class="file-copy"><strong class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</strong><span class="file-sku-summary" aria-label="SKU 规格：' + escapeHtml(skuSummary) + '">' + escapeHtml(skuSummary) + '</span></span>' +
+            '<span class="file-copy"><strong class="file-name" title="' + escapeHtml(file.name) + '">' + escapeHtml(file.name) + '</strong></span>' +
             '<span class="attachment-status-cell">' + attachmentStatusMarkup(file) + '</span>' +
             '<span class="file-actions">' +
               '<button class="attachment-action-button" type="button" data-file-action="preview" aria-label="查看 ' + escapeHtml(file.name) + '">' + icons.view + '<span>查看</span></button>' +
@@ -3436,16 +3441,16 @@
         document.getElementById('attachment-upload').value = '';
         document.getElementById('attachment-form-title').textContent = file ? '编辑附件' : '新增附件';
         document.getElementById('attachment-form-copy').textContent = file
-          ? '可替换原文件，并按规格调整关联 SKU。'
-          : '选择文件，并按规格关联到具体 SKU。';
+          ? '可替换原文件，并调整关联的 SKU 组合。'
+          : '选择文件，并关联一个或多个 SKU 组合。';
         document.getElementById('attachment-file-name').textContent = file ? file.name : '尚未选择文件';
         document.getElementById('attachment-file-meta').textContent = file
           ? fileTypeLabel(file) + ' · ' + file.size + ' · 可选择新文件替换'
           : '支持 PDF、图片及 Office 文件，单个不超过 10 MB';
         document.getElementById('attachment-picker-icon').innerHTML = file && file.kind === 'image' ? icons.image : icons.file;
         document.getElementById('choose-attachment-file').textContent = file ? '替换文件' : '选择文件';
-        attachmentSkuCandidates = matched.slice();
-        attachmentSkuDraft = createAttachmentSkuDraft(attachmentSkuCandidates, file);
+        attachmentSkuCandidates = skus.slice();
+        attachmentSkuDraftIds = createAttachmentSkuDraft(attachmentSkuCandidates, file, matched);
         var saveButton = document.getElementById('save-attachment');
         saveButton.textContent = file ? '保存修改' : '新增附件';
         renderAttachmentSkuSelector();
@@ -3453,11 +3458,13 @@
       }
 
       function downloadAttachment(file) {
-        var sku = skus.find(function (item) { return item.id === file.skuId; });
+        var linkedSkus = attachmentSkuIds(file).map(function (skuId) {
+          return skus.find(function (item) { return item.id === skuId; });
+        }).filter(Boolean);
         var downloadUrl = file.objectUrl;
         var shouldRevoke = false;
         if (!downloadUrl) {
-          var demoContent = '附件资料（静态演示）\n文件：' + file.name + '\n关联 SKU：' + sku.code;
+          var demoContent = '附件资料（静态演示）\n文件：' + file.name + '\n关联 SKU：' + linkedSkus.map(function (sku) { return sku.code; }).join('、');
           downloadUrl = URL.createObjectURL(new Blob([demoContent], { type: 'text/plain;charset=utf-8' }));
           shouldRevoke = true;
         }
@@ -3482,9 +3489,12 @@
       }
 
       function openPreview(file, trigger) {
-        var sku = skus.find(function (item) { return item.id === file.skuId; });
+        var linkedSkus = attachmentSkuIds(file).map(function (skuId) {
+          return skus.find(function (item) { return item.id === skuId; });
+        }).filter(Boolean);
+        var combinationLabels = linkedSkus.map(function (sku) { return skuCombinationLabel(sku); });
         document.getElementById('preview-title').textContent = '附件详情';
-        document.getElementById('preview-copy').textContent = '查看文件及其关联 SKU 信息';
+        document.getElementById('preview-copy').textContent = '查看文件及其关联 SKU 组合';
         document.getElementById('preview-body').innerHTML =
           '<article class="attachment-detail" aria-label="附件信息">' +
             '<div class="attachment-detail-file">' +
@@ -3492,12 +3502,12 @@
               '<span class="attachment-detail-copy"><strong>' + escapeHtml(file.name) + '</strong><span>' + fileTypeLabel(file) + ' · ' + escapeHtml(file.size) + '</span></span>' +
             '</div>' +
             '<dl class="attachment-detail-grid">' +
-              '<div class="attachment-detail-item"><dt>关联 SKU</dt><dd>' + escapeHtml(sku.code) + '</dd></div>' +
-              '<div class="attachment-detail-item"><dt>SKU 规格</dt><dd>' + escapeHtml(sku.pressure + ' · ' + sku.diameter + ' · ' + sku.length + ' · ' + sku.lining) + '</dd></div>' +
+              '<div class="attachment-detail-item"><dt>关联组合</dt><dd>' + combinationLabels.map(escapeHtml).join('<br>') + '</dd></div>' +
+              '<div class="attachment-detail-item"><dt>关联数量</dt><dd>' + linkedSkus.length + ' 个 SKU</dd></div>' +
               '<div class="attachment-detail-item"><dt>文件类型</dt><dd>' + fileTypeLabel(file) + '</dd></div>' +
               '<div class="attachment-detail-item"><dt>上传时间</dt><dd>' + escapeHtml(file.date) + '</dd></div>' +
             '</dl>' +
-            '<p class="attachment-detail-note">该附件已关联至以上 SKU。</p>' +
+            '<p class="attachment-detail-note">该附件已关联至以上 SKU 组合。</p>' +
           '</article>';
         openDialog(document.getElementById('preview-dialog'), trigger);
       }
@@ -3579,18 +3589,17 @@
 
       function saveAttachmentForm() {
         var status = document.querySelector('input[name="attachment-status"]:checked').value;
-        var resolvedSku = resolvedAttachmentSku();
-        if (!resolvedSku) {
-          showToast('请完整选择关联 SKU 的各项规格', true);
-          var firstIncompleteRow = dimensionConfigs.find(function (dimension) { return !attachmentSkuDraft[dimension.key]; });
-          var focusTarget = firstIncompleteRow && document.querySelector('[data-attachment-dimension="' + firstIncompleteRow.key + '"]');
+        if (!attachmentSkuDraftIds.length) {
+          showToast('请至少选择 1 个关联的 SKU 组合', true);
+          var focusTarget = document.querySelector('[data-attachment-sku-id]');
           if (focusTarget) focusTarget.focus();
           return;
         }
         if (editingAttachmentId) {
           var existing = attachments.find(function (file) { return file.id === editingAttachmentId; });
           if (!existing) return;
-          existing.skuId = resolvedSku.id;
+          existing.skuIds = attachmentSkuDraftIds.slice();
+          delete existing.skuId;
           existing.status = status;
           if (pendingAttachmentFile) {
             if (existing.objectUrl) URL.revokeObjectURL(existing.objectUrl);
@@ -3609,7 +3618,7 @@
           }
           attachments.unshift({
             id: 'upload-' + Date.now(),
-            skuId: resolvedSku.id,
+            skuIds: attachmentSkuDraftIds.slice(),
             status: status,
             name: pendingAttachmentFile.name,
             kind: attachmentKindFromName(pendingAttachmentFile.name),
@@ -3619,10 +3628,11 @@
           });
           closeDialog(document.getElementById('attachment-form-dialog'));
           renderAttachments(exactMatchedSkus());
-          showToast('附件已新增并关联至所选 SKU');
+          showToast('附件已新增并关联 ' + attachmentSkuDraftIds.length + ' 个 SKU 组合');
         }
         editingAttachmentId = '';
         pendingAttachmentFile = null;
+        attachmentSkuDraftIds = [];
       }
 
       document.getElementById('open-combination-manager').addEventListener('click', function (event) {
@@ -3863,10 +3873,21 @@
       });
       document.getElementById('choose-attachment-file').addEventListener('click', function () { uploadInput.click(); });
       uploadInput.addEventListener('change', function () { handleAttachmentFile(uploadInput.files); });
-      document.getElementById('attachment-sku-dimensions').addEventListener('click', function (event) {
-        var option = event.target.closest('[data-attachment-dimension]');
-        if (!option || option.disabled) return;
-        attachmentSkuDraft[option.dataset.attachmentDimension] = option.dataset.attachmentValue;
+      document.getElementById('attachment-sku-options').addEventListener('click', function (event) {
+        var option = event.target.closest('[data-attachment-sku-id]');
+        if (!option) return;
+        var skuId = option.dataset.attachmentSkuId;
+        if (attachmentSkuDraftIds.includes(skuId)) {
+          attachmentSkuDraftIds = attachmentSkuDraftIds.filter(function (id) { return id !== skuId; });
+        } else {
+          attachmentSkuDraftIds.push(skuId);
+        }
+        renderAttachmentSkuSelector();
+      });
+      document.getElementById('toggle-all-attachment-skus').addEventListener('click', function () {
+        attachmentSkuDraftIds = attachmentSkuDraftIds.length === attachmentSkuCandidates.length
+          ? []
+          : attachmentSkuCandidates.map(function (sku) { return sku.id; });
         renderAttachmentSkuSelector();
       });
       document.getElementById('attachment-form').addEventListener('submit', function (event) {
