@@ -57,13 +57,12 @@
 
         <div class="customer-table-wrap">
           <table class="customer-table">
-            <caption class="visually-hidden">客户名称、编号、类型、联系人、联系电话及操作。多联系人记录显示首位联系人，人数标记表示其余联系人数量。</caption>
+            <caption class="visually-hidden">客户名称、编号、类型、联系人及操作。每位联系人的姓名、对接角色和电话在同一张小卡片中展示，每条客户记录最多展示两位联系人，其余人数单独标记。</caption>
             <colgroup>
               <col class="customer-name-column">
               <col class="customer-code-column">
               <col class="customer-type-column">
               <col class="customer-contact-column">
-              <col class="customer-phone-column">
               <col class="customer-action-column">
             </colgroup>
             <thead>
@@ -71,8 +70,7 @@
                 <th scope="col">客户名称</th>
                 <th class="customer-code-cell" scope="col">客户编号</th>
                 <th scope="col">客户类型</th>
-                <th scope="col">联系人</th>
-                <th scope="col">联系电话</th>
+                <th scope="col">联系人 / 联系方式</th>
                 <th class="customer-action-heading" scope="col">操作</th>
               </tr>
             </thead>
@@ -85,11 +83,20 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-001</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">李志恒</span><button class="customer-contact-more" type="button" aria-label="南京远宸物业管理有限公司另有 2 位联系人：沈雅雯、周敏" title="沈雅雯 · 收货对接 · 139 0000 4221
-周敏 · 财务对接 · 135 0000 1086">+2</button></div>
-                  <span class="customer-contact-role">采购对接</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 3 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>李志恒</strong><span>采购对接</span></div>
+                        <span class="customer-contact-card-phone">138 0000 6708</span>
+                      </li>
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>沈雅雯</strong><span>收货对接</span></div>
+                        <span class="customer-contact-card-phone">139 0000 4221</span>
+                      </li>
+                    </ul>
+                    <button class="customer-contact-overflow" type="button" aria-label="另有 1 位联系人：周敏" title="周敏 · 财务对接 · 135 0000 1086">+1<span>人</span></button>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">138 0000 6708</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看南京远宸物业管理有限公司的客户资料">查看</button>
@@ -106,10 +113,15 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-002</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">周舒宁</span></div>
-                  <span class="customer-contact-role">本人</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>周舒宁</strong><span>本人</span></div>
+                        <span class="customer-contact-card-phone">135 0000 4820</span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">135 0000 4820</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看周舒宁的客户资料">查看</button>
@@ -126,10 +138,19 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-003</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">陈柏舟</span><button class="customer-contact-more" type="button" aria-label="苏州联盾建设工程有限公司另有 1 位联系人：许倩" title="许倩 · 采购对接 · 158 0000 7305">+1</button></div>
-                  <span class="customer-contact-role">项目对接</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 2 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>陈柏舟</strong><span>项目对接</span></div>
+                        <span class="customer-contact-card-phone">137 0000 2163</span>
+                      </li>
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>许倩</strong><span>采购对接</span></div>
+                        <span class="customer-contact-card-phone">158 0000 7305</span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">137 0000 2163</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看苏州联盾建设工程有限公司的客户资料">查看</button>
@@ -146,10 +167,19 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-004</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">顾文博</span><button class="customer-contact-more" type="button" aria-label="上海永安商业运营有限公司另有 1 位联系人：陆佳宁" title="陆佳宁 · 现场对接 · 152 0000 8712">+1</button></div>
-                  <span class="customer-contact-role">采购对接</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 2 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>顾文博</strong><span>采购对接</span></div>
+                        <span class="customer-contact-card-phone">136 0000 5948</span>
+                      </li>
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>陆佳宁</strong><span>现场对接</span></div>
+                        <span class="customer-contact-card-phone">152 0000 8712</span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">136 0000 5948</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看上海永安商业运营有限公司的客户资料">查看</button>
@@ -166,10 +196,15 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-005</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">唐嘉诚</span></div>
-                  <span class="customer-contact-role">本人</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>唐嘉诚</strong><span>本人</span></div>
+                        <span class="customer-contact-card-phone">188 0000 3276</span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">188 0000 3276</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看唐嘉诚的客户资料">查看</button>
@@ -186,10 +221,15 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-006</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">何远</span></div>
-                  <span class="customer-contact-role">采购对接</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>何远</strong><span>采购对接</span></div>
+                        <span class="customer-contact-card-phone">138 0000 3036</span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">138 0000 3036</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看无锡安辰机电设备有限公司的客户资料">查看</button>
@@ -206,10 +246,19 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-007</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">宋知行</span><button class="customer-contact-more" type="button" aria-label="杭州晟宇园区服务有限公司另有 1 位联系人：林若溪" title="林若溪 · 收货对接 · 137 0000 9460">+1</button></div>
-                  <span class="customer-contact-role">采购对接</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 2 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>宋知行</strong><span>采购对接</span></div>
+                        <span class="customer-contact-card-phone">159 0000 6014</span>
+                      </li>
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>林若溪</strong><span>收货对接</span></div>
+                        <span class="customer-contact-card-phone">137 0000 9460</span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">159 0000 6014</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看杭州晟宇园区服务有限公司的客户资料">查看</button>
@@ -226,10 +275,15 @@
                 <td class="customer-code-cell"><span class="customer-code">CUS-008</span></td>
                 <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
                 <td class="customer-contact-cell">
-                  <div class="customer-contact-line"><span class="customer-contact-name">林予安</span></div>
-                  <span class="customer-contact-role">本人</span>
+                  <div class="customer-contact-stack">
+                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>林予安</strong><span>本人</span></div>
+                        <span class="customer-contact-card-phone">186 0000 7591</span>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
-                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">186 0000 7591</span></td>
                 <td class="customer-action-cell">
                   <div class="customer-row-actions">
                     <button class="customer-text-button" type="button" aria-label="查看林予安的客户资料">查看</button>

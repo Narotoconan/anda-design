@@ -126,14 +126,22 @@
     const contacts = (supplier.contacts || []).filter((contact) => contact.name || contact.info);
     if (!contacts.length) return '<span class="supplier-empty-value">未填写</span>';
     const shownContacts = contacts.slice(0, 2).map((contact) => {
-      const name = contact.name ? `<strong>${escapeHtml(contact.name)}</strong>` : '';
-      const info = contact.info ? `<span>${escapeHtml(contact.info)}</span>` : '';
-      return `<span class="supplier-contact-line${contact.name ? '' : ' is-contact-only'}">${name}${info}</span>`;
-    });
-    if (contacts.length > 2) {
-      shownContacts.push(`<span class="supplier-contact-overflow" aria-label="还有 ${contacts.length - 2} 位联系人未显示">......</span>`);
-    }
-    return shownContacts.join('');
+      const name = contact.name ? `<strong class="supplier-contact-card-name">${escapeHtml(contact.name)}</strong>` : '';
+      const info = contact.info ? `<span class="supplier-contact-card-info">${escapeHtml(contact.info)}</span>` : '';
+      return `<li class="supplier-contact-card${contact.name ? '' : ' is-contact-only'}">${name}${info}</li>`;
+    }).join('');
+    const remainingContacts = contacts.slice(2);
+    const remainingSummary = remainingContacts
+      .map((contact) => [contact.name, contact.info].filter(Boolean).join(' · '))
+      .join('；');
+    const overflow = remainingContacts.length
+      ? `<span class="supplier-contact-overflow" title="${escapeHtml(remainingSummary)}">+${remainingContacts.length}<span>人</span><span class="visually-hidden">，其他联系人：${escapeHtml(remainingSummary)}</span></span>`
+      : '';
+    return `
+      <ul class="supplier-contact-cards${contacts.length === 1 ? ' is-single' : ''}" aria-label="已展示 ${Math.min(contacts.length, 2)} 位联系人，共 ${contacts.length} 位">
+        ${shownContacts}
+      </ul>
+      ${overflow}`;
   }
 
   function rowMarkup(supplier) {
@@ -155,7 +163,7 @@
           <span class="supplier-priority ${priority.className}"><span aria-hidden="true"></span>${priority.label}</span>
         </td>
         <td class="supplier-source-cell" data-label="主要来源" aria-label="主要来源：${source.label}${supplier.sourceType === 'online_store' && supplier.platform ? `，采购平台：${escapeHtml(supplier.platform)}` : ''}">${sourceMarkup(supplier.sourceType, supplier.platform)}</td>
-        <td class="supplier-contact-cell" data-label="联系人"><span class="supplier-contact-copy">${contactMarkup(supplier)}</span></td>
+        <td class="supplier-contact-cell" data-label="联系人"><div class="supplier-contact-copy">${contactMarkup(supplier)}</div></td>
         <td class="supplier-action-cell" data-label="操作">
           <button class="supplier-edit-button" type="button" data-edit-supplier="${supplier.id}" aria-label="编辑${escapeHtml(supplier.name)}">编辑</button>
         </td>
