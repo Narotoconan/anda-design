@@ -1802,24 +1802,66 @@
     .combination-manager-grid {
       padding: 10px;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 8px;
     }
 
     .configured-combination-item {
       min-width: 0;
       min-height: 50px;
-      padding: 8px 8px 8px 12px;
+      padding: 7px 8px;
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       background: #fff;
       border: 1px solid rgba(60, 60, 67, .11);
       border-radius: 10px;
+      transition: opacity var(--motion-fast), border-color var(--motion-fast), background-color var(--motion-fast), transform 120ms ease-out;
     }
 
-    .configured-combination-item strong { min-width: 0; overflow: hidden; color: var(--ink); text-overflow: ellipsis; white-space: nowrap; font-size: var(--type-base); line-height: 1.45; font-weight: 640; }
+    .configured-combination-item::before {
+      content: "";
+      height: 2px;
+      position: absolute;
+      right: 10px;
+      left: 10px;
+      z-index: 1;
+      pointer-events: none;
+      background: var(--red);
+      border-radius: 999px;
+      opacity: 0;
+      box-shadow: 0 0 0 2px rgba(216, 50, 41, .08);
+    }
+
+    .configured-combination-item[data-drop-position="before"]::before { top: -6px; opacity: 1; }
+    .configured-combination-item[data-drop-position="after"]::before { bottom: -6px; opacity: 1; }
+    .configured-combination-item.is-dragging { opacity: .42; background: var(--surface-soft); transform: scale(.99); }
+    .configured-combination-item strong { min-width: 0; flex: 1; overflow: hidden; color: var(--ink); text-overflow: ellipsis; white-space: nowrap; font-size: var(--type-base); line-height: 1.45; font-weight: 640; }
+
+    .combination-manager-grid.is-sorting { cursor: grabbing; user-select: none; }
+
+    .combination-drag-handle {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--ink-3);
+      background: transparent;
+      border: 0;
+      border-radius: 8px;
+      outline: none;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .combination-drag-handle:hover { color: var(--ink-2); background: var(--surface-soft); }
+    .combination-drag-handle:active { cursor: grabbing; transform: scale(.95); }
+    .configured-combination-item.is-dragging .combination-drag-handle { cursor: grabbing; }
+    .combination-drag-handle:focus-visible { box-shadow: var(--focus); }
     .combination-remove-button { width: 32px; height: 32px; display: grid; place-items: center; flex: 0 0 auto; color: var(--ink-3); background: transparent; border: 0; border-radius: 8px; outline: none; }
     .combination-remove-button:hover { color: var(--red-deep); background: var(--red-soft); }
     .combination-remove-button:active { transform: scale(.94); }
@@ -2193,6 +2235,7 @@
       .combination-builder-option,
       .combination-add-button,
       .combination-add-all,
+      .combination-drag-handle,
       .combination-remove-button,
       .filter-reset,
       .flow-filter-button,
@@ -2210,7 +2253,9 @@
       .sku-combination-option:active,
       .combination-builder-option:active,
       .combination-add-button:active,
+      .combination-drag-handle:active,
       .combination-remove-button:active,
+      .configured-combination-item.is-dragging,
       .dialog,
       .attachment-card.is-removing,
       .attachment-sku-option:active { transform: none !important; }
@@ -2469,12 +2514,13 @@
           <div class="configured-combinations-head">
             <div>
               <strong id="configured-combinations-title">已配置组合</strong>
-              <span id="combination-manager-count" aria-live="polite">共 3 个</span>
+              <span id="combination-manager-count">共 3 个 · 拖拽调整顺序</span>
             </div>
             <button class="combination-add-all" id="add-all-combinations" type="button">全部加入</button>
           </div>
           <div class="combination-manager-grid" id="combination-manager-list" aria-label="已配置的 SKU 组合"></div>
           <div class="combination-manager-empty" id="combination-manager-empty" hidden>暂未配置组合，请先从上方选择规格值。</div>
+          <span class="visually-hidden" id="combination-sort-status" aria-live="polite"></span>
         </section>
         <p class="combination-manager-note">至少保留 1 个组合；这里只维护快捷入口，不会改变实际 SKU。</p>
       </div>
@@ -2680,6 +2726,7 @@
       var configuredCombinationIds = ['HD-TY-08-50-20-PU', 'HD-TY-10-50-20-PU', 'HD-TY-10-65-25-PU'];
       var combinationDraftIds = [];
       var combinationBuilderState = {};
+      var combinationDragState = null;
       var activeYear = '2026';
       var activeDialogTrigger = null;
       var dialogCloseTimer = 0;
@@ -2887,7 +2934,10 @@
         var list = document.getElementById('combination-manager-list');
         list.innerHTML = configuredSkus.map(function (sku) {
           var label = skuCombinationLabel(sku);
-          return '<div class="configured-combination-item">' +
+          return '<div class="configured-combination-item" data-configured-combination-id="' + escapeHtml(sku.id) + '">' +
+            '<button class="combination-drag-handle" type="button" data-drag-combination-id="' + escapeHtml(sku.id) + '" aria-label="拖拽调整顺序：' + escapeHtml(label) + '；也可使用上下方向键调整">' +
+              '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="5" cy="3" r="1.1"></circle><circle cx="11" cy="3" r="1.1"></circle><circle cx="5" cy="8" r="1.1"></circle><circle cx="11" cy="8" r="1.1"></circle><circle cx="5" cy="13" r="1.1"></circle><circle cx="11" cy="13" r="1.1"></circle></svg>' +
+            '</button>' +
             '<strong title="' + escapeHtml(label) + '">' + escapeHtml(label) + '</strong>' +
             '<button class="combination-remove-button" type="button" data-remove-combination-id="' + escapeHtml(sku.id) + '" aria-label="移除组合：' + escapeHtml(label) + '">' +
               '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"></path></svg>' +
@@ -2896,7 +2946,7 @@
         }).join('');
         list.hidden = configuredSkus.length === 0;
         document.getElementById('combination-manager-empty').hidden = configuredSkus.length !== 0;
-        document.getElementById('combination-manager-count').textContent = '共 ' + configuredSkus.length + ' 个';
+        document.getElementById('combination-manager-count').textContent = '共 ' + configuredSkus.length + ' 个 · 拖拽调整顺序';
         document.getElementById('add-all-combinations').disabled = configuredSkus.length === skus.length;
         document.getElementById('save-combinations').disabled = configuredSkus.length === 0;
       }
@@ -2918,12 +2968,91 @@
         renderCombinationManager();
       }
 
+      function clearCombinationDropMarkers() {
+        document.querySelectorAll('.configured-combination-item').forEach(function (item) {
+          item.classList.remove('is-dragging');
+          item.removeAttribute('data-drop-position');
+        });
+        document.getElementById('combination-manager-list').classList.remove('is-sorting');
+      }
+
+      function updateCombinationDropTarget(clientY) {
+        if (!combinationDragState) return;
+        var candidates = Array.from(document.querySelectorAll('[data-configured-combination-id]')).filter(function (item) {
+          return item.dataset.configuredCombinationId !== combinationDragState.skuId;
+        });
+        candidates.forEach(function (item) { item.removeAttribute('data-drop-position'); });
+        if (!candidates.length) {
+          combinationDragState.targetId = '';
+          return;
+        }
+
+        var nearest = candidates.reduce(function (result, item) {
+          var rect = item.getBoundingClientRect();
+          var distance = clientY < rect.top ? rect.top - clientY : (clientY > rect.bottom ? clientY - rect.bottom : 0);
+          return !result || distance < result.distance ? { item: item, rect: rect, distance: distance } : result;
+        }, null);
+        var position = clientY < nearest.rect.top + nearest.rect.height / 2 ? 'before' : 'after';
+        nearest.item.dataset.dropPosition = position;
+        combinationDragState.targetId = nearest.item.dataset.configuredCombinationId;
+        combinationDragState.position = position;
+      }
+
+      function finishCombinationPointerDrag(event, cancelled) {
+        if (!combinationDragState || event.pointerId !== combinationDragState.pointerId) return;
+        var dragState = combinationDragState;
+        combinationDragState = null;
+        var handle = document.querySelector('[data-drag-combination-id="' + dragState.skuId + '"]');
+        if (handle && handle.hasPointerCapture && handle.hasPointerCapture(event.pointerId)) {
+          handle.releasePointerCapture(event.pointerId);
+        }
+        clearCombinationDropMarkers();
+        if (!cancelled && dragState.moved && dragState.targetId) {
+          moveCombinationDraft(dragState.skuId, dragState.targetId, dragState.position);
+          window.requestAnimationFrame(function () {
+            var movedHandle = document.querySelector('[data-drag-combination-id="' + dragState.skuId + '"]');
+            if (movedHandle) movedHandle.focus({ preventScroll: true });
+          });
+        }
+      }
+
+      function moveCombinationDraft(draggedId, targetId, position) {
+        if (!draggedId || !targetId || draggedId === targetId) return false;
+        var nextIds = combinationDraftIds.slice();
+        var draggedIndex = nextIds.indexOf(draggedId);
+        if (draggedIndex < 0) return false;
+        var movedId = nextIds.splice(draggedIndex, 1)[0];
+        var targetIndex = nextIds.indexOf(targetId);
+        if (targetIndex < 0) return false;
+        if (position === 'after') targetIndex += 1;
+        nextIds.splice(targetIndex, 0, movedId);
+        if (nextIds.join('|') === combinationDraftIds.join('|')) return false;
+        combinationDraftIds = nextIds;
+        renderCombinationManager();
+        var movedSku = skus.find(function (sku) { return sku.id === movedId; });
+        document.getElementById('combination-sort-status').textContent = movedSku
+          ? '已将 ' + skuCombinationLabel(movedSku) + ' 调整为第 ' + (combinationDraftIds.indexOf(movedId) + 1) + ' 个'
+          : '组合顺序已调整';
+        return true;
+      }
+
+      function applyCombinationSelection(skuId) {
+        var sku = skus.find(function (item) { return item.id === skuId; });
+        if (!sku) return false;
+        dimensions.forEach(function (dimension) {
+          filterState[dimension] = sku[dimension] || '';
+        });
+        return true;
+      }
+
       function saveCombinationManager() {
         if (!combinationDraftIds.length) return;
-        configuredCombinationIds = skus.filter(function (sku) {
-          return combinationDraftIds.includes(sku.id);
-        }).map(function (sku) { return sku.id; });
-        renderSkuCombinations();
+        configuredCombinationIds = combinationDraftIds.filter(function (skuId) {
+          return skus.some(function (sku) { return sku.id === skuId; });
+        });
+        applyCombinationSelection(configuredCombinationIds[0]);
+        renderVariantFilter();
+        updateSelection();
         closeDialog(document.getElementById('combination-manager-dialog'));
         showToast('已保存 ' + configuredCombinationIds.length + ' 个 SKU 组合');
       }
@@ -3655,6 +3784,57 @@
         renderCombinationManager();
       });
 
+      document.getElementById('combination-manager-list').addEventListener('pointerdown', function (event) {
+        var handle = event.target.closest('[data-drag-combination-id]');
+        if (!handle || (event.button !== undefined && event.button !== 0)) return;
+        combinationDragState = {
+          skuId: handle.dataset.dragCombinationId,
+          pointerId: event.pointerId,
+          startY: event.clientY,
+          targetId: '',
+          position: 'before',
+          moved: false
+        };
+        handle.focus({ preventScroll: true });
+        if (handle.setPointerCapture) handle.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      });
+
+      document.getElementById('combination-manager-list').addEventListener('pointermove', function (event) {
+        if (!combinationDragState || event.pointerId !== combinationDragState.pointerId) return;
+        if (!combinationDragState.moved && Math.abs(event.clientY - combinationDragState.startY) < 4) return;
+        event.preventDefault();
+        combinationDragState.moved = true;
+        var item = document.querySelector('[data-configured-combination-id="' + combinationDragState.skuId + '"]');
+        if (item) item.classList.add('is-dragging');
+        document.getElementById('combination-manager-list').classList.add('is-sorting');
+        updateCombinationDropTarget(event.clientY);
+      });
+
+      document.getElementById('combination-manager-list').addEventListener('pointerup', function (event) {
+        finishCombinationPointerDrag(event, false);
+      });
+
+      document.getElementById('combination-manager-list').addEventListener('pointercancel', function (event) {
+        finishCombinationPointerDrag(event, true);
+      });
+
+      document.getElementById('combination-manager-list').addEventListener('keydown', function (event) {
+        var handle = event.target.closest('[data-drag-combination-id]');
+        if (!handle || (event.key !== 'ArrowUp' && event.key !== 'ArrowDown')) return;
+        var skuId = handle.dataset.dragCombinationId;
+        var currentIndex = combinationDraftIds.indexOf(skuId);
+        var targetIndex = currentIndex + (event.key === 'ArrowUp' ? -1 : 1);
+        if (currentIndex < 0 || targetIndex < 0 || targetIndex >= combinationDraftIds.length) return;
+        event.preventDefault();
+        var targetId = combinationDraftIds[targetIndex];
+        moveCombinationDraft(skuId, targetId, event.key === 'ArrowUp' ? 'before' : 'after');
+        window.requestAnimationFrame(function () {
+          var movedHandle = document.querySelector('[data-drag-combination-id="' + skuId + '"]');
+          if (movedHandle) movedHandle.focus();
+        });
+      });
+
       document.getElementById('add-all-combinations').addEventListener('click', function () {
         combinationDraftIds = skus.map(function (sku) { return sku.id; });
         renderCombinationManager();
@@ -3940,6 +4120,7 @@
         });
       });
 
+      applyCombinationSelection(configuredCombinationIds[0]);
       renderVariantFilter();
       updateSelection();
     }());
