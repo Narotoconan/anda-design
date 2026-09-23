@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <meta name="description" content="统一查看单位客户、个人客户与联系人资料。">
+  <title>客户管理 · 燧安进销存</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../../css/common.css">
+  <link rel="stylesheet" href="../../css/customers.css">
+  <script src="../../js/admin-shell.js" defer></script>
+</head>
+<body class="admin-shell customers-page">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <admin-sidebar active="customers"></admin-sidebar>
+  <admin-topbar trail="基础资料|客户管理"></admin-topbar>
+
+  <svg class="customer-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="customer-company" viewBox="0 0 24 24"><path d="M4 21V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v16M16 10h3a1 1 0 0 1 1 1v10M3 21h18M8 8h4M8 12h4M8 16h4"/></symbol>
+    <symbol id="customer-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+    <symbol id="customer-search-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="customer-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="customer-chevron" viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"/></symbol>
+    <symbol id="customer-prev" viewBox="0 0 24 24"><path d="m14 7-5 5 5 5"/></symbol>
+    <symbol id="customer-next" viewBox="0 0 24 24"><path d="m10 7 5 5-5 5"/></symbol>
+  </svg>
+
+  <main id="main-content" class="customer-main" tabindex="-1">
+    <div class="customer-content">
+      <header class="customer-page-heading">
+        <div class="customer-heading-copy">
+          <h1>客户管理</h1>
+          <p>统一维护单位及个人客户的基础资料。</p>
+        </div>
+        <button class="customer-primary-button" type="button">
+          <svg class="customer-icon" aria-hidden="true"><use href="#customer-plus"/></svg>
+          新建客户
+        </button>
+      </header>
+
+      <section class="customer-workspace" aria-labelledby="customer-list-title">
+        <h2 class="visually-hidden" id="customer-list-title">客户列表</h2>
+        <div class="customer-toolbar">
+          <div class="customer-type-filter" role="group" aria-label="按客户类型筛选">
+            <button class="customer-filter-button is-active" type="button" aria-pressed="true">全部客户 <span>8</span></button>
+            <button class="customer-filter-button" type="button" aria-pressed="false">单位客户 <span>5</span></button>
+            <button class="customer-filter-button" type="button" aria-pressed="false">个人客户 <span>3</span></button>
+          </div>
+          <div class="customer-search" role="search">
+            <svg class="customer-icon" aria-hidden="true"><use href="#customer-search-icon"/></svg>
+            <label class="visually-hidden" for="customer-keyword">搜索客户名称、编号、联系人或电话</label>
+            <input id="customer-keyword" type="search" placeholder="搜索名称、编号或联系人" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="customer-table-wrap">
+          <table class="customer-table">
+            <caption class="visually-hidden">客户名称、编号、类型、联系人、联系电话及操作。多联系人记录显示首位联系人，人数标记表示其余联系人数量。</caption>
+            <colgroup>
+              <col class="customer-name-column">
+              <col class="customer-code-column">
+              <col class="customer-type-column">
+              <col class="customer-contact-column">
+              <col class="customer-phone-column">
+              <col class="customer-action-column">
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">客户名称</th>
+                <th class="customer-code-cell" scope="col">客户编号</th>
+                <th scope="col">客户类型</th>
+                <th scope="col">联系人</th>
+                <th scope="col">联系电话</th>
+                <th class="customer-action-heading" scope="col">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">南京远宸物业管理有限公司</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-001</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-001</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">李志恒</span><button class="customer-contact-more" type="button" aria-label="南京远宸物业管理有限公司另有 2 位联系人：沈雅雯、周敏" title="沈雅雯 · 收货对接 · 139 0000 4221
+周敏 · 财务对接 · 135 0000 1086">+2</button></div>
+                  <span class="customer-contact-role">采购对接</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">138 0000 6708</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看南京远宸物业管理有限公司的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑南京远宸物业管理有限公司的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">周舒宁</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-002</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-002</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">周舒宁</span></div>
+                  <span class="customer-contact-role">本人</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">135 0000 4820</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看周舒宁的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑周舒宁的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">苏州联盾建设工程有限公司</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-003</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-003</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">陈柏舟</span><button class="customer-contact-more" type="button" aria-label="苏州联盾建设工程有限公司另有 1 位联系人：许倩" title="许倩 · 采购对接 · 158 0000 7305">+1</button></div>
+                  <span class="customer-contact-role">项目对接</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">137 0000 2163</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看苏州联盾建设工程有限公司的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑苏州联盾建设工程有限公司的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">上海永安商业运营有限公司</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-004</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-004</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">顾文博</span><button class="customer-contact-more" type="button" aria-label="上海永安商业运营有限公司另有 1 位联系人：陆佳宁" title="陆佳宁 · 现场对接 · 152 0000 8712">+1</button></div>
+                  <span class="customer-contact-role">采购对接</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">136 0000 5948</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看上海永安商业运营有限公司的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑上海永安商业运营有限公司的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">唐嘉诚</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-005</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-005</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">唐嘉诚</span></div>
+                  <span class="customer-contact-role">本人</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">188 0000 3276</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看唐嘉诚的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑唐嘉诚的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">无锡安辰机电设备有限公司</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-006</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-006</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">何远</span></div>
+                  <span class="customer-contact-role">采购对接</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">138 0000 3036</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看无锡安辰机电设备有限公司的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑无锡安辰机电设备有限公司的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">杭州晟宇园区服务有限公司</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-007</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-007</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">宋知行</span><button class="customer-contact-more" type="button" aria-label="杭州晟宇园区服务有限公司另有 1 位联系人：林若溪" title="林若溪 · 收货对接 · 137 0000 9460">+1</button></div>
+                  <span class="customer-contact-role">采购对接</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">159 0000 6014</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看杭州晟宇园区服务有限公司的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑杭州晟宇园区服务有限公司的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="customer-identity" scope="row">
+                  <span class="customer-name">林予安</span>
+                  <span class="customer-code customer-code-inline"><span class="visually-hidden">客户编号：</span>CUS-008</span>
+                </th>
+                <td class="customer-code-cell"><span class="customer-code">CUS-008</span></td>
+                <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
+                <td class="customer-contact-cell">
+                  <div class="customer-contact-line"><span class="customer-contact-name">林予安</span></div>
+                  <span class="customer-contact-role">本人</span>
+                </td>
+                <td class="customer-phone-cell"><span class="customer-mobile-label">联系电话</span><span class="customer-phone">186 0000 7591</span></td>
+                <td class="customer-action-cell">
+                  <div class="customer-row-actions">
+                    <button class="customer-text-button" type="button" aria-label="查看林予安的客户资料">查看</button>
+                    <span class="customer-action-divider" aria-hidden="true"></span>
+                    <button class="customer-text-button" type="button" aria-label="编辑林予安的客户资料">编辑</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <footer class="customer-pagination" aria-label="客户列表分页">
+          <div class="customer-page-summary">
+            <p>共 <strong>8</strong> 条</p>
+            <div class="customer-page-size">
+              <label class="visually-hidden" for="customer-page-size">每页条数</label>
+              <select id="customer-page-size"><option selected>10 条 / 页</option><option>20 条 / 页</option><option>50 条 / 页</option></select>
+              <svg class="customer-icon" aria-hidden="true"><use href="#customer-chevron"/></svg>
+            </div>
+          </div>
+          <nav class="customer-page-controls" aria-label="页码">
+            <button class="customer-page-button" type="button" aria-label="上一页" disabled><svg class="customer-icon" aria-hidden="true"><use href="#customer-prev"/></svg></button>
+            <button class="customer-page-button is-current" type="button" aria-current="page" aria-label="第 1 页">1</button>
+            <button class="customer-page-button" type="button" aria-label="下一页" disabled><svg class="customer-icon" aria-hidden="true"><use href="#customer-next"/></svg></button>
+          </nav>
+        </footer>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

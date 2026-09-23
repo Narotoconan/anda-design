@@ -56,7 +56,7 @@
       const activeKey = current === 'goods-detail' ? 'goods-list' : current;
       const inventoryKeys = ['goods-list', 'stocktake', 'transfer', 'flows'];
       const inventoryOpen = inventoryKeys.includes(activeKey);
-      const foundationOpen = ['foundation', 'goods-categories', 'brands', 'suppliers'].includes(activeKey);
+      const foundationOpen = ['foundation', 'goods-categories', 'brands', 'suppliers', 'customers'].includes(activeKey);
       const user = userConfig(this);
 
       const sideLink = (key, label, href, icon) => {
@@ -98,6 +98,7 @@
                 ${subLink('goods-categories', '货物类目', 'foundation/goods-category/goods-categories.html')}
                 ${subLink('brands', '品牌管理', 'foundation/brand/brands.html')}
                 ${subLink('suppliers', '供应商管理', 'foundation/supplier/suppliers.html')}
+                ${subLink('customers', '客户管理', 'foundation/customer/customers.html')}
               </div>
             </nav>
           </div>
