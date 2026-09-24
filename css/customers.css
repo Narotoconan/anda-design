@@ -185,52 +185,56 @@
 .customer-type .customer-icon { width: 14px; height: 14px; stroke-width: 1.7; }
 .customer-type.is-company { color: var(--customer-company); background: var(--customer-company-bg); }
 .customer-type.is-person { color: #62626b; background: #f2f2f5; }
-.customer-contact-stack { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.customer-contact-stack { display: flex; align-items: center; gap: 8px; min-width: 0; width: 100%; max-width: 480px; }
 .customer-contact-cards {
   min-width: 0;
-  max-width: 356px;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 8px;
-  flex: 1 1 auto;
+  flex: 1;
   list-style: none;
 }
-.customer-contact-cards.is-single { max-width: 174px; grid-template-columns: minmax(0, 1fr); flex: 0 1 174px; }
 .customer-contact-card {
   min-width: 0;
-  min-height: 62px;
-  padding: 8px 10px;
-  background: #f8f8fa;
-  border: 1px solid var(--customer-line);
-  border-radius: 9px;
+  max-width: 100%;
+  display: block;
+  flex: 0 1 140px;
+  background: var(--surface-solid);
+  border-bottom: 1px solid var(--customer-line);
 }
-.customer-contact-card-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
-.customer-contact-card-heading strong { color: #373a42; font-size: var(--type-base); line-height: 1.5; font-weight: 600; white-space: nowrap; }
-.customer-contact-card-heading > span { color: var(--customer-muted); font-size: var(--type-caption); line-height: 1.5; white-space: nowrap; }
-.customer-contact-card-phone { display: block; margin-top: 2px; color: #555963; font-size: var(--type-base); line-height: 1.5; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.customer-contact-card-heading {
+  padding: 3px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 6px;
+  background: #eff2f6;
+  border-radius: 4px 4px 0 0;
+}
+.customer-contact-card-heading strong { min-width: 0; color: #536173; font-size: var(--type-base); line-height: 1.5; font-weight: 500; overflow-wrap: anywhere; }
+.customer-contact-card-heading > span { min-width: 0; color: var(--customer-muted); font-size: var(--type-caption); line-height: 1.5; overflow-wrap: anywhere; }
+.customer-contact-card-phone { display: block; padding: 4px 8px 5px; color: #626670; font-size: var(--type-base); line-height: 1.5; font-weight: 400; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .customer-contact-overflow {
-  min-width: 42px;
-  min-height: 36px;
-  padding: 0 6px;
+  min-width: 36px;
+  min-height: 26px;
+  padding: 2px 5px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
   flex: 0 0 auto;
-  color: #565b65;
-  background: var(--surface-solid);
+  color: var(--customer-muted);
+  background: #fafafb;
   border: 1px solid var(--customer-line);
-  border-radius: 8px;
-  font-size: var(--type-base);
+  border-radius: 6px;
+  font-size: var(--type-caption);
   line-height: 1.5;
-  font-weight: 500;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  transition: color var(--motion-fast), background-color var(--motion-fast), border-color var(--motion-fast);
 }
-.customer-contact-overflow > span { color: var(--customer-muted); font-size: var(--type-caption); font-weight: 400; }
-.customer-contact-overflow:hover { color: var(--red-dark); background: var(--red-soft); border-color: rgba(216, 50, 41, .15); }
 .customer-row-actions { display: flex; align-items: center; justify-content: flex-start; gap: 4px; white-space: nowrap; }
 .customer-text-button {
   min-width: 32px;
@@ -337,9 +341,6 @@
   .customer-type-cell { grid-column: 2; grid-row: 1; justify-self: end; }
   .customer-contact-cell { grid-column: 1 / -1; grid-row: 2; }
   .customer-contact-cell::before { content: "联系人 / 联系方式"; display: block; margin-bottom: 8px; color: var(--customer-muted); font-size: var(--type-caption); line-height: 1.5; }
-  .customer-contact-stack { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .customer-contact-cards { width: 100%; }
-  .customer-contact-overflow { min-height: 28px; justify-self: start; }
   .customer-action-cell { grid-column: 1 / -1; grid-row: 3; margin-top: -5px; }
   .customer-row-actions { justify-content: flex-end; }
   .customer-text-button { min-height: 40px; padding-inline: 7px; }
@@ -351,8 +352,6 @@
   .customer-type-filter { width: 100%; }
   .customer-filter-button { padding-inline: 5px; gap: 4px; }
   .customer-table tbody tr { padding-inline: 16px; column-gap: 12px; }
-  .customer-contact-card { padding-inline: 8px; }
-  .customer-contact-card-heading { gap: 4px; }
   .customer-page-summary { gap: 10px; }
   .customer-pagination { gap: 10px; }
   .customer-page-controls { gap: 2px; margin-left: auto; }

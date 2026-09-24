@@ -9,7 +9,7 @@
   <title>客户管理 · 燧安进销存</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="../../css/common.css">
-  <link rel="stylesheet" href="../../css/customers.css">
+  <link rel="stylesheet" href="../../css/customers.css?v=contact-matrix-2">
   <script src="../../js/admin-shell.js" defer></script>
 </head>
 <body class="admin-shell customers-page">
@@ -57,7 +57,7 @@
 
         <div class="customer-table-wrap">
           <table class="customer-table">
-            <caption class="visually-hidden">客户名称、编号、类型、联系人及操作。每位联系人的姓名、对接角色和电话在同一张小卡片中展示，每条客户记录最多展示两位联系人，其余人数单独标记。</caption>
+            <caption class="visually-hidden">客户名称、编号、类型、联系人及操作。每位联系人的姓名、对接角色和电话在同一个信息格中展示，每条客户记录最多展示三位联系人，其余人数单独标记。</caption>
             <colgroup>
               <col class="customer-name-column">
               <col class="customer-code-column">
@@ -84,7 +84,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 3 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 3 位联系人，共 3 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>李志恒</strong><span>采购对接</span></div>
                         <span class="customer-contact-card-phone">138 0000 6708</span>
@@ -93,8 +93,11 @@
                         <div class="customer-contact-card-heading"><strong>沈雅雯</strong><span>收货对接</span></div>
                         <span class="customer-contact-card-phone">139 0000 4221</span>
                       </li>
+                      <li class="customer-contact-card">
+                        <div class="customer-contact-card-heading"><strong>周敏</strong><span>财务对接</span></div>
+                        <span class="customer-contact-card-phone">135 0000 1086</span>
+                      </li>
                     </ul>
-                    <button class="customer-contact-overflow" type="button" aria-label="另有 1 位联系人：周敏" title="周敏 · 财务对接 · 135 0000 1086">+1<span>人</span></button>
                   </div>
                 </td>
                 <td class="customer-action-cell">
@@ -114,7 +117,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 1 位联系人，共 1 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>周舒宁</strong><span>本人</span></div>
                         <span class="customer-contact-card-phone">135 0000 4820</span>
@@ -139,7 +142,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 2 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 2 位联系人，共 2 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>陈柏舟</strong><span>项目对接</span></div>
                         <span class="customer-contact-card-phone">137 0000 2163</span>
@@ -168,7 +171,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 2 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 2 位联系人，共 2 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>顾文博</strong><span>采购对接</span></div>
                         <span class="customer-contact-card-phone">136 0000 5948</span>
@@ -197,7 +200,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 1 位联系人，共 1 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>唐嘉诚</strong><span>本人</span></div>
                         <span class="customer-contact-card-phone">188 0000 3276</span>
@@ -222,7 +225,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 1 位联系人，共 1 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>何远</strong><span>采购对接</span></div>
                         <span class="customer-contact-card-phone">138 0000 3036</span>
@@ -247,7 +250,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-company"><svg class="customer-icon" aria-hidden="true"><use href="#customer-company"/></svg>单位客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards" aria-label="已展示 2 位联系人，共 2 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 2 位联系人，共 2 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>宋知行</strong><span>采购对接</span></div>
                         <span class="customer-contact-card-phone">159 0000 6014</span>
@@ -276,7 +279,7 @@
                 <td class="customer-type-cell"><span class="customer-type is-person"><svg class="customer-icon" aria-hidden="true"><use href="#customer-person"/></svg>个人客户</span></td>
                 <td class="customer-contact-cell">
                   <div class="customer-contact-stack">
-                    <ul class="customer-contact-cards is-single" aria-label="已展示 1 位联系人，共 1 位">
+                    <ul class="customer-contact-cards" role="list" aria-label="已展示 1 位联系人，共 1 位">
                       <li class="customer-contact-card">
                         <div class="customer-contact-card-heading"><strong>林予安</strong><span>本人</span></div>
                         <span class="customer-contact-card-phone">186 0000 7591</span>
