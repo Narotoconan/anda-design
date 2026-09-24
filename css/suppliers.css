@@ -310,51 +310,57 @@
 
 .supplier-empty-value { color: #9999a1; font-size: var(--type-caption); }
 
-.supplier-contact-copy { min-width: 0; display: flex; align-items: center; gap: 8px; }
-.supplier-contact-cards {
+.supplier-contact-copy { min-width: 0; width: 100%; max-width: 420px; }
+.supplier-contact-body { min-width: 0; display: flex; align-items: center; gap: 8px; }
+/* 多人联系人信息格：最多展示三位，空间不足时整格换行。 */
+.supplier-contacts {
   min-width: 0;
-  max-width: 356px;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 8px;
-  flex: 1 1 auto;
+  flex: 1;
   list-style: none;
 }
-.supplier-contact-cards.is-single { max-width: 174px; grid-template-columns: minmax(0, 1fr); flex: 0 1 174px; }
-.supplier-contact-card {
+.supplier-contact-item {
   min-width: 0;
-  min-height: 62px;
-  padding: 8px 10px;
-  background: #f8f8fa;
-  border: 1px solid var(--supplier-line);
-  border-radius: 9px;
+  max-width: 100%;
+  display: block;
+  flex: 0 1 124px;
+  background: var(--surface-solid);
+  border-bottom: 1px solid var(--supplier-line);
+}
+.supplier-person-name,
+.supplier-person-info {
+  min-width: 0;
+  display: block;
+  font-size: var(--type-base);
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
-.supplier-contact-card-name { display: block; color: #373a42; font-size: var(--type-base); line-height: 1.5; font-weight: 600; }
-.supplier-contact-card-info { display: block; margin-top: 2px; color: #555963; font-size: var(--type-base); line-height: 1.5; font-variant-numeric: tabular-nums; }
-.supplier-contact-card.is-contact-only { display: flex; align-items: center; }
-.supplier-contact-card.is-contact-only .supplier-contact-card-info { margin-top: 0; }
-.supplier-contact-overflow {
-  min-width: 42px;
-  min-height: 36px;
-  padding: 0 6px;
+.supplier-person-name { padding: 3px 6px; color: #536173; background: #eff2f6; border-radius: 4px 4px 0 0; font-weight: 500; }
+.supplier-person-info { padding: 4px 6px 5px; color: #626670; font-weight: 400; font-variant-numeric: tabular-nums; }
+.supplier-person-name.is-placeholder,
+.supplier-person-info.is-placeholder { color: var(--supplier-muted); font-weight: 400; }
+.supplier-contact-extra {
+  min-width: 36px;
+  min-height: 26px;
+  padding: 2px 5px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
   flex: 0 0 auto;
-  color: #565b65;
-  background: var(--surface-solid);
+  color: var(--supplier-muted);
+  background: #fafafb;
   border: 1px solid var(--supplier-line);
-  border-radius: 8px;
-  font-size: var(--type-base);
+  border-radius: 6px;
+  font-size: var(--type-caption);
   line-height: 1.5;
-  font-weight: 500;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-.supplier-contact-overflow > span { color: var(--supplier-muted); font-size: var(--type-caption); font-weight: 400; }
 
 .supplier-status {
   min-height: 28px;
@@ -406,7 +412,7 @@
 .supplier-edit-button:hover { color: var(--red-dark); background: var(--red-soft); }
 .supplier-edit-button:active { transform: scale(.96); }
 .supplier-table tr.is-disabled .supplier-name,
-.supplier-table tr.is-disabled .supplier-contact-card-name { color: #686870; }
+.supplier-table tr.is-disabled .supplier-person-name { color: #686870; }
 
 .supplier-empty-state {
   min-height: 360px;
@@ -729,7 +735,7 @@
   .supplier-source-cell { grid-column: 4; }
   .supplier-contact-cell { grid-column: 1 / 5; margin-top: 14px; padding-top: 13px !important; display: flex; align-items: flex-start; border-top: 1px dashed #ededf0 !important; }
   .supplier-action-cell { grid-column: 5; grid-row: 1; }
-  .supplier-contact-cell::before { content: "联系"; flex: 0 0 auto; margin-right: 12px; padding-top: 8px; color: var(--supplier-muted); font-size: var(--type-caption); line-height: 1.5; font-weight: 400; }
+  .supplier-contact-cell::before { content: "联系"; flex: 0 0 auto; margin-right: 12px; padding-top: 4px; color: var(--supplier-muted); font-size: var(--type-caption); line-height: 1.5; font-weight: 400; }
   .supplier-contact-copy { flex: 1; }
 }
 
@@ -776,9 +782,6 @@
   .supplier-status-cell::before { content: "状态"; padding-top: 5px; }
   .supplier-priority-cell::before { content: "优先级"; padding-top: 1px; }
   .supplier-action-cell::before { content: "操作"; padding-top: 8px; }
-  .supplier-contact-copy { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .supplier-contact-cards { width: 100%; }
-  .supplier-contact-overflow { min-height: 28px; justify-self: start; }
   .supplier-edit-button { min-height: 40px; }
   .supplier-pagination { padding: 13px 14px; flex-wrap: wrap; }
   .supplier-dialog { width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 24px); }
@@ -823,6 +826,6 @@
   .supplier-table tbody th,
   .supplier-table tbody td,
   .supplier-pagination,
-  .supplier-contact-card,
-  .supplier-contact-overflow { border-color: var(--line-strong); }
+  .supplier-contact-extra,
+  .supplier-contact-item { border-color: var(--line-strong); }
 }

@@ -28,12 +28,12 @@
     },
     {
       id: 'supplier-003', code: 'SUP-003', name: '安备消防用品店', sourceType: 'online_store', priority: 'normal',
-      contacts: [{ name: '平台客服', info: '通过店铺客服联系' }],
+      contacts: [{ name: '平台客服', info: '通过店铺客服联系' }, { name: '售后客服', info: '139 **** 3816' }],
       region: '浙江·杭州', platform: '1688', shopUrl: 'https://example.com/store/003', remark: '', enabled: true
     },
     {
       id: 'supplier-004', code: 'SUP-004', name: '江南消防设备公司', sourceType: 'regional_agent', priority: 'normal',
-      contacts: [{ name: '赵经理', info: '微信：jiangnan_demo' }],
+      contacts: [{ name: '赵经理', info: '微信：jiangnan_demo' }, { name: '王会计', info: '139 **** 8210' }],
       region: '江苏·苏州', platform: '', shopUrl: '', remark: '', enabled: true
     },
     {
@@ -43,17 +43,17 @@
     },
     {
       id: 'supplier-006', code: 'SUP-006', name: '优安劳保店', sourceType: 'online_store', priority: 'backup',
-      contacts: [{ name: '', info: '通过店铺客服联系' }],
+      contacts: [{ name: '', info: '通过店铺客服联系' }, { name: '陈经理', info: '137 **** 5068' }],
       region: '浙江·宁波', platform: '淘宝', shopUrl: 'https://example.com/store/006', remark: '', enabled: true
     },
     {
       id: 'supplier-007', code: 'SUP-007', name: '城北器材经营部', sourceType: 'other', priority: 'normal',
-      contacts: [{ name: '吴经理', info: '136 **** 0806' }],
+      contacts: [{ name: '吴经理', info: '136 **** 0806' }, { name: '姚会计', info: '025-**** 7130' }, { name: '仓储部', info: '136 **** 5823' }],
       region: '安徽·合肥', platform: '', shopUrl: '', remark: '', enabled: true
     },
     {
       id: 'supplier-008', code: 'SUP-008', name: '华南消防商行', sourceType: 'regional_agent', priority: 'backup',
-      contacts: [{ name: '周经理', info: '138 **** 1540' }],
+      contacts: [{ name: '周经理', info: '138 **** 1540' }, { name: '林会计', info: '020-**** 1802' }, { name: '仓储部', info: '138 **** 7352' }],
       region: '广东·广州', platform: '', shopUrl: '', remark: '暂停新增采购。', enabled: false
     }
   ];
@@ -95,6 +95,7 @@
   const toast = document.getElementById('supplier-toast');
 
   const PAGE_SIZE = 8;
+  const CONTACT_PREVIEW_LIMIT = 3;
   let activeStatus = 'all';
   let currentPage = 1;
   let editingId = '';
@@ -123,25 +124,27 @@
   }
 
   function contactMarkup(supplier) {
-    const contacts = (supplier.contacts || []).filter((contact) => contact.name || contact.info);
+    const contacts = (supplier.contacts || []).filter((contact) => contact && (contact.name || contact.info));
     if (!contacts.length) return '<span class="supplier-empty-value">未填写</span>';
-    const shownContacts = contacts.slice(0, 2).map((contact) => {
-      const name = contact.name ? `<strong class="supplier-contact-card-name">${escapeHtml(contact.name)}</strong>` : '';
-      const info = contact.info ? `<span class="supplier-contact-card-info">${escapeHtml(contact.info)}</span>` : '';
-      return `<li class="supplier-contact-card${contact.name ? '' : ' is-contact-only'}">${name}${info}</li>`;
-    }).join('');
-    const remainingContacts = contacts.slice(2);
+
+    const shownContacts = contacts.slice(0, CONTACT_PREVIEW_LIMIT);
+    const listMarkup = `
+      <ul class="supplier-contacts" role="list" aria-label="已展示 ${shownContacts.length} 位联系人，共 ${contacts.length} 位">
+        ${shownContacts.map((contact) => `
+          <li class="supplier-contact-item">
+            <strong class="supplier-person-name${contact.name ? '' : ' is-placeholder'}">${escapeHtml(contact.name || '未填姓名')}</strong>
+            <span class="supplier-person-info${contact.info ? '' : ' is-placeholder'}">${escapeHtml(contact.info || '未填联系方式')}</span>
+          </li>`).join('')}
+      </ul>`;
+
+    const remainingContacts = contacts.slice(CONTACT_PREVIEW_LIMIT);
     const remainingSummary = remainingContacts
       .map((contact) => [contact.name, contact.info].filter(Boolean).join(' · '))
       .join('；');
     const overflow = remainingContacts.length
-      ? `<span class="supplier-contact-overflow" title="${escapeHtml(remainingSummary)}">+${remainingContacts.length}<span>人</span><span class="visually-hidden">，其他联系人：${escapeHtml(remainingSummary)}</span></span>`
+      ? `<span class="supplier-contact-extra" title="${escapeHtml(remainingSummary)}">+${remainingContacts.length} 位<span class="visually-hidden">，其他联系人：${escapeHtml(remainingSummary)}</span></span>`
       : '';
-    return `
-      <ul class="supplier-contact-cards${contacts.length === 1 ? ' is-single' : ''}" aria-label="已展示 ${Math.min(contacts.length, 2)} 位联系人，共 ${contacts.length} 位">
-        ${shownContacts}
-      </ul>
-      ${overflow}`;
+    return `<div class="supplier-contact-body">${listMarkup}${overflow}</div>`;
   }
 
   function rowMarkup(supplier) {
